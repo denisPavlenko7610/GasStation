@@ -2,6 +2,7 @@
   "dependencies": {
     "com.rdragon.tools": "https://github.com/denisPavlenko7610/RDTools.git",
     "com.svermeulen.extenject": "file:../Assets/Plugins/Zenject",
+    "com.unity.addressables": "1.21.1",
     "com.unity.cinemachine": "2.9.4",
     "com.unity.collab-proxy": "1.17.7",
     "com.unity.entities": "1.0.0-pre.15",
