@@ -1,8 +1,9 @@
-﻿using Unity.Entities;
+﻿using Aspects.MovementAspects;
+using Unity.Entities;
 
-namespace GasStation.Systems.MovingSystem
+namespace Systems.MovingSystem
 {
-    public struct MovingISystem : ISystem
+    public partial struct MovingISystem : ISystem
     {
         public void OnCreate(ref SystemState state)
         {
@@ -15,7 +16,10 @@ namespace GasStation.Systems.MovingSystem
 
         public void OnUpdate(ref SystemState state)
         {
-            
+            foreach (var moveToPositionAspect in SystemAPI.Query<MoveToPositionAspect>())
+            {
+                moveToPositionAspect.Move(SystemAPI.Time.DeltaTime);
+            }
         }
     }
 }
