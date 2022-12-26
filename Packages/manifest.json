@@ -2,7 +2,6 @@
   "dependencies": {
     "com.svermeulen.extenject": "file:../Assets/Plugins/Zenject",
     "com.unity.addressables": "1.21.2",
-    "com.unity.cinemachine": "3.0.0-pre.3",
     "com.unity.collab-proxy": "1.17.7",
     "com.unity.entities": "1.0.0-pre.15",
     "com.unity.entities.graphics": "1.0.0-pre.15",
