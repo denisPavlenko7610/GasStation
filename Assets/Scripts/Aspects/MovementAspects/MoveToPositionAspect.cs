@@ -1,22 +1,21 @@
 ﻿using GasStation.Components.MovementComponents;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
-namespace Aspects.MovementAspects
+namespace GasStation.Aspects.MovementAspects
 {
     public readonly partial struct MoveToPositionAspect : IAspect
     {
-        private readonly Entity _entity;
         private readonly TransformAspect _transformAspect;
         private readonly RefRO<SpeedComponent> _speed;
-        private readonly RefRW<TargetPositionComponent> _targetPosition;
+        private readonly RefRO<TargetPositionComponent> _targetPosition;
 
+        [BurstCompile]
         public void Move(float deltaTime)
         {
-            float3 direction = math.normalize(_targetPosition.ValueRW.Value - (Vector3)_transformAspect.WorldPosition);
-            _transformAspect.WorldPosition += direction * deltaTime * _speed.ValueRO.Value;
+            _transformAspect.WorldPosition += (float3)_targetPosition.ValueRO.Value * deltaTime * _speed.ValueRO.Value;
         }
     }
 }

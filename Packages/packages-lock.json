@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.rdragon.tools": {
-      "version": "https://github.com/denisPavlenko7610/RDTools.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "860431f399edf0eec0c1cc47cd8417bb9983fd97"
-    },
     "com.svermeulen.extenject": {
       "version": "file:../Assets/Plugins/Zenject",
       "depth": 0,
@@ -149,6 +142,21 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.physics": {
+      "version": "1.0.0-pre.15",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.7.4",
+        "com.unity.collections": "2.1.0-pre.2",
+        "com.unity.entities": "1.0.0-pre.15",
+        "com.unity.mathematics": "1.2.6",
+        "com.unity.test-framework": "1.1.33",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.postprocessing": {
