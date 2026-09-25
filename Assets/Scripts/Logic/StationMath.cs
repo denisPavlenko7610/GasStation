@@ -53,6 +53,20 @@ namespace GasStation.Logic
 
         public static float ClampReputation(float reputation) => math.saturate(reputation);
 
+        /// <summary>1 with no litter, 0 when there are dirtyThreshold pieces or more.</summary>
+        public static float Cleanliness(int trashCount, int dirtyThreshold)
+        {
+            if (dirtyThreshold <= 0)
+                return 1f;
+            return 1f - math.saturate((float)trashCount / dirtyThreshold);
+        }
+
+        /// <summary>A dirty station gets fewer customers: 0.6 at a dump, 1.1 when spotless.</summary>
+        public static float CleanlinessTrafficFactor(float cleanliness) => math.lerp(0.6f, 1.1f, math.saturate(cleanliness));
+
+        /// <summary>Reputation change per second from how clean the station is.</summary>
+        public static float CleanlinessReputationDrift(float cleanliness) => (math.saturate(cleanliness) - 0.6f) * 0.0004f;
+
         public static float3 QueueSlot(float3 head, float3 direction, float spacing, int index)
         {
             return head + direction * (spacing * index);

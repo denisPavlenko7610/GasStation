@@ -31,6 +31,8 @@ namespace GasStation.Authoring
         [Header("Service")]
         public float fuelDeliveryTime = 30f;
         public float interactionRadius = 4f;
+        [Tooltip("Litter count at which cleanliness drops to 0%")]
+        public int dirtyThreshold = 40;
 
         public FuelSettings[] fuels =
         {
@@ -62,10 +64,13 @@ namespace GasStation.Authoring
             AddComponent(entity, new StationSettings
             {
                 FuelDeliveryTime = authoring.fuelDeliveryTime,
-                InteractionRadius = authoring.interactionRadius
+                InteractionRadius = authoring.interactionRadius,
+                DirtyThreshold = authoring.dirtyThreshold
             });
 
             AddComponent(entity, new StationUpgrades());
+            AddComponent(entity, new StationCleanliness { Value = 1f });
+            AddComponent(entity, new QuestProgress());
             AddBuffer<StationEvent>(entity);
 
             var stock = AddBuffer<FuelStock>(entity);

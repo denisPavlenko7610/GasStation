@@ -1,4 +1,5 @@
 using GasStation.Components;
+using GasStation.Logic;
 
 namespace GasStation.Bridge
 {
@@ -16,6 +17,7 @@ namespace GasStation.Bridge
             UpgradeType.Advertising => "Реклама",
             UpgradeType.Attendant => "Заправщик",
             UpgradeType.ExtraPump => "Новая колонка",
+            UpgradeType.Janitor => "Уборщик",
             _ => type.ToString()
         };
 
@@ -27,7 +29,44 @@ namespace GasStation.Bridge
             UpgradeType.Advertising => "+25% клиентов",
             UpgradeType.Attendant => "сам заправляет машины, $80/день",
             UpgradeType.ExtraPump => "открывает ещё одну колонку",
+            UpgradeType.Janitor => "сам убирает мусор, $60/день",
             _ => string.Empty
         };
+
+        public static string QuestTitle(QuestDefinition quest) => quest.Id switch
+        {
+            0 => "Заброшенная заправка",
+            1 => "Первые клиенты",
+            2 => "Наводим порядок",
+            3 => "Бензовоз",
+            4 => "Первое вложение",
+            5 => "Постоянные клиенты",
+            6 => "Генеральная уборка",
+            7 => "Хорошая репутация",
+            8 => "Прибыльный день",
+            9 => "Расширение",
+            10 => "Идеальная чистота",
+            _ => "Задание дня"
+        };
+
+        public static string QuestGoalText(QuestDefinition quest) => quest.Goal switch
+        {
+            QuestGoal.CollectTrash => $"Собери мусор (E): {{0}}/{quest.Target:0}",
+            QuestGoal.ServeCustomers => $"Обслужи клиентов: {{0}}/{quest.Target:0}",
+            QuestGoal.OrderFuel => $"Закажи бензовоз (O): {{0}}/{quest.Target:0}",
+            QuestGoal.BuyUpgrade => $"Купи улучшение (Tab): {{0}}/{quest.Target:0}",
+            QuestGoal.Cleanliness => $"Доведи чистоту до {quest.Target:0}%: сейчас {{0}}%",
+            QuestGoal.Reputation => $"Подними репутацию до {quest.Target:0}%: сейчас {{0}}%",
+            QuestGoal.DayIncome => $"Заработай за день ${quest.Target:0}: сейчас ${{0}}",
+            QuestGoal.OpenPumps => "Открой новую колонку (Tab): {0}/1",
+            _ => "{0}"
+        };
+
+        public static string QuestReward(QuestDefinition quest)
+        {
+            if (quest.RewardMoney > 0f && quest.RewardReputation > 0f)
+                return $"${quest.RewardMoney:0} и +{quest.RewardReputation * 100f:0}% репутации";
+            return quest.RewardMoney > 0f ? $"${quest.RewardMoney:0}" : $"+{quest.RewardReputation * 100f:0}% репутации";
+        }
     }
 }

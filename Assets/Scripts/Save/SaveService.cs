@@ -3,6 +3,8 @@ using System.IO;
 using GasStation.Components;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 namespace GasStation.Save
@@ -34,12 +36,35 @@ namespace GasStation.Save
                     pending[(int)delivery.Type] += delivery.Liters;
             }
 
-            return SaveData.Create(
+            var data = SaveData.Create(
                 entityManager.GetComponentData<Economy>(station),
                 entityManager.GetComponentData<GameTime>(station),
                 entityManager.GetComponentData<StationUpgrades>(station),
                 stock,
                 pending);
+
+            if (entityManager.HasComponent<QuestProgress>(station))
+                data.CaptureQuest(entityManager.GetComponentData<QuestProgress>(station));
+
+            using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Trash>(), ComponentType.ReadOnly<LocalToWorld>()))
+            using (var transforms = query.ToComponentDataArray<LocalToWorld>(Allocator.Temp))
+            {
+                data.trash = new TrashSaveData[transforms.Length];
+                for (int i = 0; i < transforms.Length; i++)
+                {
+                    float3 position = transforms[i].Position;
+                    float3 forward = transforms[i].Forward;
+                    data.trash[i] = new TrashSaveData
+                    {
+                        x = position.x,
+                        y = position.y,
+                        z = position.z,
+                        yaw = math.atan2(forward.x, forward.z)
+                    };
+                }
+            }
+
+            return data;
         }
 
         /// <summary>Applies saved data and removes cars and pending deliveries.</summary>
@@ -63,6 +88,43 @@ namespace GasStation.Save
             entityManager.SetComponentData(station, economy);
             entityManager.SetComponentData(station, time);
             entityManager.SetComponentData(station, upgrades);
+
+            if (entityManager.HasComponent<QuestProgress>(station))
+                entityManager.SetComponentData(station, data.ToQuestProgress());
+
+            if (data.trash != null)
+                RestoreTrash(entityManager, data.trash);
+        }
+
+        private static void RestoreTrash(EntityManager entityManager, TrashSaveData[] trash)
+        {
+            using var spawnerQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<TrashSpawner>());
+            if (spawnerQuery.CalculateEntityCount() != 1)
+                return;
+
+            var spawnerEntity = spawnerQuery.GetSingletonEntity();
+            var prefabBuffer = entityManager.GetBuffer<TrashPrefabElement>(spawnerEntity, true);
+            if (prefabBuffer.Length == 0)
+                return;
+
+            // Copy first: instantiating invalidates the buffer.
+            using var prefabs = prefabBuffer.ToNativeArray(Allocator.Temp);
+
+            using (var existing = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Trash>()))
+                entityManager.DestroyEntity(existing);
+
+            for (int i = 0; i < trash.Length; i++)
+            {
+                var prefab = prefabs[i % prefabs.Length].Prefab;
+                float scale = entityManager.HasComponent<LocalTransform>(prefab)
+                    ? entityManager.GetComponentData<LocalTransform>(prefab).Scale
+                    : 1f;
+
+                var entity = entityManager.Instantiate(prefab);
+                entityManager.AddComponentData(entity, LocalTransform.FromPositionRotationScale(
+                    new float3(trash[i].x, trash[i].y, trash[i].z), quaternion.RotateY(trash[i].yaw), scale));
+                entityManager.AddComponentData(entity, new Trash());
+            }
         }
 
         public static void Write(SaveData data)
@@ -83,7 +145,7 @@ namespace GasStation.Save
             try
             {
                 data = JsonUtility.FromJson<SaveData>(File.ReadAllText(FilePath));
-                return data != null && data.version == SaveData.CurrentVersion;
+                return data != null && data.IsSupported;
             }
             catch (Exception exception)
             {

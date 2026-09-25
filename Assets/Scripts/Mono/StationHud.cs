@@ -49,7 +49,7 @@ namespace GasStation.Mono
             _pumps = CreateText("Pumps", font, new Vector2(0f, 0f), TextAnchor.LowerLeft, 26);
             _center = CreateText("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 34);
             _help = CreateText("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 22);
-            _help.text = "WASD — ходить   E / ЛКМ — заправить\n1/2/3 — топливо   +/- — цена   O — заказать 500 л\n" +
+            _help.text = "WASD — ходить   E / ЛКМ — заправить / убрать мусор\n1/2/3 — топливо   +/- — цена   O — заказать 500 л\n" +
                          "Tab — улучшения   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
             _shop = CreateText("Shop", font, new Vector2(0.5f, 1f), TextAnchor.UpperCenter, 26);
         }
@@ -65,7 +65,7 @@ namespace GasStation.Mono
             _fuel.text = BuildFuel();
             _pumps.text = BuildPumps();
             _center.text = BuildCenter();
-            _shop.text = _shopOpen ? BuildShop() : string.Empty;
+            _shop.text = _shopOpen ? BuildShop() : BuildQuest();
         }
 
         private void HandleKeys()
@@ -126,6 +126,7 @@ namespace GasStation.Mono
             4 => keyboard.digit4Key.wasPressedThisFrame,
             5 => keyboard.digit5Key.wasPressedThisFrame,
             6 => keyboard.digit6Key.wasPressedThisFrame,
+            7 => keyboard.digit7Key.wasPressedThisFrame,
             _ => false
         };
 
@@ -145,6 +146,14 @@ namespace GasStation.Mono
             return _builder.ToString();
         }
 
+        private string BuildQuest()
+        {
+            var quest = HudModel.Quest;
+            string title = quest.IsDaily ? "Задание дня" : $"Задание: {GameTexts.QuestTitle(quest)}";
+            string goal = string.Format(GameTexts.QuestGoalText(quest), HudModel.QuestProgress.ToString("0"));
+            return $"{title}\n{goal}\nНаграда: {GameTexts.QuestReward(quest)}";
+        }
+
         private string BuildStatus()
         {
             var economy = HudModel.Economy;
@@ -155,6 +164,7 @@ namespace GasStation.Mono
             _builder.AppendLine($"День {HudModel.Day}   {hours:00}:{minutes:00}");
             _builder.AppendLine($"Деньги: ${economy.Money:0}");
             _builder.AppendLine($"Репутация: {economy.Reputation * 100f:0}%");
+            _builder.AppendLine($"Чистота: {HudModel.Cleanliness.Value * 100f:0}% (мусора: {HudModel.Cleanliness.TrashCount})");
             _builder.AppendLine($"Сегодня: +${economy.DayIncome:0} / -${economy.DayExpenses:0}");
             _builder.Append($"Обслужено: {economy.DayServed}   Уехали: {economy.DayLost}");
             return _builder.ToString();
@@ -232,6 +242,7 @@ namespace GasStation.Mono
                 InteractionHint.CanStartFueling => "[E / ЛКМ] Заправить",
                 InteractionHint.Fueling => "Идёт заправка...",
                 InteractionHint.CarArriving => "Машина подъезжает",
+                InteractionHint.Trash => "[E / ЛКМ] Убрать мусор",
                 _ => string.Empty
             };
         }

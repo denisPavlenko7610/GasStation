@@ -21,6 +21,8 @@ namespace GasStation.Systems
             HudModel.Economy = SystemAPI.GetSingleton<Economy>();
             HudModel.LastReport = SystemAPI.GetSingleton<DayReport>();
             HudModel.Upgrades = SystemAPI.GetSingleton<StationUpgrades>();
+            if (SystemAPI.HasSingleton<StationCleanliness>())
+                HudModel.Cleanliness = SystemAPI.GetSingleton<StationCleanliness>();
 
             DrainEvents();
             CopyFuel();
@@ -104,6 +106,11 @@ namespace GasStation.Systems
                 var pumpEntity = interaction.ValueRO.NearbyPump;
                 if (pumpEntity != Entity.Null && SystemAPI.Exists(pumpEntity))
                     HudModel.Hint = HintFor(Describe(SystemAPI.GetComponent<Pump>(pumpEntity)));
+
+                bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling;
+                var trash = interaction.ValueRO.NearbyTrash;
+                if (!fuelingAction && trash != Entity.Null && SystemAPI.Exists(trash))
+                    HudModel.Hint = InteractionHint.Trash;
             }
         }
 

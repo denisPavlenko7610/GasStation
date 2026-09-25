@@ -10,7 +10,10 @@ namespace GasStation.Components
         FuelRanOut,
         FuelDelivered,
         DayEnded,
-        UpgradeBought
+        UpgradeBought,
+        FuelOrdered,
+        TrashCollected,
+        QuestCompleted
     }
 
     /// <summary>

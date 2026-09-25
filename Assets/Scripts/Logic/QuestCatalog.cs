@@ -1,0 +1,115 @@
+using Unity.Mathematics;
+
+namespace GasStation.Logic
+{
+    public enum QuestGoal : byte
+    {
+        /// <summary>Counter: pieces of litter picked up since the quest started.</summary>
+        CollectTrash,
+        /// <summary>Counter: customers who paid.</summary>
+        ServeCustomers,
+        /// <summary>Counter: fuel orders placed.</summary>
+        OrderFuel,
+        /// <summary>Counter: upgrades bought.</summary>
+        BuyUpgrade,
+        /// <summary>State: cleanliness in percent.</summary>
+        Cleanliness,
+        /// <summary>State: reputation in percent.</summary>
+        Reputation,
+        /// <summary>State: income of the current day.</summary>
+        DayIncome,
+        /// <summary>State: ExtraPump upgrade level.</summary>
+        OpenPumps
+    }
+
+    public struct QuestDefinition
+    {
+        public int Id;
+        public QuestGoal Goal;
+        public float Target;
+        public float RewardMoney;
+        public float RewardReputation;
+        public bool IsDaily;
+
+        public bool IsCounter => Goal is QuestGoal.CollectTrash or QuestGoal.ServeCustomers
+            or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade;
+    }
+
+    /// <summary>
+    /// Story quests that walk the player from an abandoned, littered station to a working business,
+    /// followed by endless daily quests. Texts live in GameTexts, keyed by Id.
+    /// </summary>
+    public static class QuestCatalog
+    {
+        public const int DailyIdBase = 100;
+
+        private static readonly QuestDefinition[] Story =
+        {
+            Quest(0, QuestGoal.CollectTrash, 10f, 200f),
+            Quest(1, QuestGoal.ServeCustomers, 3f, 150f),
+            Quest(2, QuestGoal.Cleanliness, 80f, 0f, 0.05f),
+            Quest(3, QuestGoal.OrderFuel, 1f, 100f),
+            Quest(4, QuestGoal.BuyUpgrade, 1f, 250f),
+            Quest(5, QuestGoal.ServeCustomers, 15f, 400f),
+            Quest(6, QuestGoal.CollectTrash, 40f, 400f),
+            Quest(7, QuestGoal.Reputation, 70f, 500f),
+            Quest(8, QuestGoal.DayIncome, 1000f, 800f),
+            Quest(9, QuestGoal.OpenPumps, 1f, 1000f),
+            Quest(10, QuestGoal.Cleanliness, 100f, 500f, 0.05f),
+        };
+
+        private static readonly QuestGoal[] DailyGoals =
+        {
+            QuestGoal.CollectTrash,
+            QuestGoal.ServeCustomers,
+            QuestGoal.DayIncome
+        };
+
+        public static int StoryCount => Story.Length;
+
+        public static QuestDefinition Get(int index)
+        {
+            if (index < Story.Length)
+                return Story[index];
+
+            // Daily quests cycle through goals and get harder over time.
+            int daily = index - Story.Length;
+            var goal = DailyGoals[daily % DailyGoals.Length];
+            float difficulty = 1f + 0.25f * (daily / DailyGoals.Length);
+            float target = goal switch
+            {
+                QuestGoal.CollectTrash => math.round(15f * difficulty),
+                QuestGoal.ServeCustomers => math.round(20f * difficulty),
+                _ => math.round(1200f * difficulty / 100f) * 100f
+            };
+
+            return new QuestDefinition
+            {
+                Id = DailyIdBase + (int)goal,
+                Goal = goal,
+                Target = target,
+                RewardMoney = math.round(300f * difficulty / 10f) * 10f,
+                IsDaily = true
+            };
+        }
+
+        /// <summary>Progress towards the goal. Counter goals use the stored counter, state goals read the station.</summary>
+        public static float Progress(QuestDefinition quest, float counter, float cleanliness, float reputation,
+            float dayIncome, int openPumps)
+        {
+            return quest.Goal switch
+            {
+                QuestGoal.Cleanliness => math.floor(cleanliness * 100f),
+                QuestGoal.Reputation => math.floor(reputation * 100f),
+                QuestGoal.DayIncome => dayIncome,
+                QuestGoal.OpenPumps => openPumps,
+                _ => counter
+            };
+        }
+
+        public static bool IsComplete(QuestDefinition quest, float progress) => progress >= quest.Target;
+
+        private static QuestDefinition Quest(int id, QuestGoal goal, float target, float money, float reputation = 0f) =>
+            new() { Id = id, Goal = goal, Target = target, RewardMoney = money, RewardReputation = reputation };
+    }
+}

@@ -13,11 +13,20 @@ namespace GasStation.Save
         public float sellPrice;
     }
 
+    [Serializable]
+    public class TrashSaveData
+    {
+        public float x;
+        public float y;
+        public float z;
+        public float yaw;
+    }
+
     /// <summary>Persistent part of the game state. Cars on the road are not saved.</summary>
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 1;
+        public const int CurrentVersion = 2;
 
         public int version = CurrentVersion;
         public int day;
@@ -31,6 +40,15 @@ namespace GasStation.Save
         public int dayLost;
         public int[] upgrades = new int[UpgradeTypes.Count];
         public FuelSaveData[] fuel = new FuelSaveData[FuelTypes.Count];
+
+        // Version 2
+        public int questIndex;
+        public float questCounter;
+        public int questsCompleted;
+        /// <summary>Null in version 1 saves: litter from the scene is kept as is.</summary>
+        public TrashSaveData[] trash;
+
+        public bool IsSupported => version >= 1 && version <= CurrentVersion;
 
         /// <param name="pendingDeliveries">Liters already paid for but not delivered, per fuel type. Saved as delivered.</param>
         public static SaveData Create(Economy economy, GameTime time, StationUpgrades upgrades,
@@ -65,6 +83,20 @@ namespace GasStation.Save
 
             return data;
         }
+
+        public void CaptureQuest(QuestProgress quest)
+        {
+            questIndex = quest.Index;
+            questCounter = quest.Counter;
+            questsCompleted = quest.Completed;
+        }
+
+        public QuestProgress ToQuestProgress() => new()
+        {
+            Index = Mathf.Max(0, questIndex),
+            Counter = questCounter,
+            Completed = questsCompleted
+        };
 
         public void ApplyTo(ref Economy economy, ref GameTime time, ref StationUpgrades stationUpgrades, IList<FuelStock> stock)
         {

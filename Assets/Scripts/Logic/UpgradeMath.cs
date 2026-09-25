@@ -7,6 +7,7 @@ namespace GasStation.Logic
     {
         public const float TankBonusPerLevel = 1000f;
         public const float AttendantSalaryPerLevel = 80f;
+        public const float JanitorSalaryPerLevel = 60f;
 
         public static int MaxLevel(UpgradeType type) => type == UpgradeType.ExtraPump ? 2 : 3;
 
@@ -18,6 +19,7 @@ namespace GasStation.Logic
             UpgradeType.Advertising => 700f,
             UpgradeType.Attendant => 800f,
             UpgradeType.ExtraPump => 1500f,
+            UpgradeType.Janitor => 600f,
             _ => 1000f
         };
 
@@ -35,5 +37,8 @@ namespace GasStation.Logic
 
         /// <summary>Seconds a car waits before a hired attendant starts fueling it.</summary>
         public static float AttendantDelay(int level) => level > 0 ? 8f / level : float.PositiveInfinity;
+
+        /// <summary>Seconds between two pieces of litter removed by janitors.</summary>
+        public static float JanitorInterval(int level) => level > 0 ? 20f / level : float.PositiveInfinity;
     }
 }

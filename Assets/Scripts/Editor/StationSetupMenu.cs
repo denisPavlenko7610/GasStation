@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using GasStation.Authoring;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -8,35 +6,29 @@ using UnityEngine;
 namespace GasStation.Editor
 {
     /// <summary>
-    /// Creates a ready-to-tweak station layout (station, spawner with routes, two pumps) in the active scene.
-    /// Open the Entities SubScene for editing and make it the active scene before running.
+    /// Adds gameplay objects to an existing scene. Open the Entities SubScene for editing and make it the
+    /// active scene before running.
     /// </summary>
     public static class StationSetupMenu
     {
-        private static readonly string[] CarFolders =
-        {
-            "Assets/Prefabs/Environment/Interactable/Cars",
-            "Assets/Models/Interactable/Cars"
-        };
-
         [MenuItem("GasStation/Создать объекты станции")]
         private static void CreateStation()
         {
             var scene = EditorSceneManager.GetActiveScene();
-            var sceneView = SceneView.lastActiveSceneView;
-            var center = sceneView != null ? sceneView.pivot : Vector3.zero;
-            center.y = 0f;
+            var center = SceneViewCenter();
 
             var root = new GameObject("GasStationSetup");
             Undo.RegisterCreatedObjectUndo(root, "Create station");
             root.transform.position = center;
 
-            Create("Station", root.transform, Vector3.zero).AddComponent<StationAuthoring>();
+            var station = Create("Station", root.transform, Vector3.zero);
+            station.AddComponent<StationAuthoring>();
+            station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
 
             var spawnerGo = Create("CarSpawner", root.transform, new Vector3(-40f, 0f, 0f));
             spawnerGo.transform.rotation = Quaternion.LookRotation(Vector3.right);
             var spawner = spawnerGo.AddComponent<CarSpawnerAuthoring>();
-            spawner.carPrefabs = FindCarPrefabs();
+            spawner.carPrefabs = StationEditorUtility.FindCarPrefabs();
             spawner.entryRoute = new[] { Create("Entry_0", spawnerGo.transform, new Vector3(-25f, 0f, 0f)).transform };
 
             var queueHead = Create("QueueHead", spawnerGo.transform, new Vector3(-10f, 0f, 0f));
@@ -62,6 +54,38 @@ namespace GasStation.Editor
                       $"Найдено машин: {spawner.carPrefabs.Length}. Расставьте точки маршрута и колонки под окружение.");
         }
 
+        [MenuItem("GasStation/Набросать мусор (30 шт. вокруг Scene View)")]
+        private static void ScatterTrash()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            var parent = new GameObject("Trash");
+            Undo.RegisterCreatedObjectUndo(parent, "Scatter trash");
+            SceneManagerMove(parent, scene);
+
+            int placed = StationEditorUtility.ScatterTrash(scene, parent.transform, SceneViewCenter(),
+                new Vector2(25f, 25f), 30, System.Environment.TickCount);
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            Selection.activeGameObject = parent;
+            Debug.Log(placed > 0
+                ? $"GasStation: разбросано {placed} ед. мусора в сцене '{scene.name}'."
+                : "GasStation: не нашёл префабы мусора в паке 'Gas station'.");
+        }
+
+        private static Vector3 SceneViewCenter()
+        {
+            var sceneView = SceneView.lastActiveSceneView;
+            var center = sceneView != null ? sceneView.pivot : Vector3.zero;
+            center.y = 0f;
+            return center;
+        }
+
+        private static void SceneManagerMove(GameObject go, UnityEngine.SceneManagement.Scene scene)
+        {
+            if (go.scene != scene)
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go, scene);
+        }
+
         private static void CreatePump(Transform parent, int number, Vector3 position, Vector3 stopPosition, int requiredUpgradeLevel)
         {
             var pumpGo = Create($"Pump_{number}", parent, position);
@@ -80,23 +104,6 @@ namespace GasStation.Editor
             go.transform.SetParent(parent, false);
             go.transform.localPosition = localPosition;
             return go;
-        }
-
-        private static GameObject[] FindCarPrefabs()
-        {
-            var folders = CarFolders.Where(AssetDatabase.IsValidFolder).ToArray();
-            if (folders.Length == 0)
-                return new GameObject[0];
-
-            var result = new List<GameObject>();
-            foreach (var guid in AssetDatabase.FindAssets("t:Prefab t:Model", folders))
-            {
-                var asset = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
-                if (asset != null && !result.Contains(asset))
-                    result.Add(asset);
-            }
-
-            return result.ToArray();
         }
     }
 }

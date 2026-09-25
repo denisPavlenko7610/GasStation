@@ -37,5 +37,6 @@ namespace GasStation.Components
     {
         public float FuelDeliveryTime;
         public float InteractionRadius;
+        public int DirtyThreshold;
     }
 }

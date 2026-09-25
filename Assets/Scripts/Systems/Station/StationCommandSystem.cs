@@ -108,6 +108,7 @@ namespace GasStation.Systems
                 TimeLeft = settings.FuelDeliveryTime
             });
 
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.FuelOrdered, fuel, liters);
             HudModel.Notify($"Заказано {liters:0} л {GameTexts.FuelName(fuel)}, привезут через {settings.FuelDeliveryTime:0} с");
         }
 
@@ -146,6 +147,9 @@ namespace GasStation.Systems
                     break;
                 case UpgradeType.Attendant:
                     economy.ValueRW.DailyFixedCosts += UpgradeMath.AttendantSalaryPerLevel;
+                    break;
+                case UpgradeType.Janitor:
+                    economy.ValueRW.DailyFixedCosts += UpgradeMath.JanitorSalaryPerLevel;
                     break;
             }
 

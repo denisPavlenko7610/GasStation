@@ -26,6 +26,11 @@ namespace GasStation.Systems
             _cars = SystemAPI.QueryBuilder().WithAll<Car>().Build();
         }
 
+        private float CleanlinessFactor(ref SystemState state) =>
+            SystemAPI.HasSingleton<StationCleanliness>()
+                ? StationMath.CleanlinessTrafficFactor(SystemAPI.GetSingleton<StationCleanliness>().Value)
+                : 1f;
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
@@ -47,7 +52,8 @@ namespace GasStation.Systems
             float intensity = StationMath.TrafficIntensity(hour)
                               * StationMath.ReputationFactor(reputation)
                               * attractiveness
-                              * UpgradeMath.TrafficMultiplier(upgrades.Advertising);
+                              * UpgradeMath.TrafficMultiplier(upgrades.Advertising)
+                              * CleanlinessFactor(ref state);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;

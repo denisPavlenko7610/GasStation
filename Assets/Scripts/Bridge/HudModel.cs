@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GasStation.Components;
+using GasStation.Logic;
 using UnityEngine;
 
 namespace GasStation.Bridge
@@ -10,7 +11,8 @@ namespace GasStation.Bridge
         PumpFree,
         CarArriving,
         CanStartFueling,
-        Fueling
+        Fueling,
+        Trash
     }
 
     public struct PumpInfo
@@ -43,6 +45,9 @@ namespace GasStation.Bridge
         /// <summary>Events of the last simulation frame. Refilled every frame; read them in Update.</summary>
         public static readonly List<StationEvent> Events = new();
         public static bool AnyFueling;
+        public static StationCleanliness Cleanliness;
+        public static QuestDefinition Quest;
+        public static float QuestProgress;
 
         public static int QueueLength;
         public static int CarsOnSite;

@@ -2,7 +2,9 @@
     "name": "GasStation.Editor",
     "rootNamespace": "GasStation.Editor",
     "references": [
-        "GasStation.Runtime"
+        "GasStation.Runtime",
+        "Unity.Scenes",
+        "Unity.Entities"
     ],
     "includePlatforms": [
         "Editor"

@@ -6,7 +6,10 @@ using Unity.Transforms;
 
 namespace GasStation.Systems
 {
-    /// <summary>Finds the pump next to the player and starts fueling on interact.</summary>
+    /// <summary>
+    /// Finds the pump and the litter next to the player. On interact, starting fueling has priority;
+    /// otherwise the press is left for TrashPickupSystem.
+    /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
     [UpdateAfter(typeof(QueueSystem))]
@@ -24,31 +27,24 @@ namespace GasStation.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            float radius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
+            float pumpRadius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
+            float trashRadius = SystemAPI.HasSingleton<TrashSpawner>()
+                ? SystemAPI.GetSingleton<TrashSpawner>().PickupRadius
+                : 2.5f;
 
             foreach (var (interaction, transform) in SystemAPI
                          .Query<RefRW<PlayerInteraction>, RefRO<LocalTransform>>()
                          .WithAll<PlayerTag>())
             {
                 float2 playerPosition = transform.ValueRO.Position.xz;
-                float bestDistance = radius * radius;
-                var nearest = Entity.Null;
+                interaction.ValueRW.NearbyPump = FindNearestPump(ref state, playerPosition, pumpRadius);
+                interaction.ValueRW.NearbyTrash = FindNearestTrash(ref state, playerPosition, trashRadius);
 
-                foreach (var (pump, pumpEntity) in SystemAPI.Query<RefRO<Pump>>().WithEntityAccess())
-                {
-                    float distance = math.distancesq(pump.ValueRO.InteractionPoint.xz, playerPosition);
-                    if (distance < bestDistance)
-                    {
-                        bestDistance = distance;
-                        nearest = pumpEntity;
-                    }
-                }
-
-                interaction.ValueRW.NearbyPump = nearest;
-                if (!interaction.ValueRO.InteractPressed || nearest == Entity.Null)
+                var pumpEntity = interaction.ValueRO.NearbyPump;
+                if (!interaction.ValueRO.InteractPressed || pumpEntity == Entity.Null)
                     continue;
 
-                var occupant = SystemAPI.GetComponent<Pump>(nearest).Occupant;
+                var occupant = SystemAPI.GetComponent<Pump>(pumpEntity).Occupant;
                 if (occupant == Entity.Null || !SystemAPI.Exists(occupant))
                     continue;
 
@@ -57,8 +53,43 @@ namespace GasStation.Systems
                     continue;
 
                 car.ValueRW.State = CarState.Fueling;
+                interaction.ValueRW.InteractPressed = false;
                 StationEvent.Push(SystemAPI.GetSingletonBuffer<StationEvent>(), StationEventType.FuelingStarted, car.ValueRO.FuelType);
             }
+        }
+
+        private Entity FindNearestPump(ref SystemState state, float2 position, float radius)
+        {
+            float best = radius * radius;
+            var nearest = Entity.Null;
+            foreach (var (pump, entity) in SystemAPI.Query<RefRO<Pump>>().WithEntityAccess())
+            {
+                float distance = math.distancesq(pump.ValueRO.InteractionPoint.xz, position);
+                if (distance < best)
+                {
+                    best = distance;
+                    nearest = entity;
+                }
+            }
+
+            return nearest;
+        }
+
+        private Entity FindNearestTrash(ref SystemState state, float2 position, float radius)
+        {
+            float best = radius * radius;
+            var nearest = Entity.Null;
+            foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalToWorld>>().WithAll<Trash>().WithEntityAccess())
+            {
+                float distance = math.distancesq(transform.ValueRO.Position.xz, position);
+                if (distance < best)
+                {
+                    best = distance;
+                    nearest = entity;
+                }
+            }
+
+            return nearest;
         }
     }
 }

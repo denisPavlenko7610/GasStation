@@ -18,6 +18,8 @@ namespace GasStation.Mono
         [SerializeField] private AudioClip deliveryClip;
         [SerializeField] private AudioClip alarmClip;
         [SerializeField] private AudioClip pumpLoopClip;
+        [SerializeField] private AudioClip trashClip;
+        [SerializeField] private AudioClip questClip;
         [SerializeField, Range(0f, 1f)] private float volume = 0.6f;
 
         private AudioSource _oneShots;
@@ -30,6 +32,8 @@ namespace GasStation.Mono
             nozzleClip = Existing(nozzleClip) ?? Tones("Nozzle", 0.12f, (t, p) => Noise() * (1f - p) * 0.5f + Square(t, 90f) * 0.2f);
             deliveryClip = Existing(deliveryClip) ?? Tones("Delivery", 0.9f, (t, p) => (Square(t, 55f) * 0.3f + Noise() * 0.15f) * Envelope(p));
             alarmClip = Existing(alarmClip) ?? Tones("Alarm", 0.6f, (t, p) => Mathf.Sin(2f * Mathf.PI * (p < 0.5f ? 880f : 660f) * t) * 0.4f);
+            trashClip = Existing(trashClip) ?? Tones("Trash", 0.18f, (t, p) => Noise() * 0.4f * (1f - p) + Mathf.Sin(2f * Mathf.PI * 220f * t) * 0.2f * (1f - p));
+            questClip = Existing(questClip) ?? Tones("Quest", 0.7f, (t, p) => Bell(t, 523f, 4f) + (t > 0.15f ? Bell(t - 0.15f, 659f, 4f) : 0f) + (t > 0.3f ? Bell(t - 0.3f, 784f, 4f) : 0f));
             pumpLoopClip = Existing(pumpLoopClip) ?? Tones("PumpLoop", 1f, (t, p) => Mathf.Sin(2f * Mathf.PI * 120f * t) * 0.15f + Noise() * 0.05f);
 
             _oneShots = gameObject.AddComponent<AudioSource>();
@@ -66,6 +70,8 @@ namespace GasStation.Mono
             StationEventType.FuelingStarted => nozzleClip,
             StationEventType.FuelDelivered => deliveryClip,
             StationEventType.FuelRanOut => alarmClip,
+            StationEventType.TrashCollected => trashClip,
+            StationEventType.QuestCompleted => questClip,
             _ => null
         };
 
