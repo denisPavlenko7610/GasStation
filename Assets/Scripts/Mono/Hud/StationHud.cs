@@ -375,7 +375,9 @@ namespace GasStation.Mono
                 Level = HudModel.Level.Level,
                 Money = HudModel.Economy.Money,
                 Cleanliness = HudModel.Cleanliness.Value,
-                Headcount = HudModel.Staff.Headcount
+                Headcount = HudModel.Staff.Headcount,
+                RenovationsTotal = HudModel.RenovationsTotal,
+                RenovationsDone = CountBits(HudModel.RenovationsDone)
             };
 
             int unlocked = 0;
@@ -398,6 +400,14 @@ namespace GasStation.Mono
 
             _builder.Append(Loc.F("panel.achievements.stats", HudModel.Stats.DaysPlayed, HudModel.Stats.Served, HudModel.Stats.Income));
             return _builder.ToString();
+        }
+
+        private static int CountBits(ulong mask)
+        {
+            int count = 0;
+            for (; mask != 0; mask &= mask - 1)
+                count++;
+            return count;
         }
 
         private string BuildQuest()
@@ -568,6 +578,8 @@ namespace GasStation.Mono
                 InteractionHint.None => string.Empty,
                 InteractionHint.PumpFree => string.Empty,
                 InteractionHint.Repair => Loc.F("hint.Repair", ProgressMath.RepairStepCost),
+                InteractionHint.Renovate => Loc.F("hint.Renovate", Loc.T($"renovation.{HudModel.NearRenovationKind}"),
+                    RenovationMath.Cost(HudModel.NearRenovationKind), RenovationMath.RequiredLevel(HudModel.NearRenovationKind)),
                 _ => Loc.T($"hint.{HudModel.Hint}")
             };
         }

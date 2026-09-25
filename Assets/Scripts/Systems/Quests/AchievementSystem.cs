@@ -50,6 +50,13 @@ namespace GasStation.Systems
                 Headcount = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Headcount : 0
             };
 
+            foreach (var renovation in SystemAPI.Query<RefRO<Renovation>>())
+            {
+                context.RenovationsTotal++;
+                if (renovation.ValueRO.Done)
+                    context.RenovationsDone++;
+            }
+
             ref var achievements = ref SystemAPI.GetSingletonRW<Achievements>().ValueRW;
             for (int i = 0; i < AchievementCatalog.Count; i++)
             {

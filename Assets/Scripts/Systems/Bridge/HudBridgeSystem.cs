@@ -35,6 +35,7 @@ namespace GasStation.Systems
             CopyWash();
             CopyFacilities();
             CopyStaff();
+            CopyRenovations();
             HudModel.Stats = SystemAPI.HasSingleton<StationStats>() ? SystemAPI.GetSingleton<StationStats>() : default;
             HudModel.Achievements = SystemAPI.HasSingleton<Achievements>() ? SystemAPI.GetSingleton<Achievements>() : default;
             CopyFuel();
@@ -110,6 +111,12 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.AchievementUnlocked:
                         HudModel.Notify(Loc.F("msg.achievement", Loc.T($"achievement.{(AchievementId)(int)stationEvent.Value}.name")));
+                        break;
+                    case StationEventType.RenovationDone:
+                        HudModel.Notify(Loc.F("msg.renovated", Loc.T($"renovation.{(RenovationKind)(int)stationEvent.Value}")));
+                        break;
+                    case StationEventType.RenovationNeedsLevel:
+                        HudModel.Notify(Loc.F("msg.renovationNeedsLevel", stationEvent.Value));
                         break;
                     case StationEventType.MotelPaid:
                         HudModel.Notify(Loc.F("msg.motelPaid", stationEvent.Value));
@@ -236,6 +243,21 @@ namespace GasStation.Systems
             HudModel.RestroomDirt = HudModel.HasRestroom ? SystemAPI.GetSingleton<Restroom>().Dirt : 0f;
         }
 
+        private void CopyRenovations()
+        {
+            ulong done = 0;
+            int total = 0;
+            foreach (var renovation in SystemAPI.Query<RefRO<Renovation>>())
+            {
+                total++;
+                if (renovation.ValueRO.Done && renovation.ValueRO.Id is >= 0 and < 64)
+                    done |= 1UL << renovation.ValueRO.Id;
+            }
+
+            HudModel.RenovationsDone = done;
+            HudModel.RenovationsTotal = total;
+        }
+
         private void CopyStaff()
         {
             HudModel.Workers.Clear();
@@ -324,6 +346,15 @@ namespace GasStation.Systems
                 if (!fuelingAction && NearDirtyRestroom())
                 {
                     HudModel.Hint = InteractionHint.Restroom;
+                    fuelingAction = true;
+                }
+
+                // Same order as the systems that consume the interact press.
+                var renovationEntity = interaction.ValueRO.NearbyRenovation;
+                if (!fuelingAction && renovationEntity != Entity.Null && SystemAPI.Exists(renovationEntity))
+                {
+                    HudModel.NearRenovationKind = SystemAPI.GetComponent<Renovation>(renovationEntity).Kind;
+                    HudModel.Hint = InteractionHint.Renovate;
                     fuelingAction = true;
                 }
 

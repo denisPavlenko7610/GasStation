@@ -46,7 +46,9 @@ namespace GasStation.Components
         MotelCheckIn,
         MotelPaid,
         MotelRoomCleaned,
-        AchievementUnlocked
+        AchievementUnlocked,
+        RenovationDone,
+        RenovationNeedsLevel
     }
 
     /// <summary>

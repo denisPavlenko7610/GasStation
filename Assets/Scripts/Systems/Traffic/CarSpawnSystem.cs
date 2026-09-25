@@ -57,7 +57,8 @@ namespace GasStation.Systems
                               * CleanlinessFactor(ref state)
                               * ProgressMath.LevelTrafficFactor(stationLevel)
                               * EventFactor(worldEvent)
-                              * (SystemAPI.HasSingleton<StationStyle>() ? StyleMath.TrafficFactor(SystemAPI.GetSingleton<StationStyle>().Scheme) : 1f);
+                              * (SystemAPI.HasSingleton<StationStyle>() ? StyleMath.TrafficFactor(SystemAPI.GetSingleton<StationStyle>().Scheme) : 1f)
+                              * RenovationFactor(ref state);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;
@@ -117,6 +118,18 @@ namespace GasStation.Systems
             SystemAPI.HasSingleton<StationCleanliness>()
                 ? StationMath.CleanlinessTrafficFactor(SystemAPI.GetSingleton<StationCleanliness>().Value)
                 : 1f;
+
+        private float RenovationFactor(ref SystemState state)
+        {
+            float factor = 1f;
+            foreach (var renovation in SystemAPI.Query<RefRO<Renovation>>())
+            {
+                if (renovation.ValueRO.Done)
+                    factor += RenovationMath.TrafficBonus(renovation.ValueRO.Kind);
+            }
+
+            return factor;
+        }
 
         private static float EventFactor(WorldEventKind kind) => kind switch
         {

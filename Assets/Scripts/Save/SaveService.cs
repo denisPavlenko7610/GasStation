@@ -56,6 +56,19 @@ namespace GasStation.Save
 
             CaptureShop(entityManager, data);
 
+            using (var renovationQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Renovation>()))
+            using (var renovations = renovationQuery.ToComponentDataArray<Renovation>(Allocator.Temp))
+            {
+                var done = new System.Collections.Generic.List<int>();
+                foreach (var renovation in renovations)
+                {
+                    if (renovation.Done)
+                        done.Add(renovation.Id);
+                }
+
+                data.renovationsDone = done.ToArray();
+            }
+
             using (var motelQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Motel>()))
             {
                 if (motelQuery.CalculateEntityCount() == 1)
@@ -161,6 +174,18 @@ namespace GasStation.Save
                     var restroom = entityManager.GetComponentData<Restroom>(restroomEntity);
                     restroom.Dirt = Mathf.Clamp01(data.restroomDirt);
                     entityManager.SetComponentData(restroomEntity, restroom);
+                }
+            }
+
+            if (data.renovationsDone != null)
+            {
+                using var renovationQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Renovation>());
+                using var entities = renovationQuery.ToEntityArray(Allocator.Temp);
+                foreach (var entity in entities)
+                {
+                    var renovation = entityManager.GetComponentData<Renovation>(entity);
+                    renovation.Done = Array.IndexOf(data.renovationsDone, renovation.Id) >= 0;
+                    entityManager.SetComponentData(entity, renovation);
                 }
             }
 

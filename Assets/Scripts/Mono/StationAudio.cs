@@ -93,6 +93,8 @@ namespace GasStation.Mono
             StationEventType.WorkerStole => angryClip,
             StationEventType.MotelPaid => cashClip,
             StationEventType.AchievementUnlocked => questClip,
+            StationEventType.RenovationDone => questClip,
+            StationEventType.RenovationNeedsLevel => angryClip,
             StationEventType.MotelRoomCleaned => trashClip,
             StationEventType.RestroomCleaned => trashClip,
             StationEventType.RestroomDisgusting => angryClip,

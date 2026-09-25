@@ -41,7 +41,9 @@ namespace GasStation.Logic
         /// <summary>Counter: workers hired.</summary>
         HireWorker,
         /// <summary>Counter: motel guests who paid.</summary>
-        HostGuests
+        HostGuests,
+        /// <summary>Counter: renovations finished.</summary>
+        Renovate
     }
 
     public struct QuestDefinition
@@ -57,7 +59,7 @@ namespace GasStation.Logic
             or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief
             or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers
             or QuestGoal.ChangeTires or QuestGoal.HireWorker
-            or QuestGoal.HostGuests;
+            or QuestGoal.HostGuests or QuestGoal.Renovate;
     }
 
     /// <summary>
@@ -72,6 +74,7 @@ namespace GasStation.Logic
         {
             Quest(0, QuestGoal.CollectTrash, 10f, 200f),
             Quest(11, QuestGoal.RepairPump, 1f, 150f),
+            Quest(22, QuestGoal.Renovate, 1f, 100f),
             Quest(1, QuestGoal.ServeCustomers, 3f, 150f),
             Quest(14, QuestGoal.SellProducts, 5f, 150f),
             Quest(16, QuestGoal.CleanRestroom, 1f, 100f),
@@ -83,6 +86,7 @@ namespace GasStation.Logic
             Quest(5, QuestGoal.ServeCustomers, 15f, 400f),
             Quest(6, QuestGoal.CollectTrash, 40f, 400f),
             Quest(7, QuestGoal.Reputation, 70f, 500f),
+            Quest(23, QuestGoal.Renovate, 3f, 400f, 0.05f),
             Quest(8, QuestGoal.DayIncome, 1000f, 800f),
             Quest(12, QuestGoal.StationLevel, 4f, 600f),
             Quest(9, QuestGoal.OpenPumps, 1f, 1000f),

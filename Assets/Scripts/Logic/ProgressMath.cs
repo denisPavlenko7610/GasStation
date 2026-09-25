@@ -37,6 +37,7 @@ namespace GasStation.Logic
             StationEventType.TiresChanged => 8f,
             StationEventType.StationPainted => 30f,
             StationEventType.WorkerHired => 10f,
+            StationEventType.RenovationDone => 25f,
             StationEventType.MotelPaid => 12f,
             StationEventType.MotelRoomCleaned => 3f,
             _ => 0f

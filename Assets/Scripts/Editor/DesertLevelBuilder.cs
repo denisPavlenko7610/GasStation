@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using GasStation.Authoring;
 using GasStation.Mono;
+using GasStation.Mono.Scenery;
+using GasStation.Components;
 using Unity.Scenes;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -88,32 +90,18 @@ namespace GasStation.Editor
             primary.Add(Place("Station_Canopy", scene, parent, new Vector3(0f, 0f, 0f), 0f));
             accent.Add(Place("Petrol_pump", scene, parent, new Vector3(0f, 0f, -5f), 90f));
             accent.Add(Place("Petrol_pump", scene, parent, new Vector3(0f, 0f, 5f), 90f));
-            // Closed pumps look old until the ExtraPump upgrade opens them.
-            accent.Add(Place("Petrol_pump_2", scene, parent, new Vector3(0f, 0f, -12f), 90f));
-            accent.Add(Place("Petrol_pump_2", scene, parent, new Vector3(0f, 0f, 12f), 90f));
 
-            primary.Add(Place("Operator 's_room", scene, parent, new Vector3(0f, 0f, 21f), 180f));
+            var shop = Place("Operator 's_room", scene, parent, new Vector3(0f, 0f, 21f), 180f);
+            primary.Add(shop);
             Place("Electric_panel", scene, parent, new Vector3(-11f, 0f, 21f), 180f);
             Place("Fire_extinguisher", scene, parent, new Vector3(7f, 0f, 18f), 180f);
-            Place("Vending_machine_Rusted", scene, parent, new Vector3(10f, 0f, 19f), 180f);
             Place("Trash_can", scene, parent, new Vector3(-8f, 0f, 17f), 0f);
             Place("Trash_can_2", scene, parent, new Vector3(5f, 0f, -9f), 0f);
             Place("Gas_Cistern", scene, parent, new Vector3(-33f, 0f, -7f), 90f);
-            // Motel: the second operator's room model serves as the reception with rooms.
-            primary.Add(Place("Operator 's_room_2", scene, parent, new Vector3(-26f, 0f, 22f), 180f));
             Place("Old_Rust_Car", scene, parent, new Vector3(-46f, 0f, 22f), 35f);
-            // Car wash bay, opened by the CarWash upgrade.
-            primary.Add(Place("Station_Canopy_2", scene, parent, new Vector3(26f, 0f, 12f), 90f));
-
-            // Tire service corner: a pile of wheels and cones next to the bay.
-            for (int i = 0; i < 4; i++)
-                Place("wheel", scene, parent, new Vector3(31f + 0.9f * i, 0f, -12f), 20f * i);
-            Place("Conus", scene, parent, new Vector3(22f, 0f, -12f), 0f);
-            Place("Conus", scene, parent, new Vector3(30f, 0f, -4f), 0f);
             Place("Air_conditioning", scene, parent, new Vector3(-6f, 0f, 24f), 180f);
             primary.Add(CreateRestroomHut(scene, parent, new Vector3(11f, 0f, 21f)));
             Place("Hydrant", scene, parent, new Vector3(-34f, 0f, -13f), 0f);
-            accent.Add(Place("Gas_Station_Sign", scene, parent, new Vector3(-26f, 0f, -15f), 180f));
             Place("Warning_sign_1", scene, parent, new Vector3(-16f, 0f, -9f), 180f);
             Place("Warning_sign_2", scene, parent, new Vector3(-24f, 0f, -12f), 0f);
             Place("Mini_Flags", scene, parent, new Vector3(30f, 0f, -14f), 0f);
@@ -124,20 +112,181 @@ namespace GasStation.Editor
             for (float x = -RoadHalfLength + 15f; x < RoadHalfLength; x += 30f)
                 Place("Streetlight", scene, parent, new Vector3(x, 0f, RoadZ + 7f), 180f);
 
-            foreach (var corner in new[] { new Vector2(-34f, -13f), new Vector2(34f, -13f), new Vector2(-34f, 25f), new Vector2(34f, 25f) })
-                Place("Old_Lamp", scene, parent, new Vector3(corner.x, 0f, corner.y), 0f);
-
-            // Broken fence around the back and the sides of the lot.
-            string[] fences = { "Wire_fence_Part1", "Wire_fence_Part2", "Wire_fence_Part3" };
-            TileLine(fences, scene, parent, new Vector3(-Lot.width / 2f, 0f, Lot.yMax), Vector3.right, Lot.width);
-            TileLine(fences, scene, parent, new Vector3(Lot.xMin, 0f, Lot.yMin + 10f), Vector3.forward, Lot.height - 10f);
-            TileLine(fences, scene, parent, new Vector3(Lot.xMax, 0f, Lot.yMin + 10f), Vector3.forward, Lot.height - 10f);
-
+            BuildRenovations(scene, parent, shop, accent);
+            BuildConstructionSites(scene, parent, primary, accent);
             ScatterNature(scene, parent);
 
             var painter = root.AddComponent<StationPainter>();
             painter.primary = RenderersOf(primary);
             painter.accent = RenderersOf(accent);
+        }
+
+        /// <summary>
+        /// "Before/after" pairs for the renovations (ids match the RenovationAuthoring points in the SubScene).
+        /// The asset pack has rusty/clean pairs; boards and graffiti are simple primitives.
+        /// </summary>
+        private static void BuildRenovations(Scene scene, Transform parent, GameObject shop, List<GameObject> accent)
+        {
+            var shopBounds = shop != null ? StationEditorUtility.GetBounds(shop) : new Bounds(new Vector3(0f, 2f, 21f), new Vector3(12f, 4f, 7f));
+
+            // 0: boarded-up windows on the shop front (left and right of the door).
+            var (windowsBroken, _) = RenovationPair(scene, parent, (int)RenovationKind.Windows, "Windows");
+            var boards = GetOrCreateMaterial("OldBoards", new Color(0.36f, 0.25f, 0.16f));
+            float front = shopBounds.min.z - 0.06f;
+            foreach (float x in new[] { shopBounds.center.x - 3.5f, shopBounds.center.x + 3.5f })
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    var board = Primitive(scene, windowsBroken.transform, $"Board_{i}", boards,
+                        new Vector3(x, 1.1f + i * 0.35f, front), new Vector3(1.6f, 0.22f, 0.06f));
+                    board.transform.rotation = Quaternion.Euler(0f, 0f, (i - 1) * 8f);
+                }
+            }
+
+            // 1: graffiti on the side walls of the shop.
+            var (graffitiBroken, _) = RenovationPair(scene, parent, (int)RenovationKind.Graffiti, "Graffiti");
+            var paints = new[]
+            {
+                GetOrCreateMaterial("GraffitiPink", new Color(0.9f, 0.2f, 0.6f)),
+                GetOrCreateMaterial("GraffitiGreen", new Color(0.2f, 0.85f, 0.35f)),
+                GetOrCreateMaterial("GraffitiBlue", new Color(0.2f, 0.5f, 0.95f))
+            };
+            for (int i = 0; i < 3; i++)
+            {
+                float z = shopBounds.center.z + (i - 1) * 1.8f;
+                Primitive(scene, graffitiBroken.transform, $"Tag_W{i}", paints[i],
+                    new Vector3(shopBounds.min.x - 0.04f, 1.2f + 0.3f * i, z), new Vector3(0.04f, 0.9f, 1.4f));
+                Primitive(scene, graffitiBroken.transform, $"Tag_E{i}", paints[(i + 1) % 3],
+                    new Vector3(shopBounds.max.x + 0.04f, 1.0f + 0.35f * i, z), new Vector3(0.04f, 0.8f, 1.6f));
+            }
+
+            // 2: the wire fence with holes becomes a clean fence.
+            var (fenceBroken, fenceFixed) = RenovationPair(scene, parent, (int)RenovationKind.Fence, "Fence");
+            string[] wireFences = { "Wire_fence_Part1", "Wire_fence_Part2", "Wire_fence_Part3" };
+            string[] cleanFences = { "Fence_Part1_Clean", "Fence_Part2_Clean", "Fence_Part3_Clean" };
+            FenceAround(wireFences, scene, fenceBroken.transform, gaps: true);
+            FenceAround(cleanFences, scene, fenceFixed.transform, gaps: false);
+
+            // 3: old lamps become new ones.
+            var (lampsBroken, lampsFixed) = RenovationPair(scene, parent, (int)RenovationKind.Lamps, "Lamps");
+            foreach (var corner in new[] { new Vector2(-34f, -13f), new Vector2(34f, -13f), new Vector2(-34f, 25f), new Vector2(34f, 25f) })
+            {
+                var position = new Vector3(corner.x, 0f, corner.y);
+                Place("Old_Lamp", scene, lampsBroken.transform, position, 0f);
+                Place("Lamp", scene, lampsFixed.transform, position, 0f);
+            }
+
+            // 4: rusty vending machine becomes a new one.
+            var (vendingBroken, vendingFixed) = RenovationPair(scene, parent, (int)RenovationKind.VendingMachine, "VendingMachine");
+            Place("Vending_machine_Rusted", scene, vendingBroken.transform, new Vector3(10f, 0f, 19f), 180f);
+            Place("Vending_machine", scene, vendingFixed.transform, new Vector3(10f, 0f, 19f), 180f);
+
+            // 5: a crooked old sign becomes the station sign.
+            var (signBroken, signFixed) = RenovationPair(scene, parent, (int)RenovationKind.Sign, "Sign");
+            var oldSign = Place("Gas_Station_Sign_2", scene, signBroken.transform, new Vector3(-26f, 0f, -15f), 180f);
+            if (oldSign != null)
+                oldSign.transform.rotation = Quaternion.Euler(0f, 180f, 9f);
+            accent.Add(Place("Gas_Station_Sign", scene, signFixed.transform, new Vector3(-26f, 0f, -15f), 180f));
+        }
+
+        /// <summary>Buildings that appear when their upgrade is bought; until then a fenced-off site with cones.</summary>
+        private static void BuildConstructionSites(Scene scene, Transform parent, List<GameObject> primary, List<GameObject> accent)
+        {
+            var (washBuilding, washSite) = ConstructionPair(scene, parent, "CarWash", UpgradeType.CarWash, 1, new Vector3(26f, 0f, 12f));
+            primary.Add(Place("Station_Canopy_2", scene, washBuilding.transform, new Vector3(26f, 0f, 12f), 90f));
+            SiteMarkers(scene, washSite.transform, new Vector3(26f, 0f, 12f), new Vector2(8f, 6f));
+
+            var (tiresBuilding, tiresSite) = ConstructionPair(scene, parent, "TireService", UpgradeType.TireService, 1, new Vector3(30f, 0f, -9f));
+            primary.Add(CreateShed(scene, tiresBuilding.transform, new Vector3(31f, 0f, -9f), new Vector3(6f, 3.2f, 5f)));
+            for (int i = 0; i < 4; i++)
+                Place("wheel", scene, tiresBuilding.transform, new Vector3(31f + 0.9f * i - 1.3f, 0f, -12.5f), 20f * i);
+            SiteMarkers(scene, tiresSite.transform, new Vector3(30f, 0f, -9f), new Vector2(5f, 4f));
+
+            var (motelBuilding, motelSite) = ConstructionPair(scene, parent, "Motel", UpgradeType.Motel, 1, new Vector3(-26f, 0f, 22f));
+            primary.Add(Place("Operator 's_room_2", scene, motelBuilding.transform, new Vector3(-26f, 0f, 22f), 180f));
+            SiteMarkers(scene, motelSite.transform, new Vector3(-26f, 0f, 22f), new Vector2(8f, 4f));
+
+            var (parkingBuilding, parkingSite) = ConstructionPair(scene, parent, "TruckParking", UpgradeType.TruckParking, 1, new Vector3(25f, 0f, 24f));
+            var paint = GetOrCreateMaterial("RoadMarking", new Color(0.95f, 0.95f, 0.9f));
+            for (int i = 0; i <= 4; i++)
+                Primitive(scene, parkingBuilding.transform, $"Line_{i}", paint, new Vector3(13f + i * 6f, 0.03f, 24f), new Vector3(0.15f, 0.02f, 5f));
+            SiteMarkers(scene, parkingSite.transform, new Vector3(25f, 0f, 24f), new Vector2(12f, 2.5f));
+
+            // Pumps 3 and 4 are installed by the ExtraPump upgrade (they still need a repair afterwards).
+            foreach (var (level, z) in new[] { (1, -12f), (2, 12f) })
+            {
+                var (pumpBuilding, pumpSite) = ConstructionPair(scene, parent, $"Pump_{2 + level}", UpgradeType.ExtraPump, level, new Vector3(0f, 0f, z));
+                accent.Add(Place("Petrol_pump_2", scene, pumpBuilding.transform, new Vector3(0f, 0f, z), 90f));
+                SiteMarkers(scene, pumpSite.transform, new Vector3(0f, 0f, z), new Vector2(1.5f, 1.5f));
+            }
+        }
+
+        private static (GameObject broken, GameObject fixedState) RenovationPair(Scene scene, Transform parent, int id, string name)
+        {
+            var root = Create($"Renovation_{id}_{name}", parent, Vector3.zero);
+            var broken = Create("Broken", root.transform, Vector3.zero);
+            var fixedState = Create("Fixed", root.transform, Vector3.zero);
+            var visual = root.AddComponent<RenovationVisual>();
+            visual.id = id;
+            visual.broken = broken;
+            visual.fixedState = fixedState;
+            return (broken, fixedState);
+        }
+
+        private static (GameObject building, GameObject site) ConstructionPair(Scene scene, Transform parent, string name,
+            UpgradeType upgrade, int level, Vector3 position)
+        {
+            var root = Create($"Construction_{name}", parent, Vector3.zero);
+            // The building wrapper sits on the ground so that scaling it grows the building upwards.
+            var building = Create("Building", root.transform, new Vector3(position.x, 0f, position.z));
+            var site = Create("Site", root.transform, Vector3.zero);
+            var construction = root.AddComponent<ConstructionSite>();
+            construction.upgrade = upgrade;
+            construction.requiredLevel = level;
+            construction.building = building;
+            construction.site = site;
+            return (building, site);
+        }
+
+        /// <summary>Cones at the corners and a heap of sand: an empty plot waiting for construction.</summary>
+        private static void SiteMarkers(Scene scene, Transform parent, Vector3 center, Vector2 halfSize)
+        {
+            foreach (var corner in new[] { new Vector2(-1f, -1f), new Vector2(1f, -1f), new Vector2(-1f, 1f), new Vector2(1f, 1f) })
+                Place("Conus", scene, parent, center + new Vector3(corner.x * halfSize.x, 0f, corner.y * halfSize.y), 0f);
+            Place("Sand", scene, parent, center, 30f);
+        }
+
+        /// <summary>Simple open shed from primitives: back wall, two side walls and a roof.</summary>
+        private static GameObject CreateShed(Scene scene, Transform parent, Vector3 center, Vector3 size)
+        {
+            var walls = GetOrCreateMaterial("ShedWalls", new Color(0.72f, 0.68f, 0.6f));
+            var roof = GetOrCreateMaterial("ShedRoof", new Color(0.45f, 0.18f, 0.15f));
+            var shed = Create("Tire_Shed", parent, Vector3.zero);
+            Primitive(scene, shed.transform, "Back", walls, center + new Vector3(size.x / 2f, size.y / 2f, 0f), new Vector3(0.2f, size.y, size.z));
+            Primitive(scene, shed.transform, "Left", walls, center + new Vector3(0f, size.y / 2f, -size.z / 2f), new Vector3(size.x, size.y, 0.2f));
+            Primitive(scene, shed.transform, "Right", walls, center + new Vector3(0f, size.y / 2f, size.z / 2f), new Vector3(size.x, size.y, 0.2f));
+            Primitive(scene, shed.transform, "Roof", roof, center + new Vector3(0f, size.y + 0.1f, 0f), new Vector3(size.x + 0.6f, 0.2f, size.z + 0.6f));
+            return shed;
+        }
+
+        private static GameObject Primitive(Scene scene, Transform parent, string name, Material material, Vector3 position, Vector3 size)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            SceneManager.MoveGameObjectToScene(go, scene);
+            go.transform.SetParent(parent, true);
+            go.transform.position = position;
+            go.transform.localScale = size;
+            Object.DestroyImmediate(go.GetComponent<Collider>());
+            go.GetComponent<Renderer>().sharedMaterial = material;
+            return go;
+        }
+
+        private static void FenceAround(string[] prefabs, Scene scene, Transform parent, bool gaps)
+        {
+            TileLine(prefabs, scene, parent, new Vector3(-Lot.width / 2f, 0f, Lot.yMax), Vector3.right, Lot.width, gaps);
+            TileLine(prefabs, scene, parent, new Vector3(Lot.xMin, 0f, Lot.yMin + 10f), Vector3.forward, Lot.height - 10f, gaps);
+            TileLine(prefabs, scene, parent, new Vector3(Lot.xMax, 0f, Lot.yMin + 10f), Vector3.forward, Lot.height - 10f, gaps);
         }
 
         private static void CreateGround(Scene scene, Transform parent)
@@ -281,6 +430,15 @@ namespace GasStation.Editor
 
             CreatePlayer(parent, new Vector3(-6f, 0f, -10f));
 
+            // Renovation points: stand here and press E. Ids match the RenovationVisual pairs in the main scene.
+            var renovations = Create("Renovations", parent, Vector3.zero);
+            AddRenovation(renovations.transform, RenovationKind.Windows, new Vector3(-3.5f, 0f, 16.5f));
+            AddRenovation(renovations.transform, RenovationKind.Graffiti, new Vector3(-8.5f, 0f, 20f));
+            AddRenovation(renovations.transform, RenovationKind.Fence, new Vector3(0f, 0f, 25f));
+            AddRenovation(renovations.transform, RenovationKind.Lamps, new Vector3(-31f, 0f, -11f));
+            AddRenovation(renovations.transform, RenovationKind.VendingMachine, new Vector3(10f, 0f, 16.5f));
+            AddRenovation(renovations.transform, RenovationKind.Sign, new Vector3(-26f, 0f, -12.5f));
+
             var shop = Create("Shop_Door", parent, new Vector3(0f, 0f, 17.5f));
             shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
 
@@ -347,6 +505,14 @@ namespace GasStation.Editor
             };
             StationEditorUtility.ScatterTrash(scene, trash.transform, new Vector3(Lot.center.x, 0f, Lot.center.y),
                 new Vector2(Lot.width / 2f - 2f, Lot.height / 2f - 2f), 45, 1234, keepOut);
+        }
+
+        private static void AddRenovation(Transform parent, RenovationKind kind, Vector3 position)
+        {
+            var point = Create($"Renovation_{kind}", parent, position);
+            var renovation = point.AddComponent<RenovationAuthoring>();
+            renovation.id = (int)kind;
+            renovation.kind = kind;
         }
 
         private static void CreatePlayer(Transform parent, Vector3 position)
@@ -417,7 +583,8 @@ namespace GasStation.Editor
             }
         }
 
-        private static void TileLine(string[] prefabNames, Scene scene, Transform parent, Vector3 start, Vector3 direction, float totalLength)
+        private static void TileLine(string[] prefabNames, Scene scene, Transform parent, Vector3 start, Vector3 direction, float totalLength,
+            bool gaps = true)
         {
             var prefabs = new List<GameObject>();
             foreach (var name in prefabNames)
@@ -440,7 +607,7 @@ namespace GasStation.Editor
             for (float travelled = length / 2f; travelled < totalLength; travelled += length, index++)
             {
                 // Leave gaps: the fence of an abandoned station is broken.
-                if (index % 4 == 3)
+                if (gaps && index % 4 == 3)
                     continue;
 
                 StationEditorUtility.Place(prefabs[index % prefabs.Count], scene, parent, start + direction * travelled, yaw);

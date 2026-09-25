@@ -121,7 +121,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 9;
+        public const int CurrentVersion = 10;
 
         public int version = CurrentVersion;
         public int day;
@@ -168,6 +168,9 @@ namespace GasStation.Save
         // Version 9. Older saves start with empty statistics and no achievements.
         public StatsSaveData stats;
         public long achievements;
+
+        // Version 10. Null in older saves: renovations stay as in the scene.
+        public int[] renovationsDone;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

@@ -22,7 +22,8 @@ namespace GasStation.Logic
         PerfectDay,
         Tycoon,
         Spotless,
-        FullStaff
+        FullStaff,
+        FullyRenovated
     }
 
     /// <summary>Everything an achievement can look at.</summary>
@@ -33,11 +34,13 @@ namespace GasStation.Logic
         public float Money;
         public float Cleanliness;
         public int Headcount;
+        public int RenovationsDone;
+        public int RenovationsTotal;
     }
 
     public static class AchievementCatalog
     {
-        public const int Count = 18;
+        public const int Count = 19;
 
         /// <summary>Current value and target of an achievement.</summary>
         public static float2 Progress(AchievementId id, in AchievementContext c) => id switch
@@ -60,6 +63,8 @@ namespace GasStation.Logic
             AchievementId.Tycoon => new float2(c.Money, 50000),
             AchievementId.Spotless => new float2(math.floor(c.Cleanliness * 100f), 100),
             AchievementId.FullStaff => new float2(c.Headcount, StaffMath.MaxStaff),
+            // Without renovations in the scene there is nothing to finish.
+            AchievementId.FullyRenovated => new float2(c.RenovationsDone, c.RenovationsTotal > 0 ? c.RenovationsTotal : int.MaxValue),
             _ => new float2(0, 1)
         };
 

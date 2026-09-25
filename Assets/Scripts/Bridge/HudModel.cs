@@ -16,7 +16,8 @@ namespace GasStation.Bridge
         Repair,
         Restroom,
         Tires,
-        MotelRoom
+        MotelRoom,
+        Renovate
     }
 
     public struct PumpInfo
@@ -83,6 +84,13 @@ namespace GasStation.Bridge
         public static int MotelOpen;
         public static int MotelUsed;
         public static int MotelDirty;
+
+        /// <summary>Bit i set = renovation with Id i is done.</summary>
+        public static ulong RenovationsDone;
+        public static int RenovationsTotal;
+        public static RenovationKind NearRenovationKind;
+
+        public static bool IsRenovated(int id) => id >= 0 && id < 64 && (RenovationsDone & (1UL << id)) != 0;
 
         public static StationStats Stats;
         public static Achievements Achievements;

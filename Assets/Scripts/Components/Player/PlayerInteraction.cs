@@ -7,5 +7,6 @@ namespace GasStation.Components
         public bool InteractPressed;
         public Entity NearbyPump;
         public Entity NearbyTrash;
+        public Entity NearbyRenovation;
     }
 }

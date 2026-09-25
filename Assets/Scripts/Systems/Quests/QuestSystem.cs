@@ -13,8 +13,11 @@ namespace GasStation.Systems
     [UpdateInGroup(typeof(StationSystemGroup), OrderLast = true)]
     public partial class QuestSystem : SystemBase
     {
+        private EntityQuery _renovations;
+
         protected override void OnCreate()
         {
+            _renovations = GetEntityQuery(ComponentType.ReadOnly<Renovation>());
             RequireForUpdate<QuestProgress>();
             RequireForUpdate<Economy>();
             RequireForUpdate<StationCleanliness>();
@@ -27,6 +30,14 @@ namespace GasStation.Systems
             var station = SystemAPI.GetSingletonEntity<QuestProgress>();
             var progress = SystemAPI.GetComponent<QuestProgress>(station);
             var quest = QuestCatalog.Get(progress.Index);
+
+            // Scenes without renovation points (e.g. set up with the station menu) skip renovation quests.
+            while (quest.Goal == QuestGoal.Renovate && _renovations.IsEmpty)
+            {
+                progress.Index++;
+                progress.Counter = 0f;
+                quest = QuestCatalog.Get(progress.Index);
+            }
 
             var events = SystemAPI.GetBuffer<StationEvent>(station);
             for (int i = 0; i < events.Length; i++)
@@ -81,6 +92,7 @@ namespace GasStation.Systems
             QuestGoal.ChangeTires => type == StationEventType.TiresChanged,
             QuestGoal.HireWorker => type == StationEventType.WorkerHired,
             QuestGoal.HostGuests => type == StationEventType.MotelPaid,
+            QuestGoal.Renovate => type == StationEventType.RenovationDone,
             _ => false
         };
     }

@@ -316,6 +316,21 @@ namespace GasStation.Localization
             { "meter.experience", new[] { "Опыт", "Experience" } },
 
             // Menus and settings
+            // Renovation and construction
+            { "renovation.Windows", new[] { "заколоченные окна", "boarded-up windows" } },
+            { "renovation.Graffiti", new[] { "граффити на стенах", "graffiti on the walls" } },
+            { "renovation.Fence", new[] { "дырявый забор", "broken fence" } },
+            { "renovation.Lamps", new[] { "старые фонари", "old lamps" } },
+            { "renovation.VendingMachine", new[] { "ржавый автомат с напитками", "rusty vending machine" } },
+            { "renovation.Sign", new[] { "покосившаяся вывеска", "crooked sign" } },
+            { "hint.Renovate", new[] { "[E / ЛКМ] Отремонтировать: {0} (${1:0}, уровень {2})", "[E / LMB] Renovate: {0} (${1:0}, level {2})" } },
+            { "msg.renovated", new[] { "Отремонтировано: {0}. Станция выглядит лучше!", "Renovated: {0}. The station looks better!" } },
+            { "msg.renovationNeedsLevel", new[] { "Для этого ремонта нужен уровень станции {0:0}", "This renovation needs station level {0:0}" } },
+            { "quest.title.22", new[] { "Первый ремонт", "First repairs" } },
+            { "quest.title.23", new[] { "Новая жизнь", "A new life" } },
+            { "quest.goal.Renovate", new[] { "Отремонтируй станцию (E у разбитых окон, забора, вывески…): {0}/{1:0}", "Renovate the station (E at broken windows, fence, sign…): {0}/{1:0}" } },
+            { "achievement.FullyRenovated.name", new[] { "Как новая", "Good as new" } },
+            { "achievement.FullyRenovated.desc", new[] { "Отремонтируй на станции всё", "Renovate everything at the station" } },
             { "hud.speed", new[] { "   ×{0}", "   ×{0}" } },
             { "menu.title", new[] { "GAS STATION", "GAS STATION" } },
             { "menu.subtitle", new[] { "Симулятор заправки у трассы", "Roadside gas station simulator" } },
