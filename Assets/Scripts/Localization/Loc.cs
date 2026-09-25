@@ -22,6 +22,12 @@ namespace GasStation.Localization
 
         private static GameLanguage? _fallbackLanguage;
 
+        // The HUD asks for hundreds of strings every frame; table lookups are cached per language.
+        private static readonly System.Collections.Generic.Dictionary<string, string>[] Cache =
+        {
+            new(), new()
+        };
+
         public static GameLanguage Language
         {
             get
@@ -39,13 +45,26 @@ namespace GasStation.Localization
 
         public static string T(string key)
         {
+            var language = Language;
+            var cache = Cache[(int)language];
+            if (cache.TryGetValue(key, out var cached))
+                return cached;
+
             if (TryGetFromTable(key, out var value))
+            {
+                cache[key] = value;
                 return value;
+            }
 
-            if (LocTable.Entries.TryGetValue(key, out var entry))
-                return entry[(int)Language];
+            // Not cached: the table may still be loading, it will be asked again next time.
+            return LocTable.Entries.TryGetValue(key, out var entry) ? entry[(int)language] : key;
+        }
 
-            return key;
+        /// <summary>Forget cached strings, e.g. after the translations were edited.</summary>
+        public static void ClearCache()
+        {
+            foreach (var cache in Cache)
+                cache.Clear();
         }
 
         public static string F(string key, params object[] args)
@@ -88,6 +107,7 @@ namespace GasStation.Localization
         private static void RestoreLanguage()
         {
             _fallbackLanguage = null;
+            ClearCache();
             if (PlayerPrefs.HasKey(PrefsKey))
                 SetLanguage((GameLanguage)PlayerPrefs.GetInt(PrefsKey));
         }

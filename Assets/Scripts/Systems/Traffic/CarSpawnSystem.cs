@@ -17,8 +17,6 @@ namespace GasStation.Systems
     [UpdateAfter(typeof(FuelDeliverySystem))]
     public partial struct CarSpawnSystem : ISystem
     {
-        private EntityQuery _cars;
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -27,7 +25,6 @@ namespace GasStation.Systems
             state.RequireForUpdate<Economy>();
             state.RequireForUpdate<FuelStock>();
             state.RequireForUpdate<StationUpgrades>();
-            _cars = SystemAPI.QueryBuilder().WithAll<Car>().Build();
         }
 
         [BurstCompile]
@@ -67,7 +64,7 @@ namespace GasStation.Systems
                 return;
 
             spawner.Timer = spawner.BaseInterval * spawner.Random.NextFloat(0.6f, 1.4f);
-            if (_cars.CalculateEntityCount() >= spawner.MaxCars)
+            if (ActiveCars(ref state) >= spawner.MaxCars)
                 return;
 
             var customer = CustomerProfiles.Pick(spawner.Random.NextFloat(), stationLevel, hour, worldEvent == WorldEventKind.RushHour);
@@ -113,6 +110,19 @@ namespace GasStation.Systems
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
+        }
+
+        /// <summary>Cars on the station, not counting guests sleeping at the motel or on the truck parking.</summary>
+        private int ActiveCars(ref SystemState state)
+        {
+            int count = 0;
+            foreach (var car in SystemAPI.Query<RefRO<Car>>())
+            {
+                if (car.ValueRO.State is not (CarState.Parked or CarState.InMotel or CarState.DrivingToParking or CarState.DrivingToMotel))
+                    count++;
+            }
+
+            return count;
         }
 
         private float CleanlinessFactor(ref SystemState state) =>
