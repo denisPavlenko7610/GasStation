@@ -83,6 +83,8 @@ namespace GasStation.Components
         public int ContractId;
         /// <summary>Which state the license plate is from (PlateMath).</summary>
         public byte Plate;
+        /// <summary>The player started this fueling by hand — fuel flows only while they hold E.</summary>
+        public bool PlayerPumping;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

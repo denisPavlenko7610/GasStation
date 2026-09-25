@@ -323,6 +323,8 @@ namespace GasStation.Systems
                         return;
                     var car = SystemAPI.GetComponentRW<Car>(agent.Target);
                     car.ValueRW.State = CarState.Fueling;
+                    // The attendant pumps without the player, so hold-to-pump does not apply.
+                    car.ValueRW.PlayerPumping = false;
                     StationEvent.Push(events, StationEventType.FuelingStarted, car.ValueRO.FuelType);
                     // A chatty attendant makes the customer's day.
                     if (worker.Trait == StaffTrait.Chatty && SystemAPI.HasSingleton<Economy>())

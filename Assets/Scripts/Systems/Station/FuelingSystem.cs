@@ -38,6 +38,7 @@ namespace GasStation.Systems
             var exitRoute = SystemAPI.GetBuffer<ExitRoutePoint>(SystemAPI.GetSingletonEntity<CarSpawner>());
             float catchRadius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
             float3 playerPosition = PlayerPosition(ref state, out bool hasPlayer);
+            bool playerHoldsInteract = PlayerHoldsInteract(ref state);
             bool hasShop = SystemAPI.HasSingleton<Shop>();
             float cleanliness = SystemAPI.HasSingleton<StationCleanliness>() ? SystemAPI.GetSingleton<StationCleanliness>().Value : 1f;
             int skills = (SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0);
@@ -63,8 +64,13 @@ namespace GasStation.Systems
                 int fuelIndex = (int)car.ValueRO.FuelType;
                 var fuel = stock[fuelIndex];
 
+                // Hold-to-pump: a car the player started only dispenses while the player keeps holding
+                // interact next to that pump. Staff-pumped cars always flow.
+                bool playerPaused = car.ValueRO.PlayerPumping &&
+                                    (!PlayerNearPump(ref state, pumpEntity, playerPosition, hasPlayer, catchRadius) || !playerHoldsInteract);
+
                 float remaining = car.ValueRO.RequestedLiters - car.ValueRO.ReceivedLiters;
-                float amount = pump.ValueRO.IsBroken
+                float amount = pump.ValueRO.IsBroken || playerPaused
                     ? 0f
                     : StationMath.Dispense(pump.ValueRO.FlowRate * flowMultiplier * deltaTime, remaining, fuel.Amount);
                 bool hadFuel = fuel.Amount > 0f;
@@ -200,6 +206,22 @@ namespace GasStation.Systems
             }
 
             return position;
+        }
+
+        private bool PlayerNearPump(ref SystemState state, Entity pumpEntity, float3 playerPosition, bool hasPlayer, float radius)
+        {
+            if (!hasPlayer || pumpEntity == Entity.Null || !SystemAPI.Exists(pumpEntity))
+                return false;
+
+            var interactionPoint = SystemAPI.GetComponent<Pump>(pumpEntity).InteractionPoint;
+            return math.distancesq(interactionPoint.xz, playerPosition.xz) <= radius * radius;
+        }
+
+        private bool PlayerHoldsInteract(ref SystemState state)
+        {
+            foreach (var interaction in SystemAPI.Query<RefRO<PlayerInteraction>>().WithAll<PlayerTag>())
+                return interaction.ValueRO.InteractHeld;
+            return false;
         }
     }
 }

@@ -33,6 +33,8 @@ namespace GasStation.Systems
             Vector2 move = menuOpen ? Vector2.zero : _inputAction.Player.Move.ReadValue<Vector2>();
             bool interact = !menuOpen && (_inputAction.Player.Fire.WasPressedThisFrame()
                                           || (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame));
+            bool interactHeld = !menuOpen && (_inputAction.Player.Fire.IsPressed()
+                                              || (Keyboard.current != null && Keyboard.current.eKey.isPressed));
 
             foreach (var (moveInput, interaction) in SystemAPI
                          .Query<RefRW<MoveInput>, RefRW<PlayerInteraction>>()
@@ -40,6 +42,7 @@ namespace GasStation.Systems
             {
                 moveInput.ValueRW.Value = new float3(move.x, 0f, move.y);
                 interaction.ValueRW.InteractPressed = interact;
+                interaction.ValueRW.InteractHeld = interactHeld;
             }
         }
     }

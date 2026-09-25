@@ -53,6 +53,7 @@ namespace GasStation.Systems
                     continue;
 
                 car.ValueRW.State = CarState.Fueling;
+                car.ValueRW.PlayerPumping = true;
                 interaction.ValueRW.InteractPressed = false;
                 StationEvent.Push(SystemAPI.GetSingletonBuffer<StationEvent>(), StationEventType.FuelingStarted, car.ValueRO.FuelType);
             }
