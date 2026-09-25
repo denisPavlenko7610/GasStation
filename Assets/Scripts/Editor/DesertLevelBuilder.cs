@@ -99,6 +99,7 @@ namespace GasStation.Editor
             // Car wash bay, opened by the CarWash upgrade.
             Place("Station_Canopy_2", scene, parent, new Vector3(26f, 0f, 12f), 90f);
             Place("Air_conditioning", scene, parent, new Vector3(-6f, 0f, 24f), 180f);
+            CreateRestroomHut(scene, parent, new Vector3(11f, 0f, 21f));
             Place("Hydrant", scene, parent, new Vector3(-34f, 0f, -13f), 0f);
             Place("Gas_Station_Sign", scene, parent, new Vector3(-26f, 0f, -15f), 180f);
             Place("Warning_sign_1", scene, parent, new Vector3(-16f, 0f, -9f), 180f);
@@ -148,6 +149,17 @@ namespace GasStation.Editor
             driveway.name = "Driveway";
             driveway.transform.localPosition = new Vector3(0f, 0.01f, (RoadZ + Lot.yMin) / 2f);
             driveway.transform.localScale = new Vector3(Lot.width + 10f, 0.02f, Lot.yMin - RoadZ);
+        }
+
+        private static void CreateRestroomHut(Scene scene, Transform parent, Vector3 position)
+        {
+            var hut = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            hut.name = "Restroom_Hut";
+            SceneManager.MoveGameObjectToScene(hut, scene);
+            hut.transform.SetParent(parent, false);
+            hut.transform.localPosition = position + new Vector3(1.5f, 1.25f, 0f);
+            hut.transform.localScale = new Vector3(3f, 2.5f, 3f);
+            hut.GetComponent<Renderer>().sharedMaterial = GetOrCreateMaterial("RestroomWalls", new Color(0.75f, 0.78f, 0.8f));
         }
 
         private static void ScatterNature(Scene scene, Transform parent)
@@ -242,6 +254,21 @@ namespace GasStation.Editor
             var shop = Create("Shop_Door", parent, new Vector3(0f, 0f, 17.5f));
             shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
 
+            // Restroom on the right side of the shop; the hut is a placeholder until a real model is added.
+            Create("Restroom_Door", parent, new Vector3(9f, 0f, 21f)).AddComponent<RestroomAuthoring>();
+
+            // Four truck spots behind the wash, opened two at a time by the TruckParking upgrade.
+            var parking = Create("TruckParking", parent, new Vector3(16f, 0f, 18f));
+            var parkingAuthoring = parking.AddComponent<TruckParkingAuthoring>();
+            parkingAuthoring.entry = parking.transform;
+            parkingAuthoring.spots = new Transform[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var spot = Create($"Spot_{i + 1}", parent, new Vector3(16f + i * 6f, 0f, 24f));
+                spot.transform.rotation = Quaternion.LookRotation(Vector3.right);
+                parkingAuthoring.spots[i] = spot.transform;
+            }
+
             var wash = Create("CarWash_Bay", parent, new Vector3(26f, 0f, 12f));
             wash.transform.rotation = Quaternion.LookRotation(Vector3.right);
             var washAuthoring = wash.AddComponent<CarWashAuthoring>();
@@ -264,7 +291,8 @@ namespace GasStation.Editor
             {
                 new(-3f, -14f, 6f, 28f),   // pump island
                 new(-4f, 15f, 8f, 5f),     // shop door
-                new(8f, 4f, 30f, 12f)      // wash lane
+                new(8f, 4f, 30f, 12f),     // wash lane
+                new(10f, 17f, 26f, 10f)    // truck parking and restroom
             };
             StationEditorUtility.ScatterTrash(scene, trash.transform, new Vector3(Lot.center.x, 0f, Lot.center.y),
                 new Vector2(Lot.width / 2f - 2f, Lot.height / 2f - 2f), 45, 1234, keepOut);

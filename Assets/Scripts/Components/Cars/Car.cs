@@ -24,8 +24,11 @@ namespace GasStation.Components
         Shopping,
         DrivingToWash,
         Washing,
-        /// <summary>Done at the pump (and the shop); CarWashSystem frees the pump and picks the way out.</summary>
-        ReadyToLeave
+        /// <summary>Done at the pump (and the shop); ParkingSystem / CarWashSystem free the pump and pick the way out.</summary>
+        ReadyToLeave,
+        DrivingToParking,
+        /// <summary>A trucker sleeping on the parking lot until morning.</summary>
+        Parked
     }
 
     public struct Car : IComponentData
@@ -45,6 +48,9 @@ namespace GasStation.Components
         public bool DriverAway;
         /// <summary>Generic countdown: shopping without a pedestrian, washing.</summary>
         public float Timer;
+        public int ParkingSpot;
+        /// <summary>Game hour at which a parked trucker leaves.</summary>
+        public float ParkUntilHour;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

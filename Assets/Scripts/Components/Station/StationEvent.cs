@@ -31,7 +31,13 @@ namespace GasStation.Components
         ShopEmpty,
         ProductsOrdered,
         ProductsDelivered,
-        CarWashed
+        CarWashed,
+        TruckParked,
+        ParkingPaid,
+        RestroomUsed,
+        RestroomDisgusting,
+        RestroomCleaned,
+        AutoOrder
     }
 
     /// <summary>

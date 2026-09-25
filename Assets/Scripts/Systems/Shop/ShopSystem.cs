@@ -69,6 +69,7 @@ namespace GasStation.Systems
                     continue;
 
                 Purchase(ref shop, shelves, ref economy, events, car.ValueRO.Customer);
+                UseRestroom(ref state, ref shop, ref economy, events);
                 car.ValueRW.DriverAway = false;
                 car.ValueRW.State = CarState.ReadyToLeave;
             }
@@ -98,6 +99,7 @@ namespace GasStation.Systems
                             break;
 
                         Purchase(ref shop, shelves, ref economy, events, SystemAPI.GetComponent<Car>(carEntity).Customer);
+                        UseRestroom(ref state, ref shop, ref economy, events);
                         pedestrian.ValueRW.State = PedestrianState.ToCar;
                         path.Add(new PathPoint { Position = DoorOfCar(SystemAPI.GetComponent<LocalTransform>(carEntity)) });
                         break;
@@ -116,6 +118,25 @@ namespace GasStation.Systems
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
+        }
+
+        /// <summary>Some shop visitors also use the restroom; a disgusting one costs reputation.</summary>
+        private void UseRestroom(ref SystemState state, ref Shop shop, ref Economy economy, DynamicBuffer<StationEvent> events)
+        {
+            if (!SystemAPI.HasSingleton<Restroom>())
+                return;
+
+            ref var restroom = ref SystemAPI.GetSingletonRW<Restroom>().ValueRW;
+            if (shop.Random.NextFloat() >= restroom.VisitChance)
+                return;
+
+            restroom.Dirt = math.min(1f, restroom.Dirt + restroom.DirtPerVisit);
+            StationEvent.Push(events, StationEventType.RestroomUsed);
+            if (restroom.Dirt >= FacilityMath.RestroomDisgustingDirt)
+            {
+                economy.Reputation = StationMath.ClampReputation(economy.Reputation - EmptyShopPenalty);
+                StationEvent.Push(events, StationEventType.RestroomDisgusting);
+            }
         }
 
         private static void SpawnDriver(EntityCommandBuffer ecb, Shop shop, Entity car, LocalTransform carTransform)

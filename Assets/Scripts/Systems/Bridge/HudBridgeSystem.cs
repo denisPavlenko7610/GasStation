@@ -32,6 +32,7 @@ namespace GasStation.Systems
             DrainEvents();
             CopyShop();
             CopyWash();
+            CopyFacilities();
             CopyFuel();
             CopyCars();
             CopyPumps();
@@ -97,6 +98,15 @@ namespace GasStation.Systems
                     case StationEventType.ShopEmpty:
                         HudModel.Notify("Покупатель ушёл из магазина ни с чем — закажите товар (M)");
                         break;
+                    case StationEventType.RestroomDisgusting:
+                        HudModel.Notify("Клиент в ужасе от туалета! Уберите его (E у двери)");
+                        break;
+                    case StationEventType.TruckParked:
+                        HudModel.Notify("Дальнобойщик встал на ночёвку");
+                        break;
+                    case StationEventType.ParkingPaid:
+                        HudModel.Notify($"Дальнобойщик заплатил за ночь: ${stationEvent.Value:0}");
+                        break;
                     case StationEventType.ProductsDelivered:
                         HudModel.Notify($"В магазин привезли товар: {stationEvent.Value:0} шт.");
                         break;
@@ -159,6 +169,28 @@ namespace GasStation.Systems
             HudModel.WashTimeLeft = car.State == CarState.Washing ? car.Timer : 0f;
         }
 
+        private void CopyFacilities()
+        {
+            HudModel.HasParking = SystemAPI.HasSingleton<TruckParking>();
+            if (HudModel.HasParking)
+            {
+                var spots = SystemAPI.GetBuffer<ParkingSpot>(SystemAPI.GetSingletonEntity<TruckParking>());
+                HudModel.ParkingTotal = spots.Length;
+                HudModel.ParkingOpen = FacilityMath.OpenSpots(HudModel.Upgrades.TruckParking, spots.Length);
+                int used = 0;
+                for (int i = 0; i < spots.Length; i++)
+                {
+                    if (spots[i].Occupant != Entity.Null && SystemAPI.Exists(spots[i].Occupant))
+                        used++;
+                }
+
+                HudModel.ParkingUsed = used;
+            }
+
+            HudModel.HasRestroom = SystemAPI.HasSingleton<Restroom>();
+            HudModel.RestroomDirt = HudModel.HasRestroom ? SystemAPI.GetSingleton<Restroom>().Dirt : 0f;
+        }
+
         private void CopyFuel()
         {
             var stock = SystemAPI.GetSingletonBuffer<FuelStock>(true);
@@ -214,10 +246,35 @@ namespace GasStation.Systems
                     HudModel.Hint = InteractionHint.Repair;
 
                 bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling or InteractionHint.Repair;
+                if (!fuelingAction && NearDirtyRestroom())
+                {
+                    HudModel.Hint = InteractionHint.Restroom;
+                    fuelingAction = true;
+                }
+
                 var trash = interaction.ValueRO.NearbyTrash;
                 if (!fuelingAction && trash != Entity.Null && SystemAPI.Exists(trash))
                     HudModel.Hint = InteractionHint.Trash;
             }
+        }
+
+        private bool NearDirtyRestroom()
+        {
+            if (!SystemAPI.HasSingleton<Restroom>() || !SystemAPI.HasSingleton<StationSettings>())
+                return false;
+
+            var restroom = SystemAPI.GetSingleton<Restroom>();
+            if (restroom.Dirt <= FacilityMath.RestroomCleanThreshold)
+                return false;
+
+            float radius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
+            foreach (var transform in SystemAPI.Query<RefRO<Unity.Transforms.LocalTransform>>().WithAll<PlayerTag>())
+            {
+                if (Unity.Mathematics.math.distancesq(transform.ValueRO.Position.xz, restroom.Door.xz) <= radius * radius)
+                    return true;
+            }
+
+            return false;
         }
 
         private PumpInfo Describe(Pump pump)

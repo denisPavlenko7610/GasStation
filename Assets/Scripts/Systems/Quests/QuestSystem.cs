@@ -74,6 +74,8 @@ namespace GasStation.Systems
             QuestGoal.RepairPump => type == StationEventType.PumpRepaired,
             QuestGoal.CatchThief => type == StationEventType.ThiefCaught,
             QuestGoal.SellProducts => type == StationEventType.ShopSale,
+            QuestGoal.CleanRestroom => type == StationEventType.RestroomCleaned,
+            QuestGoal.HostTruckers => type == StationEventType.ParkingPaid,
             _ => false
         };
     }

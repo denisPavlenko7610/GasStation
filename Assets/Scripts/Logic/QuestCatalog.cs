@@ -29,7 +29,11 @@ namespace GasStation.Logic
         /// <summary>Counter: products sold in the shop.</summary>
         SellProducts,
         /// <summary>State: CarWash upgrade level.</summary>
-        OpenCarWash
+        OpenCarWash,
+        /// <summary>Counter: restroom cleanings.</summary>
+        CleanRestroom,
+        /// <summary>Counter: nights paid by parked truckers.</summary>
+        HostTruckers
     }
 
     public struct QuestDefinition
@@ -43,7 +47,7 @@ namespace GasStation.Logic
 
         public bool IsCounter => Goal is QuestGoal.CollectTrash or QuestGoal.ServeCustomers
             or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief
-            or QuestGoal.SellProducts;
+            or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers;
     }
 
     /// <summary>
@@ -60,6 +64,7 @@ namespace GasStation.Logic
             Quest(11, QuestGoal.RepairPump, 1f, 150f),
             Quest(1, QuestGoal.ServeCustomers, 3f, 150f),
             Quest(14, QuestGoal.SellProducts, 5f, 150f),
+            Quest(16, QuestGoal.CleanRestroom, 1f, 100f),
             Quest(2, QuestGoal.Cleanliness, 80f, 0f, 0.05f),
             Quest(3, QuestGoal.OrderFuel, 1f, 100f),
             Quest(4, QuestGoal.BuyUpgrade, 1f, 250f),
@@ -70,6 +75,7 @@ namespace GasStation.Logic
             Quest(12, QuestGoal.StationLevel, 4f, 600f),
             Quest(9, QuestGoal.OpenPumps, 1f, 1000f),
             Quest(15, QuestGoal.OpenCarWash, 1f, 800f),
+            Quest(17, QuestGoal.HostTruckers, 3f, 600f),
             Quest(13, QuestGoal.CatchThief, 1f, 500f, 0.05f),
             Quest(10, QuestGoal.Cleanliness, 100f, 500f, 0.05f),
         };

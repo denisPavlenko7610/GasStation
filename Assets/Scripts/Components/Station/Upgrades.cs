@@ -12,12 +12,14 @@ namespace GasStation.Components
         ExtraPump = 5,
         Janitor = 6,
         Mechanic = 7,
-        CarWash = 8
+        CarWash = 8,
+        SupplyManager = 9,
+        TruckParking = 10
     }
 
     public static class UpgradeTypes
     {
-        public const int Count = 9;
+        public const int Count = 11;
     }
 
     public struct StationUpgrades : IComponentData
@@ -31,6 +33,8 @@ namespace GasStation.Components
         public int Janitor;
         public int Mechanic;
         public int CarWash;
+        public int SupplyManager;
+        public int TruckParking;
 
         public int Get(UpgradeType type) => type switch
         {
@@ -43,6 +47,8 @@ namespace GasStation.Components
             UpgradeType.Janitor => Janitor,
             UpgradeType.Mechanic => Mechanic,
             UpgradeType.CarWash => CarWash,
+            UpgradeType.SupplyManager => SupplyManager,
+            UpgradeType.TruckParking => TruckParking,
             _ => 0
         };
 
@@ -59,6 +65,8 @@ namespace GasStation.Components
                 case UpgradeType.Janitor: Janitor = level; break;
                 case UpgradeType.Mechanic: Mechanic = level; break;
                 case UpgradeType.CarWash: CarWash = level; break;
+                case UpgradeType.SupplyManager: SupplyManager = level; break;
+                case UpgradeType.TruckParking: TruckParking = level; break;
             }
         }
     }

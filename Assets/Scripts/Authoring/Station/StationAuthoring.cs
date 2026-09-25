@@ -74,6 +74,7 @@ namespace GasStation.Authoring
             AddComponent(entity, new StationCleanliness { Value = 1f });
             AddComponent(entity, new QuestProgress());
             AddComponent(entity, new StationLevel { Level = 1 });
+            AddComponent(entity, new SupplyManagerState());
             AddComponent(entity, new WorldEvents
             {
                 Active = WorldEventKind.None,

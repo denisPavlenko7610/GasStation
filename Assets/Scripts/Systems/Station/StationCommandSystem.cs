@@ -221,6 +221,9 @@ namespace GasStation.Systems
                 case UpgradeType.Mechanic:
                     economy.ValueRW.DailyFixedCosts += ProgressMath.MechanicSalaryPerLevel;
                     break;
+                case UpgradeType.SupplyManager:
+                    economy.ValueRW.DailyFixedCosts += FacilityMath.SupplyManagerSalaryPerLevel;
+                    break;
             }
 
             HudModel.Notify($"Куплено: {GameTexts.UpgradeName(type)}, уровень {level + 1}");

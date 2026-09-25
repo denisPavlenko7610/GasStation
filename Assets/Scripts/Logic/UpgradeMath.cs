@@ -9,7 +9,8 @@ namespace GasStation.Logic
         public const float AttendantSalaryPerLevel = 80f;
         public const float JanitorSalaryPerLevel = 60f;
 
-        public static int MaxLevel(UpgradeType type) => type == UpgradeType.ExtraPump ? 2 : 3;
+        public static int MaxLevel(UpgradeType type) =>
+            type is UpgradeType.ExtraPump or UpgradeType.TruckParking ? 2 : 3;
 
         /// <summary>Condition a mechanic restores per second on each worn pump.</summary>
         public static float MechanicRepairPerSecond(int level) => 0.01f * level;
@@ -25,6 +26,8 @@ namespace GasStation.Logic
             UpgradeType.Janitor => 600f,
             UpgradeType.Mechanic => 900f,
             UpgradeType.CarWash => 1200f,
+            UpgradeType.SupplyManager => 700f,
+            UpgradeType.TruckParking => 900f,
             _ => 1000f
         };
 

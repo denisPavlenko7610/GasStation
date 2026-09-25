@@ -13,7 +13,8 @@ namespace GasStation.Bridge
         CanStartFueling,
         Fueling,
         Trash,
-        Repair
+        Repair,
+        Restroom
     }
 
     public struct PumpInfo
@@ -61,6 +62,14 @@ namespace GasStation.Bridge
         public static bool HasWash;
         public static bool WashBusy;
         public static float WashTimeLeft;
+
+        public static bool HasParking;
+        public static int ParkingOpen;
+        public static int ParkingTotal;
+        public static int ParkingUsed;
+
+        public static bool HasRestroom;
+        public static float RestroomDirt;
         public static WorldEvents World;
 
         public static int QueueLength;

@@ -86,6 +86,9 @@ namespace GasStation.Mono
             StationEventType.CarWashed => cashClip,
             StationEventType.ShopEmpty => angryClip,
             StationEventType.ProductsDelivered => deliveryClip,
+            StationEventType.ParkingPaid => cashClip,
+            StationEventType.RestroomCleaned => trashClip,
+            StationEventType.RestroomDisgusting => angryClip,
             _ => null
         };
 

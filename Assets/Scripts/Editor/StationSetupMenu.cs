@@ -51,6 +51,19 @@ namespace GasStation.Editor
             var shop = Create("Shop_Door", root.transform, new Vector3(0f, 0f, 15f));
             shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
 
+            Create("Restroom_Door", root.transform, new Vector3(6f, 0f, 15f)).AddComponent<RestroomAuthoring>();
+
+            var parking = Create("TruckParking", root.transform, new Vector3(20f, 0f, 20f));
+            var parkingAuthoring = parking.AddComponent<TruckParkingAuthoring>();
+            parkingAuthoring.entry = parking.transform;
+            parkingAuthoring.spots = new Transform[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var spot = Create($"Spot_{i + 1}", root.transform, new Vector3(24f + i * 6f, 0f, 24f));
+                spot.transform.rotation = Quaternion.LookRotation(Vector3.right);
+                parkingAuthoring.spots[i] = spot.transform;
+            }
+
             var wash = Create("CarWash_Bay", root.transform, new Vector3(20f, 0f, 10f));
             wash.transform.rotation = Quaternion.LookRotation(Vector3.right);
             var washAuthoring = wash.AddComponent<CarWashAuthoring>();

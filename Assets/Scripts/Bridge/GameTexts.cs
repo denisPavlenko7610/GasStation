@@ -20,6 +20,8 @@ namespace GasStation.Bridge
             UpgradeType.Janitor => "Уборщик",
             UpgradeType.Mechanic => "Механик",
             UpgradeType.CarWash => "Автомойка",
+            UpgradeType.SupplyManager => "Завхоз",
+            UpgradeType.TruckParking => "Стоянка для фур",
             _ => type.ToString()
         };
 
@@ -34,6 +36,8 @@ namespace GasStation.Bridge
             UpgradeType.Janitor => "сам убирает мусор, $60/день",
             UpgradeType.Mechanic => "сам чинит колонки, $70/день",
             UpgradeType.CarWash => "открывает мойку, уровни — быстрее и дороже",
+            UpgradeType.SupplyManager => "сам заказывает топливо и товар; ур.2 −10%, ур.3 быстрее; $50/день",
+            UpgradeType.TruckParking => "+2 места для ночёвки дальнобойщиков",
             _ => string.Empty
         };
 
@@ -68,6 +72,8 @@ namespace GasStation.Bridge
             13 => "Держи вора!",
             14 => "Первые покупки",
             15 => "Автомойка",
+            16 => "Туалет",
+            17 => "Ночлег",
             _ => "Задание дня"
         };
 
@@ -85,6 +91,8 @@ namespace GasStation.Bridge
             QuestGoal.StationLevel => $"Подними уровень станции до {quest.Target:0}: сейчас {{0}}",
             QuestGoal.SellProducts => $"Продай товары в магазине (M — ассортимент): {{0}}/{quest.Target:0}",
             QuestGoal.OpenCarWash => "Открой автомойку (Tab): {0}/1",
+            QuestGoal.CleanRestroom => "Убери туалет (E у двери): {0}/1",
+            QuestGoal.HostTruckers => $"Прими дальнобойщиков на ночь (Стоянка для фур): {{0}}/{quest.Target:0}",
             QuestGoal.CatchThief => "Стой рядом с машиной вора, когда он заправляется: {0}/1",
             _ => "{0}"
         };

@@ -50,6 +50,12 @@ namespace GasStation.Save
 
             CaptureShop(entityManager, data);
 
+            using (var restroomQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Restroom>()))
+            {
+                if (restroomQuery.CalculateEntityCount() == 1)
+                    data.restroomDirt = restroomQuery.GetSingleton<Restroom>().Dirt;
+            }
+
             using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Pump>()))
             using (var pumps = query.ToComponentDataArray<Pump>(Allocator.Temp))
             {
@@ -112,6 +118,18 @@ namespace GasStation.Save
 
             if (data.products != null)
                 RestoreShop(entityManager, data.products);
+
+            if (data.restroomDirt >= 0f)
+            {
+                using var restroomQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Restroom>());
+                if (restroomQuery.CalculateEntityCount() == 1)
+                {
+                    var restroomEntity = restroomQuery.GetSingletonEntity();
+                    var restroom = entityManager.GetComponentData<Restroom>(restroomEntity);
+                    restroom.Dirt = Mathf.Clamp01(data.restroomDirt);
+                    entityManager.SetComponentData(restroomEntity, restroom);
+                }
+            }
 
             if (data.trash != null)
                 RestoreTrash(entityManager, data.trash);
@@ -260,6 +278,21 @@ namespace GasStation.Save
 
             using (var pedestrians = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Pedestrian>()))
                 entityManager.DestroyEntity(pedestrians);
+
+            using (var parkingQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<TruckParking>()))
+            using (var parkings = parkingQuery.ToEntityArray(Allocator.Temp))
+            {
+                foreach (var parkingEntity in parkings)
+                {
+                    var spots = entityManager.GetBuffer<ParkingSpot>(parkingEntity);
+                    for (int i = 0; i < spots.Length; i++)
+                    {
+                        var spot = spots[i];
+                        spot.Occupant = Entity.Null;
+                        spots[i] = spot;
+                    }
+                }
+            }
 
             using (var washQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<CarWash>()))
             using (var washes = washQuery.ToEntityArray(Allocator.Temp))

@@ -27,7 +27,9 @@ namespace GasStation.Mono
         private Text _center;
         private Text _help;
         private Text _shop;
+        private const int UpgradesPerPage = 6;
         private bool _upgradesOpen;
+        private int _upgradePage;
         private bool _storeOpen;
         private ProductType _selectedProduct;
         private float _newGameRequestedAt = float.NegativeInfinity;
@@ -79,7 +81,18 @@ namespace GasStation.Mono
 
             if (keyboard.tabKey.wasPressedThisFrame)
             {
-                _upgradesOpen = !_upgradesOpen;
+                // Tab: page 1 → page 2 → closed.
+                int pages = (UpgradeTypes.Count + UpgradesPerPage - 1) / UpgradesPerPage;
+                if (!_upgradesOpen)
+                {
+                    _upgradesOpen = true;
+                    _upgradePage = 0;
+                }
+                else if (++_upgradePage >= pages)
+                {
+                    _upgradesOpen = false;
+                }
+
                 _storeOpen = false;
             }
 
@@ -109,10 +122,11 @@ namespace GasStation.Mono
 
             if (_upgradesOpen)
             {
-                for (int i = 0; i < UpgradeTypes.Count; i++)
+                for (int slot = 0; slot < UpgradesPerPage; slot++)
                 {
-                    if (DigitPressed(keyboard, i + 1))
-                        StationCommands.BuyUpgrade((UpgradeType)i);
+                    int index = _upgradePage * UpgradesPerPage + slot;
+                    if (index < UpgradeTypes.Count && DigitPressed(keyboard, slot + 1))
+                        StationCommands.BuyUpgrade((UpgradeType)index);
                 }
 
                 return;
@@ -164,9 +178,14 @@ namespace GasStation.Mono
         private string BuildUpgrades()
         {
             _builder.Clear();
-            _builder.AppendLine("УЛУЧШЕНИЯ (цифра — купить, Tab — закрыть)");
-            for (int i = 0; i < UpgradeTypes.Count; i++)
+            int pages = (UpgradeTypes.Count + UpgradesPerPage - 1) / UpgradesPerPage;
+            _builder.AppendLine($"УЛУЧШЕНИЯ, стр. {_upgradePage + 1}/{pages} (цифра — купить, Tab — дальше / закрыть)");
+            for (int slot = 0; slot < UpgradesPerPage; slot++)
             {
+                int i = _upgradePage * UpgradesPerPage + slot;
+                if (i >= UpgradeTypes.Count)
+                    break;
+
                 var type = (UpgradeType)i;
                 int level = HudModel.Upgrades.Get(type);
                 int max = UpgradeMath.MaxLevel(type);
@@ -174,7 +193,7 @@ namespace GasStation.Mono
                 string price = !UpgradeMath.CanUpgrade(type, level) ? "макс."
                     : HudModel.Level.Level < requiredLevel ? $"нужен уровень {requiredLevel}"
                     : $"${UpgradeMath.Cost(type, level):0}";
-                _builder.AppendLine($"{i + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
+                _builder.AppendLine($"{slot + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
             }
 
             return _builder.ToString();
@@ -263,6 +282,16 @@ namespace GasStation.Mono
                     : "свободна";
                 _builder.AppendLine($"Мойка: {wash}");
             }
+
+            if (HudModel.HasParking)
+            {
+                _builder.AppendLine(HudModel.ParkingOpen == 0
+                    ? "Стоянка для фур: закрыта (улучшение «Стоянка для фур»)"
+                    : $"Стоянка для фур: {HudModel.ParkingUsed}/{HudModel.ParkingOpen} мест занято");
+            }
+
+            if (HudModel.HasRestroom)
+                _builder.AppendLine($"Туалет: {(HudModel.RestroomDirt >= FacilityMath.RestroomDisgustingDirt ? "ОТВРАТИТЕЛЬНО" : $"грязь {HudModel.RestroomDirt * 100f:0}%")}");
             foreach (var pump in HudModel.Pumps)
             {
                 _builder.Append($"Колонка {pump.Number}: ");
@@ -326,6 +355,7 @@ namespace GasStation.Mono
                 InteractionHint.Fueling => "Идёт заправка...",
                 InteractionHint.CarArriving => "Машина подъезжает",
                 InteractionHint.Trash => "[E / ЛКМ] Убрать мусор",
+                InteractionHint.Restroom => "[E / ЛКМ] Убрать туалет",
                 InteractionHint.Repair => $"[E / ЛКМ] Чинить колонку (${ProgressMath.RepairStepCost:0} за шаг)",
                 _ => string.Empty
             };

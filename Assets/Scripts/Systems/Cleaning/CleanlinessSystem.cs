@@ -48,6 +48,8 @@ namespace GasStation.Systems
             int count = _trash.CalculateEntityCount();
             int threshold = SystemAPI.GetSingleton<StationSettings>().DirtyThreshold;
             float value = StationMath.Cleanliness(count, threshold);
+            if (SystemAPI.HasSingleton<Restroom>())
+                value = FacilityMath.CombinedCleanliness(value, SystemAPI.GetSingleton<Restroom>().Dirt);
             cleanliness.ValueRW.TrashCount = count;
             cleanliness.ValueRW.Value = value;
 
