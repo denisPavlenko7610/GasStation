@@ -9,18 +9,12 @@ using UnityEngine;
 namespace GasStation.Editor
 {
     /// <summary>
-    /// Builds the Windows version of the game into Builds/. Also used by CI through
+    /// Builds the Windows version of the game into Builds/. Used by CI through
     /// <see cref="BuildWindowsFromCommandLine"/>.
     /// </summary>
     public static class BuildMenu
     {
         private const string DesertScene = "Assets/Scenes/Desert.unity";
-
-        [MenuItem("GasStation/Build/Windows (release)")]
-        private static void BuildWindowsRelease() => Build(BuildTarget.StandaloneWindows64, "Builds/Windows/GasStation.exe", false);
-
-        [MenuItem("GasStation/Build/Windows (development)")]
-        private static void BuildWindowsDevelopment() => Build(BuildTarget.StandaloneWindows64, "Builds/WindowsDev/GasStation.exe", true);
 
         /// <summary>Entry point for batch mode: -executeMethod GasStation.Editor.BuildMenu.BuildWindowsFromCommandLine</summary>
         public static void BuildWindowsFromCommandLine()
