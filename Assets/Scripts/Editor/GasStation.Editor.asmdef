@@ -1,0 +1,24 @@
+{
+    "name": "GasStation.Editor",
+    "rootNamespace": "GasStation.Editor",
+    "references": [
+        "GasStation.Runtime",
+        "Unity.Scenes",
+        "Unity.Entities",
+        "Unity.Localization",
+        "Unity.Localization.Editor",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

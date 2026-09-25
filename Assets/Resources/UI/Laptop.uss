@@ -1,0 +1,126 @@
+/* Office laptop (UI Toolkit). Loaded at runtime from Resources/UI/Laptop together with Menu.uss. */
+
+.laptop-window {
+    width: 980px;
+    height: 680px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.laptop-titlebar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 12px 0 18px;
+    background-color: rgba(240, 130, 45, 0.9);
+}
+
+.laptop-title {
+    font-size: 18px;
+    color: rgb(20, 20, 24);
+    -unity-font-style: bold;
+}
+
+.laptop-body {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.laptop-apps {
+    width: 210px;
+    padding: 12px 8px;
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.laptop-app {
+    height: 44px;
+    margin: 3px 0;
+    padding-left: 14px;
+    font-size: 18px;
+    border-width: 0;
+    border-radius: 6px;
+    color: rgb(230, 232, 238);
+    -unity-text-align: middle-left;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.laptop-app:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.laptop-app--active {
+    background-color: rgba(240, 130, 45, 0.35);
+}
+
+.laptop-content {
+    flex-grow: 1;
+    padding: 18px 22px;
+}
+
+.laptop-heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: rgb(250, 250, 250);
+    -unity-font-style: bold;
+}
+
+.laptop-card {
+    margin: 6px 0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.laptop-card-title {
+    font-size: 18px;
+    color: rgb(240, 150, 60);
+    -unity-font-style: bold;
+}
+
+.laptop-line {
+    font-size: 16px;
+    white-space: normal;
+    color: rgb(222, 225, 232);
+}
+
+.laptop-muted {
+    font-size: 15px;
+    white-space: normal;
+    color: rgb(140, 146, 158);
+}
+
+.laptop-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+.laptop-action {
+    height: 34px;
+    min-width: 130px;
+    margin-left: 8px;
+    font-size: 16px;
+    border-width: 0;
+    border-radius: 6px;
+    color: rgb(245, 245, 245);
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.laptop-action:hover {
+    background-color: rgba(240, 130, 45, 0.9);
+}
+
+.laptop-action:disabled {
+    opacity: 0.4;
+}
+
+.laptop-close {
+    height: 30px;
+    width: 34px;
+    font-size: 18px;
+    border-width: 0;
+    border-radius: 6px;
+    color: rgb(20, 20, 24);
+    background-color: rgba(255, 255, 255, 0.35);
+}

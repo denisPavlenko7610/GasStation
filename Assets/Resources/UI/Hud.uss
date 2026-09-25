@@ -1,0 +1,156 @@
+/* HUD of GasStation (UI Toolkit). Loaded at runtime from Resources/UI/Hud. */
+
+.hud-root {
+    flex-grow: 1;
+}
+
+.card {
+    position: absolute;
+    background-color: rgba(12, 14, 20, 0.74);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    padding: 10px 14px 12px 14px;
+}
+
+.card--top-left { left: 16px; top: 16px; max-width: 34%; }
+.card--top-right { right: 16px; top: 16px; max-width: 40%; }
+.card--bottom-left { left: 16px; bottom: 16px; max-width: 48%; }
+.card--bottom-right { right: 16px; bottom: 16px; max-width: 46%; }
+.card--top-center { top: 16px; left: 30%; right: 30%; }
+.card--top-center.card--wide { left: 18%; right: 18%; }
+.card--center {
+    top: 42%;
+    left: 24%;
+    right: 24%;
+    align-items: center;
+    background-color: rgba(20, 22, 30, 0.86);
+    border-color: rgba(240, 150, 60, 0.6);
+}
+
+.accent-line {
+    height: 3px;
+    margin-bottom: 8px;
+    border-radius: 2px;
+    background-color: rgb(240, 130, 45);
+}
+
+.hud-text {
+    color: rgb(238, 240, 244);
+    font-size: 21px;
+    white-space: normal;
+    -unity-text-align: upper-left;
+}
+
+.hud-text--right { -unity-text-align: upper-right; }
+.hud-text--small { font-size: 15px; color: rgb(185, 192, 204); }
+.hud-text--center { font-size: 27px; -unity-text-align: middle-center; -unity-font-style: bold; }
+
+.meter {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.meter__label {
+    width: 130px;
+    font-size: 15px;
+    color: rgb(185, 192, 204);
+}
+
+.meter__track {
+    width: 220px;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.meter__fill {
+    height: 100%;
+    width: 50%;
+    border-radius: 5px;
+    background-color: rgb(80, 190, 120);
+}
+
+.meter__fill--reputation { background-color: rgb(240, 180, 60); }
+.meter__fill--xp { background-color: rgb(90, 150, 240); }
+
+.quest-marker {
+    position: absolute;
+    width: 40px;
+    font-size: 44px;
+    color: rgb(255, 150, 40);
+    -unity-text-align: lower-center;
+    -unity-font-style: bold;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+.car-card {
+    position: absolute;
+    width: 140px;
+    padding: 4px 8px 6px 8px;
+    border-radius: 7px;
+    background-color: rgba(12, 14, 20, 0.78);
+}
+
+.car-card__text {
+    font-size: 14px;
+    color: rgb(238, 240, 244);
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.car-card__track {
+    height: 6px;
+    margin-top: 3px;
+    border-radius: 3px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.car-card__fill {
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
+    background-color: rgb(80, 200, 110);
+}
+
+.chart {
+    flex-direction: row;
+    align-items: flex-end;
+    height: 170px;
+    margin-top: 10px;
+    padding-top: 6px;
+    border-top-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.chart__column {
+    flex-grow: 1;
+    height: 100%;
+    margin: 0 3px;
+    align-items: center;
+}
+
+.chart__bars {
+    flex-grow: 1;
+    width: 100%;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.chart__bar {
+    width: 40%;
+    margin: 0 1px;
+    border-radius: 2px;
+}
+
+.chart__bar--income { background-color: rgb(80, 200, 110); }
+.chart__bar--expense { background-color: rgb(230, 90, 70); }
+
+.chart__day {
+    font-size: 12px;
+    color: rgb(170, 176, 188);
+}
