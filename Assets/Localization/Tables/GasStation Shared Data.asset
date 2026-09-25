@@ -1,0 +1,3708 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: GasStation Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: GasStation
+  m_TableCollectionNameGuidString: 07b5363dfda2555409468dc7271fbb91
+  m_Entries:
+  - m_Id: 1064034304
+    m_Key: fuel.Petrol92
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612160
+    m_Key: fuel.Petrol95
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612161
+    m_Key: fuel.Diesel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612162
+    m_Key: product.Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612163
+    m_Key: product.Coffee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612164
+    m_Key: product.Snacks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612165
+    m_Key: product.MotorOil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612166
+    m_Key: product.Souvenir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612167
+    m_Key: upgrade.name.PumpSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612168
+    m_Key: upgrade.name.TankCapacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612169
+    m_Key: upgrade.name.Comfort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612170
+    m_Key: upgrade.name.Advertising
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612171
+    m_Key: upgrade.name.Attendant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612172
+    m_Key: upgrade.name.ExtraPump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612173
+    m_Key: upgrade.name.Janitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612174
+    m_Key: upgrade.name.Mechanic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612175
+    m_Key: upgrade.name.CarWash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612176
+    m_Key: upgrade.name.SupplyManager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612177
+    m_Key: upgrade.name.TruckParking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612178
+    m_Key: upgrade.name.TireService
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612179
+    m_Key: upgrade.name.Motel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612180
+    m_Key: upgrade.desc.PumpSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612181
+    m_Key: upgrade.desc.TankCapacity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612182
+    m_Key: upgrade.desc.Comfort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612183
+    m_Key: upgrade.desc.Advertising
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612184
+    m_Key: upgrade.desc.ExtraPump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612185
+    m_Key: upgrade.desc.CarWash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612186
+    m_Key: upgrade.desc.SupplyManager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612187
+    m_Key: upgrade.desc.TruckParking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612188
+    m_Key: upgrade.desc.TireService
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612189
+    m_Key: upgrade.desc.Motel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612190
+    m_Key: role.Attendant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612191
+    m_Key: role.Janitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612192
+    m_Key: role.Mechanic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612193
+    m_Key: role.Cashier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612194
+    m_Key: duty.Attendant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612195
+    m_Key: duty.Janitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612196
+    m_Key: duty.Mechanic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612197
+    m_Key: duty.Cashier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612198
+    m_Key: reference.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612199
+    m_Key: reference.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612200
+    m_Key: reference.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612201
+    m_Key: staff.name.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612202
+    m_Key: staff.name.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612203
+    m_Key: staff.name.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612204
+    m_Key: staff.name.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612205
+    m_Key: staff.name.4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612206
+    m_Key: staff.name.5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612207
+    m_Key: staff.name.6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612208
+    m_Key: staff.name.7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612209
+    m_Key: staff.name.8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612210
+    m_Key: staff.name.9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612211
+    m_Key: staff.name.10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612212
+    m_Key: staff.name.11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612213
+    m_Key: staff.name.12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612214
+    m_Key: staff.name.13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612215
+    m_Key: staff.name.14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612216
+    m_Key: staff.name.15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612217
+    m_Key: scheme.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612218
+    m_Key: scheme.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612219
+    m_Key: scheme.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612220
+    m_Key: scheme.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612221
+    m_Key: customer.Regular
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612222
+    m_Key: customer.Trucker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612223
+    m_Key: customer.Hurry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612224
+    m_Key: customer.Tourist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612225
+    m_Key: customer.Thief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612226
+    m_Key: customer.Critic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612227
+    m_Key: customer.Biker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612228
+    m_Key: customer.Emergency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612229
+    m_Key: customer.TourBus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612230
+    m_Key: customer.TowTruck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612231
+    m_Key: quest.title.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612232
+    m_Key: quest.title.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612233
+    m_Key: quest.title.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612234
+    m_Key: quest.title.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612235
+    m_Key: quest.title.4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612236
+    m_Key: quest.title.5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612237
+    m_Key: quest.title.6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612238
+    m_Key: quest.title.7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612239
+    m_Key: quest.title.8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612240
+    m_Key: quest.title.9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612241
+    m_Key: quest.title.10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612242
+    m_Key: quest.title.11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612243
+    m_Key: quest.title.12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612244
+    m_Key: quest.title.13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612245
+    m_Key: quest.title.14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612246
+    m_Key: quest.title.15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612247
+    m_Key: quest.title.16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612248
+    m_Key: quest.title.17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612249
+    m_Key: quest.title.18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612250
+    m_Key: quest.title.19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612251
+    m_Key: quest.title.20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612252
+    m_Key: quest.title.21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612253
+    m_Key: quest.title.daily
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612254
+    m_Key: quest.goal.CollectTrash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612255
+    m_Key: quest.goal.ServeCustomers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612256
+    m_Key: quest.goal.OrderFuel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612257
+    m_Key: quest.goal.BuyUpgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612258
+    m_Key: quest.goal.Cleanliness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612259
+    m_Key: quest.goal.Reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612260
+    m_Key: quest.goal.DayIncome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612261
+    m_Key: quest.goal.OpenPumps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612262
+    m_Key: quest.goal.RepairPump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612263
+    m_Key: quest.goal.StationLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806464
+    m_Key: quest.goal.CatchThief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806465
+    m_Key: quest.goal.SellProducts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806466
+    m_Key: quest.goal.OpenCarWash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806467
+    m_Key: quest.goal.CleanRestroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806468
+    m_Key: quest.goal.HostTruckers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806469
+    m_Key: quest.goal.PaintStation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806470
+    m_Key: quest.goal.ChangeTires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806471
+    m_Key: quest.goal.HireWorker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806472
+    m_Key: quest.goal.HostGuests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806473
+    m_Key: quest.reward.both
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806474
+    m_Key: quest.reward.money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806475
+    m_Key: quest.reward.reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806476
+    m_Key: quest.header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806477
+    m_Key: quest.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806478
+    m_Key: quest.completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806479
+    m_Key: hud.help
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806480
+    m_Key: hud.day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806481
+    m_Key: hud.money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806482
+    m_Key: hud.reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806483
+    m_Key: hud.cleanliness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806484
+    m_Key: hud.staff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806485
+    m_Key: hud.level.max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806486
+    m_Key: hud.level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806487
+    m_Key: hud.event
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806488
+    m_Key: event.RushHour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806489
+    m_Key: event.Sandstorm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806490
+    m_Key: hud.today
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806491
+    m_Key: hud.served
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806492
+    m_Key: hud.fuel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806493
+    m_Key: hud.fuel.pending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806494
+    m_Key: hud.queue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806495
+    m_Key: hud.wash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806496
+    m_Key: hud.wash.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806497
+    m_Key: hud.wash.working
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806498
+    m_Key: hud.wash.arriving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806499
+    m_Key: hud.free.f
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806500
+    m_Key: hud.free.m
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806501
+    m_Key: hud.parking.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806502
+    m_Key: hud.parking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806503
+    m_Key: hud.tires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806504
+    m_Key: hud.tires.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806505
+    m_Key: hud.tires.working
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806506
+    m_Key: hud.tires.waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806507
+    m_Key: hud.motel.closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806508
+    m_Key: hud.motel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806509
+    m_Key: hud.motel.dirty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806510
+    m_Key: hud.restroom.disgusting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806511
+    m_Key: hud.restroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806512
+    m_Key: hud.pump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806513
+    m_Key: hud.pump.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806514
+    m_Key: hud.pump.broken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806515
+    m_Key: hud.pump.wear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806516
+    m_Key: hud.pump.car
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806517
+    m_Key: carstate.DrivingToPump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806518
+    m_Key: carstate.WaitingForService
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806519
+    m_Key: carstate.Fueling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806520
+    m_Key: carstate.Shopping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806521
+    m_Key: carstate.ReadyToLeave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806522
+    m_Key: hud.report
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806523
+    m_Key: hint.CanStartFueling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806524
+    m_Key: hint.Fueling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806525
+    m_Key: hint.CarArriving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806526
+    m_Key: hint.Trash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806527
+    m_Key: hint.Restroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806528
+    m_Key: hint.Tires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806529
+    m_Key: hint.MotelRoom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806530
+    m_Key: hint.Repair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806531
+    m_Key: panel.upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806532
+    m_Key: panel.upgrades.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806533
+    m_Key: panel.max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806534
+    m_Key: panel.needLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806535
+    m_Key: panel.price
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806536
+    m_Key: panel.staff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806537
+    m_Key: panel.staff.candidates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806538
+    m_Key: panel.staff.candidate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806539
+    m_Key: panel.staff.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806540
+    m_Key: panel.staff.working
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806541
+    m_Key: panel.staff.worker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806542
+    m_Key: panel.staff.confirmFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806543
+    m_Key: panel.paint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806544
+    m_Key: panel.paint.current
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806545
+    m_Key: panel.paint.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806546
+    m_Key: panel.paint.current.short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806547
+    m_Key: panel.store
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806548
+    m_Key: panel.store.inside
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806549
+    m_Key: panel.store.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806550
+    m_Key: panel.store.pending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806551
+    m_Key: msg.confirmNewGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806552
+    m_Key: msg.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806553
+    m_Key: msg.customerAngry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806554
+    m_Key: msg.fuelRanOut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806555
+    m_Key: msg.fuelDelivered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806556
+    m_Key: msg.pumpBroken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806557
+    m_Key: msg.pumpRepaired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806558
+    m_Key: msg.noMoney
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806559
+    m_Key: msg.levelUp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806560
+    m_Key: msg.tip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806561
+    m_Key: msg.fuelStolen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806562
+    m_Key: msg.thiefCaught
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806563
+    m_Key: msg.market
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806564
+    m_Key: msg.vandals
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806565
+    m_Key: msg.rushHour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806566
+    m_Key: msg.sandstorm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806567
+    m_Key: msg.inspectionPassed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806568
+    m_Key: msg.inspectionFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806569
+    m_Key: msg.shopEmpty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806570
+    m_Key: msg.restroomDisgusting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806571
+    m_Key: msg.workerStole
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806572
+    m_Key: msg.truckParked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806573
+    m_Key: msg.parkingPaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806574
+    m_Key: msg.productsDelivered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806575
+    m_Key: msg.motelPaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806576
+    m_Key: msg.saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806577
+    m_Key: msg.loaded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806578
+    m_Key: msg.noSave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806579
+    m_Key: msg.newGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806580
+    m_Key: msg.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806581
+    m_Key: msg.tankFull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806582
+    m_Key: msg.fuelOrdered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806583
+    m_Key: msg.noShop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806584
+    m_Key: msg.shelvesFull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806585
+    m_Key: msg.productsOrdered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806586
+    m_Key: msg.staffFull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806587
+    m_Key: msg.noMoneyHire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806588
+    m_Key: msg.hired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806589
+    m_Key: msg.fired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806590
+    m_Key: msg.alreadyPainted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806591
+    m_Key: msg.schemeNeedsLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806592
+    m_Key: msg.painted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806593
+    m_Key: msg.upgradeMax
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806594
+    m_Key: msg.upgradeNeedsLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806595
+    m_Key: msg.upgradeBought
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806596
+    m_Key: achievement.FirstCustomer.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806597
+    m_Key: achievement.FirstCustomer.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806598
+    m_Key: achievement.Served100.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806599
+    m_Key: achievement.Served100.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806600
+    m_Key: achievement.Served1000.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806601
+    m_Key: achievement.Served1000.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806602
+    m_Key: achievement.Trash100.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806603
+    m_Key: achievement.Trash100.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806604
+    m_Key: achievement.Trash1000.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806605
+    m_Key: achievement.Trash1000.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806606
+    m_Key: achievement.Income10K.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806607
+    m_Key: achievement.Income10K.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806608
+    m_Key: achievement.Income100K.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806609
+    m_Key: achievement.Income100K.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806610
+    m_Key: achievement.Level5.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806611
+    m_Key: achievement.Level5.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806612
+    m_Key: achievement.Level10.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806613
+    m_Key: achievement.Level10.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806614
+    m_Key: achievement.ThiefCaught.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806615
+    m_Key: achievement.ThiefCaught.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806616
+    m_Key: achievement.MotelGuests10.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806617
+    m_Key: achievement.MotelGuests10.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806618
+    m_Key: achievement.Truckers10.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806619
+    m_Key: achievement.Truckers10.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806620
+    m_Key: achievement.CarsWashed50.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806621
+    m_Key: achievement.CarsWashed50.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806622
+    m_Key: achievement.Tires25.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806623
+    m_Key: achievement.Tires25.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806624
+    m_Key: achievement.PerfectDay.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806625
+    m_Key: achievement.PerfectDay.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806626
+    m_Key: achievement.Tycoon.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806627
+    m_Key: achievement.Tycoon.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806628
+    m_Key: achievement.Spotless.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806629
+    m_Key: achievement.Spotless.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806630
+    m_Key: achievement.FullStaff.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806631
+    m_Key: achievement.FullStaff.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806632
+    m_Key: panel.achievements
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806633
+    m_Key: panel.achievements.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806634
+    m_Key: panel.achievements.stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806635
+    m_Key: msg.achievement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806636
+    m_Key: meter.reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806637
+    m_Key: meter.cleanliness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806638
+    m_Key: meter.experience
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806639
+    m_Key: renovation.Windows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806640
+    m_Key: renovation.Graffiti
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806641
+    m_Key: renovation.Fence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806642
+    m_Key: renovation.Lamps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806643
+    m_Key: renovation.VendingMachine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806644
+    m_Key: renovation.Sign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806645
+    m_Key: hint.Renovate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806646
+    m_Key: msg.renovated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806647
+    m_Key: msg.renovationNeedsLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806648
+    m_Key: quest.title.22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806649
+    m_Key: quest.title.23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806650
+    m_Key: quest.goal.Renovate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806651
+    m_Key: achievement.FullyRenovated.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806652
+    m_Key: achievement.FullyRenovated.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806653
+    m_Key: msg.tankerArrived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806654
+    m_Key: msg.cargoArrived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806655
+    m_Key: menu.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806656
+    m_Key: menu.skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806657
+    m_Key: menu.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806658
+    m_Key: menu.tutorial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806659
+    m_Key: tutorial.page
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806660
+    m_Key: tutorial.0.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806661
+    m_Key: tutorial.0.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806662
+    m_Key: tutorial.1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806663
+    m_Key: tutorial.1.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806664
+    m_Key: tutorial.2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806665
+    m_Key: tutorial.2.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806666
+    m_Key: tutorial.3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806667
+    m_Key: tutorial.3.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806668
+    m_Key: tutorial.4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806669
+    m_Key: tutorial.4.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806670
+    m_Key: review.5.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806671
+    m_Key: review.5.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806672
+    m_Key: review.5.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806673
+    m_Key: review.4.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806674
+    m_Key: review.4.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806675
+    m_Key: review.4.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806676
+    m_Key: review.3.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806677
+    m_Key: review.3.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806678
+    m_Key: review.3.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806679
+    m_Key: review.2.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806680
+    m_Key: review.2.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806681
+    m_Key: review.2.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806682
+    m_Key: review.1.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806683
+    m_Key: review.1.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806684
+    m_Key: review.1.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806685
+    m_Key: card.wants
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806686
+    m_Key: card.fueling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806687
+    m_Key: card.tires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806688
+    m_Key: panel.finance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806689
+    m_Key: panel.finance.today
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806690
+    m_Key: panel.finance.yesterday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806691
+    m_Key: panel.finance.week
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806692
+    m_Key: panel.finance.rating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806693
+    m_Key: panel.finance.noRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806694
+    m_Key: panel.finance.reviews
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806695
+    m_Key: panel.finance.chart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806696
+    m_Key: panel.finance.noHistory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806697
+    m_Key: upgrade.name.Decor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806698
+    m_Key: upgrade.desc.Decor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806699
+    m_Key: station.defaultName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806700
+    m_Key: menu.stationName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806701
+    m_Key: menu.stationName.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806702
+    m_Key: menu.saveName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806703
+    m_Key: settings.musicVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806704
+    m_Key: settings.radio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806705
+    m_Key: radio.Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806706
+    m_Key: radio.Country
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806707
+    m_Key: radio.Synthwave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806708
+    m_Key: radio.LoFi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806709
+    m_Key: msg.radio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806710
+    m_Key: hud.speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806711
+    m_Key: menu.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806712
+    m_Key: menu.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806713
+    m_Key: menu.play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806714
+    m_Key: menu.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806715
+    m_Key: menu.newGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806716
+    m_Key: menu.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806717
+    m_Key: menu.controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806718
+    m_Key: menu.quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806719
+    m_Key: menu.version
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806720
+    m_Key: menu.pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806721
+    m_Key: menu.resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806722
+    m_Key: menu.save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806723
+    m_Key: menu.load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806724
+    m_Key: menu.toMainMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806725
+    m_Key: menu.back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806726
+    m_Key: menu.yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806727
+    m_Key: menu.no
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806728
+    m_Key: menu.confirm.newGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806729
+    m_Key: menu.confirm.load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806730
+    m_Key: settings.display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806731
+    m_Key: settings.resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806732
+    m_Key: settings.mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806733
+    m_Key: settings.mode.ExclusiveFullScreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806734
+    m_Key: settings.mode.FullScreenWindow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806735
+    m_Key: settings.mode.Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806736
+    m_Key: settings.vsync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806737
+    m_Key: settings.fps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806738
+    m_Key: settings.fps.unlimited
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806739
+    m_Key: settings.graphics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806740
+    m_Key: settings.quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806741
+    m_Key: settings.renderScale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806742
+    m_Key: settings.audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806743
+    m_Key: settings.masterVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806744
+    m_Key: settings.effectsVolume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806745
+    m_Key: settings.interface
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806746
+    m_Key: settings.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806747
+    m_Key: settings.uiScale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806748
+    m_Key: settings.showControls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806749
+    m_Key: settings.game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806750
+    m_Key: settings.gameSpeed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806751
+    m_Key: settings.autosave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806752
+    m_Key: controls.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806753
+    m_Key: msg.loanAlready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806754
+    m_Key: msg.loanTaken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806755
+    m_Key: msg.noLoan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806756
+    m_Key: msg.loanRepaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806757
+    m_Key: msg.loanPaidOff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806758
+    m_Key: msg.insuranceOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806759
+    m_Key: msg.insuranceOff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806760
+    m_Key: msg.insurancePayout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806761
+    m_Key: msg.weeklyBills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806762
+    m_Key: msg.bankruptcyWarning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806763
+    m_Key: msg.buyoutNeedsLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806764
+    m_Key: msg.competitorOpened
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806765
+    m_Key: msg.competitorPriceCut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806766
+    m_Key: msg.competitorPriceRise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806767
+    m_Key: msg.competitorPromo.Discount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806768
+    m_Key: msg.competitorPromo.Advertising
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806769
+    m_Key: msg.competitorBoughtOut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806770
+    m_Key: difficulty.Relaxed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806771
+    m_Key: difficulty.Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806772
+    m_Key: difficulty.Survival
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806773
+    m_Key: difficulty.Relaxed.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806774
+    m_Key: difficulty.Normal.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806775
+    m_Key: difficulty.Survival.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806776
+    m_Key: panel.bank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806777
+    m_Key: panel.bank.noLoan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806778
+    m_Key: panel.bank.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806779
+    m_Key: panel.bank.loan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806780
+    m_Key: panel.bank.repay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806781
+    m_Key: panel.bank.insured
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806782
+    m_Key: panel.bank.notInsured
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806783
+    m_Key: panel.bank.utilities
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806784
+    m_Key: panel.bank.tax
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806785
+    m_Key: panel.bank.debt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806786
+    m_Key: panel.bank.debtRelaxed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806787
+    m_Key: panel.bank.help
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806788
+    m_Key: panel.rival
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806789
+    m_Key: panel.rival.notOpen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806790
+    m_Key: panel.rival.boughtOut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806791
+    m_Key: panel.rival.header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806792
+    m_Key: panel.rival.reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806793
+    m_Key: panel.rival.promo.Discount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806794
+    m_Key: panel.rival.promo.Advertising
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806795
+    m_Key: panel.rival.share
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806796
+    m_Key: panel.rival.buyout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806797
+    m_Key: panel.rival.buyoutLocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806798
+    m_Key: panel.rival.confirmBuyout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806799
+    m_Key: menu.difficulty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806800
+    m_Key: menu.gameOver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806801
+    m_Key: menu.gameOver.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806802
+    m_Key: prop.name.TrashBin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806803
+    m_Key: prop.name.Bench
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806804
+    m_Key: prop.name.Planter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806805
+    m_Key: prop.name.Lamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806806
+    m_Key: prop.name.RoadSign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806807
+    m_Key: prop.name.AirPump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806808
+    m_Key: prop.name.WaterMachine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806809
+    m_Key: prop.name.SecurityCamera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806810
+    m_Key: prop.desc.TrashBin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806811
+    m_Key: prop.desc.Bench
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806812
+    m_Key: prop.desc.Planter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806813
+    m_Key: prop.desc.Lamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806814
+    m_Key: prop.desc.RoadSign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806815
+    m_Key: prop.desc.AirPump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806816
+    m_Key: prop.desc.WaterMachine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806817
+    m_Key: prop.desc.SecurityCamera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806818
+    m_Key: build.error.OutsideLot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806819
+    m_Key: build.error.Blocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806820
+    m_Key: build.error.TooClose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806821
+    m_Key: build.error.TooMany
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806822
+    m_Key: msg.propPlaced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806823
+    m_Key: msg.propRemoved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806824
+    m_Key: msg.propNeedsLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806825
+    m_Key: panel.build
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806826
+    m_Key: panel.build.item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806827
+    m_Key: panel.build.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806828
+    m_Key: panel.build.help
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806829
+    m_Key: regular.0.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806830
+    m_Key: regular.0.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806831
+    m_Key: regular.0.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806832
+    m_Key: regular.0.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806833
+    m_Key: regular.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806834
+    m_Key: regular.1.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806835
+    m_Key: regular.1.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806836
+    m_Key: regular.1.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806837
+    m_Key: regular.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806838
+    m_Key: regular.2.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806839
+    m_Key: regular.2.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806840
+    m_Key: regular.2.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806841
+    m_Key: regular.3.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806842
+    m_Key: regular.3.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806843
+    m_Key: regular.3.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806844
+    m_Key: regular.3.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806845
+    m_Key: regular.4.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806846
+    m_Key: regular.4.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806847
+    m_Key: regular.4.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806848
+    m_Key: regular.4.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806849
+    m_Key: regular.5.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806850
+    m_Key: regular.5.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806851
+    m_Key: regular.5.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806852
+    m_Key: regular.5.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806853
+    m_Key: regular.6.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806854
+    m_Key: regular.6.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806855
+    m_Key: regular.6.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806856
+    m_Key: regular.6.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806857
+    m_Key: regular.7.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806858
+    m_Key: regular.7.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806859
+    m_Key: regular.7.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806860
+    m_Key: regular.7.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806861
+    m_Key: regular.8.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806862
+    m_Key: regular.8.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806863
+    m_Key: regular.8.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806864
+    m_Key: regular.8.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806865
+    m_Key: regular.9.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806866
+    m_Key: regular.9.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806867
+    m_Key: regular.9.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806868
+    m_Key: regular.9.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806869
+    m_Key: regular.10.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806870
+    m_Key: regular.10.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806871
+    m_Key: regular.10.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806872
+    m_Key: regular.10.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806873
+    m_Key: regular.11.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806874
+    m_Key: regular.11.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806875
+    m_Key: regular.11.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806876
+    m_Key: regular.11.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806877
+    m_Key: regular.12.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806878
+    m_Key: regular.12.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806879
+    m_Key: regular.12.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806880
+    m_Key: regular.12.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806881
+    m_Key: regular.13.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806882
+    m_Key: regular.13.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806883
+    m_Key: regular.13.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806884
+    m_Key: regular.13.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806885
+    m_Key: regular.14.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806886
+    m_Key: regular.14.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806887
+    m_Key: regular.14.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806888
+    m_Key: regular.14.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806889
+    m_Key: regular.15.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806890
+    m_Key: regular.15.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806891
+    m_Key: regular.15.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806892
+    m_Key: regular.15.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806893
+    m_Key: regular.16.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806894
+    m_Key: regular.16.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806895
+    m_Key: regular.16.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806896
+    m_Key: regular.16.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806897
+    m_Key: regular.17.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806898
+    m_Key: regular.17.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806899
+    m_Key: regular.17.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806900
+    m_Key: regular.17.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806901
+    m_Key: regular.18.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806902
+    m_Key: regular.18.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806903
+    m_Key: regular.18.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806904
+    m_Key: regular.18.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806905
+    m_Key: regular.19.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806906
+    m_Key: regular.19.about
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806907
+    m_Key: regular.19.line.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806908
+    m_Key: regular.19.line.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806909
+    m_Key: msg.regularMet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806910
+    m_Key: msg.regularArrived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806911
+    m_Key: msg.regularLost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806912
+    m_Key: msg.regularLostNoRival
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806913
+    m_Key: msg.regularFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806914
+    m_Key: msg.criticPraise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806915
+    m_Key: msg.criticPan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806916
+    m_Key: msg.special.TourBus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806917
+    m_Key: msg.special.Biker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806918
+    m_Key: msg.special.Emergency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806919
+    m_Key: msg.special.TowTruck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806920
+    m_Key: msg.emergencyServed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806921
+    m_Key: panel.regulars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806922
+    m_Key: panel.regulars.praise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806923
+    m_Key: panel.regulars.pan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806924
+    m_Key: panel.regulars.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806925
+    m_Key: panel.regulars.lost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806926
+    m_Key: panel.regulars.upset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806927
+    m_Key: panel.regulars.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806928
+    m_Key: panel.regulars.help
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806929
+    m_Key: weekday.every
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806930
+    m_Key: weekday.weekdays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806931
+    m_Key: weekday.weekend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806932
+    m_Key: weekday.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806933
+    m_Key: weekday.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806934
+    m_Key: weekday.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806935
+    m_Key: weekday.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806936
+    m_Key: weekday.4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806937
+    m_Key: weekday.5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806938
+    m_Key: weekday.6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806939
+    m_Key: contract.TaxiFleet.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806940
+    m_Key: contract.TaxiFleet.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806941
+    m_Key: contract.Police.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806942
+    m_Key: contract.Police.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806943
+    m_Key: contract.Delivery.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806944
+    m_Key: contract.Delivery.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806945
+    m_Key: contract.BusCompany.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806946
+    m_Key: contract.BusCompany.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806947
+    m_Key: msg.contractsFull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806948
+    m_Key: msg.contractNeedsLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806949
+    m_Key: msg.contractWalkedAway
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806950
+    m_Key: msg.contractOffer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806951
+    m_Key: msg.contractAccepted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806952
+    m_Key: msg.contractPenalty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806953
+    m_Key: msg.contractCompleted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806954
+    m_Key: msg.contractCancelled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806955
+    m_Key: card.contract
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806956
+    m_Key: hint.Laptop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806957
+    m_Key: laptop.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806958
+    m_Key: laptop.app.Mail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806959
+    m_Key: laptop.app.Bank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806960
+    m_Key: laptop.app.Competitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806961
+    m_Key: laptop.app.Regulars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806962
+    m_Key: laptop.app.Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806963
+    m_Key: laptop.mail.offers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806964
+    m_Key: laptop.mail.noOffers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806965
+    m_Key: laptop.mail.active
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806966
+    m_Key: laptop.mail.noActive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806967
+    m_Key: laptop.contract.terms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806968
+    m_Key: laptop.contract.stakes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806969
+    m_Key: laptop.contract.accept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806970
+    m_Key: laptop.contract.decline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806971
+    m_Key: laptop.contract.progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806972
+    m_Key: laptop.contract.schedule
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806973
+    m_Key: laptop.contract.daily
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806974
+    m_Key: laptop.contract.every
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806975
+    m_Key: laptop.contract.cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806976
+    m_Key: laptop.contract.confirmCancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806977
+    m_Key: laptop.bank.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806978
+    m_Key: laptop.bank.loan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806979
+    m_Key: laptop.bank.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806980
+    m_Key: laptop.bank.take
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806981
+    m_Key: laptop.bank.repay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806982
+    m_Key: laptop.bank.insurance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806983
+    m_Key: laptop.bank.insured
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806984
+    m_Key: laptop.bank.notInsured
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806985
+    m_Key: laptop.bank.insuranceOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806986
+    m_Key: laptop.bank.insuranceOff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806987
+    m_Key: laptop.bank.bills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806988
+    m_Key: laptop.rival.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806989
+    m_Key: laptop.rival.prices
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806990
+    m_Key: laptop.rival.priceLine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806991
+    m_Key: laptop.rival.market
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806992
+    m_Key: laptop.rival.buyout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806993
+    m_Key: laptop.rival.buyoutText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806994
+    m_Key: laptop.rival.buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806995
+    m_Key: laptop.rival.confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806996
+    m_Key: laptop.regulars.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806997
+    m_Key: laptop.regulars.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806998
+    m_Key: laptop.stats.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806999
+    m_Key: laptop.stats.money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807000
+    m_Key: laptop.stats.station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807001
+    m_Key: laptop.stats.noReviews
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807002
+    m_Key: shift.Day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807003
+    m_Key: shift.Night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807004
+    m_Key: trait.None
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807005
+    m_Key: trait.Chatty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807006
+    m_Key: trait.Pedant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807007
+    m_Key: trait.NightOwl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807008
+    m_Key: trait.Tireless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807009
+    m_Key: trait.None.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807010
+    m_Key: trait.Chatty.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807011
+    m_Key: trait.Pedant.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807012
+    m_Key: trait.NightOwl.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807013
+    m_Key: trait.Tireless.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807014
+    m_Key: mood.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807015
+    m_Key: mood.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807016
+    m_Key: mood.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807017
+    m_Key: mood.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807018
+    m_Key: panel.staff.state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807019
+    m_Key: panel.staff.onShift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807020
+    m_Key: panel.staff.offShift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807021
+    m_Key: panel.staff.laptopHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807022
+    m_Key: msg.workerQuit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807023
+    m_Key: msg.alreadyPraised
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807024
+    m_Key: msg.praised
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195072
+    m_Key: msg.trainingMax
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195073
+    m_Key: msg.trained
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195074
+    m_Key: msg.raised
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195075
+    m_Key: msg.shiftChanged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195076
+    m_Key: laptop.app.Staff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195077
+    m_Key: laptop.staff.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195078
+    m_Key: laptop.staff.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195079
+    m_Key: laptop.staff.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195080
+    m_Key: laptop.staff.candidate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195081
+    m_Key: laptop.staff.praise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195082
+    m_Key: laptop.staff.train
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195083
+    m_Key: laptop.staff.raise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195084
+    m_Key: laptop.staff.shift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195085
+    m_Key: laptop.staff.fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195086
+    m_Key: laptop.staff.confirmFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195087
+    m_Key: laptop.staff.hire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195088
+    m_Key: supplier.Cheap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195089
+    m_Key: supplier.Reliable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195090
+    m_Key: supplier.Cheap.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195091
+    m_Key: supplier.Reliable.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195092
+    m_Key: msg.supplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195093
+    m_Key: msg.promoOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195094
+    m_Key: msg.promoOff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195095
+    m_Key: msg.spoiled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195096
+    m_Key: msg.short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195097
+    m_Key: msg.suspicious
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195098
+    m_Key: msg.shoplifterCaught
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195099
+    m_Key: msg.goodsStolen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195100
+    m_Key: msg.robbery
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195101
+    m_Key: msg.robberyPrevented
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195102
+    m_Key: msg.inspectionExpired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195103
+    m_Key: panel.store.age
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195104
+    m_Key: panel.store.expired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195105
+    m_Key: panel.store.promo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195106
+    m_Key: panel.store.supplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195107
+    m_Key: laptop.app.Suppliers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195108
+    m_Key: laptop.suppliers.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195109
+    m_Key: laptop.suppliers.current
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195110
+    m_Key: laptop.suppliers.stock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195111
+    m_Key: laptop.suppliers.age
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195112
+    m_Key: laptop.suppliers.expired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195113
+    m_Key: laptop.suppliers.order
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195114
+    m_Key: laptop.suppliers.promoOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195115
+    m_Key: laptop.suppliers.promoOff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195116
+    m_Key: upgrade.name.EvCharger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195117
+    m_Key: upgrade.desc.EvCharger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195118
+    m_Key: upgrade.name.Diner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195119
+    m_Key: upgrade.desc.Diner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195120
+    m_Key: role.Cook
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195121
+    m_Key: duty.Cook
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195122
+    m_Key: customer.Electric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195123
+    m_Key: carstate.DrivingToCharger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195124
+    m_Key: carstate.Charging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195125
+    m_Key: dish.HotDog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195126
+    m_Key: dish.Burger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195127
+    m_Key: hint.Grill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195128
+    m_Key: msg.noDiner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195129
+    m_Key: msg.fridgeFull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195130
+    m_Key: msg.ingredientsBought
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195131
+    m_Key: msg.dinerEmpty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195132
+    m_Key: msg.foodWasted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195133
+    m_Key: msg.dishCooked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195134
+    m_Key: panel.store.diner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195135
+    m_Key: laptop.diner.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195136
+    m_Key: laptop.diner.line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195137
+    m_Key: laptop.diner.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195138
+    m_Key: laptop.diner.order
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195139
+    m_Key: laptop.stats.chargers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195140
+    m_Key: skill.branch.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195141
+    m_Key: skill.branch.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195142
+    m_Key: skill.branch.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195143
+    m_Key: skill.branch.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195144
+    m_Key: skill.QuickHands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195145
+    m_Key: skill.QuickHands.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195146
+    m_Key: skill.CheapParts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195147
+    m_Key: skill.CheapParts.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195148
+    m_Key: skill.PumpCare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195149
+    m_Key: skill.PumpCare.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195150
+    m_Key: skill.Smile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195151
+    m_Key: skill.Smile.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195152
+    m_Key: skill.SmallTalk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195153
+    m_Key: skill.SmallTalk.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195154
+    m_Key: skill.Celebrity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195155
+    m_Key: skill.Celebrity.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195156
+    m_Key: skill.Wholesale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195157
+    m_Key: skill.Wholesale.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195158
+    m_Key: skill.Haggler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195159
+    m_Key: skill.Haggler.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195160
+    m_Key: skill.Negotiator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195161
+    m_Key: skill.Negotiator.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195162
+    m_Key: skill.Runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195163
+    m_Key: skill.Runner.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195164
+    m_Key: skill.LongArms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195165
+    m_Key: skill.LongArms.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195166
+    m_Key: skill.Motivator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195167
+    m_Key: skill.Motivator.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195168
+    m_Key: msg.noSkillPoints
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195169
+    m_Key: msg.skillLocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195170
+    m_Key: msg.skillLearned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195171
+    m_Key: msg.needStars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195172
+    m_Key: msg.starGained
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195173
+    m_Key: msg.starLost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195174
+    m_Key: hud.stars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195175
+    m_Key: hud.road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195176
+    m_Key: hud.hosted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195177
+    m_Key: road.None
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195178
+    m_Key: road.Accident
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195179
+    m_Key: road.AfterAccident
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195180
+    m_Key: road.RoadWorks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195181
+    m_Key: road.Festival
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195182
+    m_Key: road.OilCrisis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195183
+    m_Key: road.Accident.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195184
+    m_Key: road.AfterAccident.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195185
+    m_Key: road.RoadWorks.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195186
+    m_Key: road.Festival.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195187
+    m_Key: road.OilCrisis.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195188
+    m_Key: road.Accident.end
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195189
+    m_Key: road.AfterAccident.end
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195190
+    m_Key: road.RoadWorks.end
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195191
+    m_Key: road.Festival.end
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195192
+    m_Key: road.OilCrisis.end
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195193
+    m_Key: road.Accident.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195194
+    m_Key: road.AfterAccident.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195195
+    m_Key: road.RoadWorks.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195196
+    m_Key: road.Festival.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195197
+    m_Key: road.OilCrisis.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195198
+    m_Key: hosted.Fair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195199
+    m_Key: hosted.CarMeet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195200
+    m_Key: hosted.MovieNight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195201
+    m_Key: hosted.Fair.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195202
+    m_Key: hosted.CarMeet.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195203
+    m_Key: hosted.MovieNight.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195204
+    m_Key: msg.eventAlreadyPlanned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195205
+    m_Key: msg.eventTooSoon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195206
+    m_Key: msg.eventPlanned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195207
+    m_Key: msg.eventStarted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195208
+    m_Key: msg.eventEnded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195209
+    m_Key: laptop.app.Events
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195210
+    m_Key: laptop.app.Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195211
+    m_Key: laptop.events.stars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195212
+    m_Key: laptop.events.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195213
+    m_Key: laptop.events.need
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195214
+    m_Key: laptop.events.starsHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195215
+    m_Key: laptop.events.road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195216
+    m_Key: laptop.events.roadCalm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195217
+    m_Key: laptop.events.host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195218
+    m_Key: laptop.events.planned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195219
+    m_Key: laptop.events.terms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195220
+    m_Key: laptop.events.plan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195221
+    m_Key: laptop.events.prepHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195222
+    m_Key: laptop.skills.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195223
+    m_Key: laptop.skills.learn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195224
+    m_Key: season.Spring
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195225
+    m_Key: season.Summer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195226
+    m_Key: season.Autumn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195227
+    m_Key: season.Winter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195228
+    m_Key: season.Spring.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195229
+    m_Key: season.Summer.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195230
+    m_Key: season.Autumn.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195231
+    m_Key: season.Winter.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195232
+    m_Key: weather.Clear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195233
+    m_Key: weather.Rain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195234
+    m_Key: weather.Heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195235
+    m_Key: weather.Snow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195236
+    m_Key: weather.Rain.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195237
+    m_Key: weather.Heat.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195238
+    m_Key: weather.Snow.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195239
+    m_Key: hud.season
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195240
+    m_Key: msg.newPlate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195241
+    m_Key: msg.photoMode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195242
+    m_Key: msg.screenshot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195243
+    m_Key: cat.defaultName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195244
+    m_Key: msg.catPurrs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195245
+    m_Key: laptop.app.Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195246
+    m_Key: laptop.collection.plates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195247
+    m_Key: laptop.collection.wall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195248
+    m_Key: laptop.collection.cat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195249
+    m_Key: laptop.collection.catHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195250
+    m_Key: laptop.collection.rename
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195251
+    m_Key: laptop.collection.photoTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195252
+    m_Key: laptop.collection.photo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195253
+    m_Key: plate.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195254
+    m_Key: plate.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195255
+    m_Key: plate.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195256
+    m_Key: plate.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195257
+    m_Key: plate.4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195258
+    m_Key: plate.5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195259
+    m_Key: plate.6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195260
+    m_Key: plate.7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195261
+    m_Key: plate.8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195262
+    m_Key: plate.9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195263
+    m_Key: plate.10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195264
+    m_Key: plate.11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195265
+    m_Key: plate.12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195266
+    m_Key: plate.13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195267
+    m_Key: plate.14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195268
+    m_Key: plate.15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195269
+    m_Key: plate.16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195270
+    m_Key: plate.17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195271
+    m_Key: plate.18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195272
+    m_Key: plate.19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195273
+    m_Key: menu.mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195274
+    m_Key: mode.Campaign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195275
+    m_Key: mode.Campaign.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195276
+    m_Key: mode.Free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195277
+    m_Key: mode.Sandbox
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195278
+    m_Key: mode.Sandbox.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195279
+    m_Key: hud.campaign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195280
+    m_Key: msg.chapter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195281
+    m_Key: msg.debtPaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195282
+    m_Key: msg.soldLand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195283
+    m_Key: msg.declinedOffer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195284
+    m_Key: laptop.letters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195285
+    m_Key: laptop.letters.goal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195286
+    m_Key: laptop.letters.debt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195287
+    m_Key: laptop.letters.pay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195288
+    m_Key: laptop.letters.payAll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195289
+    m_Key: letter.1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195290
+    m_Key: letter.1.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195291
+    m_Key: letter.2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195292
+    m_Key: letter.2.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195293
+    m_Key: letter.3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195294
+    m_Key: letter.3.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195295
+    m_Key: letter.offer.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195296
+    m_Key: letter.offer.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195297
+    m_Key: letter.offer.accept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195298
+    m_Key: letter.offer.decline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195299
+    m_Key: letter.end.Won
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195300
+    m_Key: letter.end.Won.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195301
+    m_Key: letter.end.Lost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195302
+    m_Key: letter.end.Lost.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195303
+    m_Key: letter.end.Sold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195304
+    m_Key: letter.end.Sold.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195305
+    m_Key: letter.end.None
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195306
+    m_Key: letter.end.None.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195307
+    m_Key: menu.gameOver.campaign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195308
+    m_Key: menu.gameOver.campaign.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195309
+    m_Key: menu.gameOver.sold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195310
+    m_Key: menu.gameOver.sold.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195311
+    m_Key: menu.victory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195312
+    m_Key: menu.victory.text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195313
+    m_Key: menu.victory.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195314
+    m_Key: quest.title.24
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195315
+    m_Key: quest.title.25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195316
+    m_Key: quest.title.26
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195317
+    m_Key: quest.title.27
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195318
+    m_Key: quest.title.28
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195319
+    m_Key: quest.title.29
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195320
+    m_Key: quest.goal.PlaceProps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195321
+    m_Key: quest.goal.MeetRegulars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195322
+    m_Key: quest.goal.SignContract
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195323
+    m_Key: quest.goal.LearnSkill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195324
+    m_Key: quest.goal.CollectPlates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195325
+    m_Key: quest.goal.HostEvent
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2420238976768278793
+  references:
+    version: 2
+    RefIds:
+    - rid: 2420238976768278793
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1790348082750

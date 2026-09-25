@@ -1,0 +1,3718 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: GasStation_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 07b5363dfda2555409468dc7271fbb91, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1064034304
+    m_Localized: Regular 92
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612160
+    m_Localized: Premium 95
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612161
+    m_Localized: Diesel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612162
+    m_Localized: Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612163
+    m_Localized: Coffee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612164
+    m_Localized: Snacks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612165
+    m_Localized: Motor oil
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612166
+    m_Localized: Souvenirs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612167
+    m_Localized: Fast pumps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612168
+    m_Localized: Bigger tanks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612169
+    m_Localized: Shade and coffee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612170
+    m_Localized: Advertising
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612171
+    m_Localized: Attendant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612172
+    m_Localized: Extra pump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612173
+    m_Localized: Janitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612174
+    m_Localized: Mechanic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612175
+    m_Localized: Car wash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612176
+    m_Localized: Supply manager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612177
+    m_Localized: Truck parking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612178
+    m_Localized: Tire service
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612179
+    m_Localized: Motel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612180
+    m_Localized: +50% fueling speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612181
+    m_Localized: +1000 L to every tank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612182
+    m_Localized: customers wait 20% longer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612183
+    m_Localized: +25% customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612184
+    m_Localized: opens one more pump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612185
+    m_Localized: opens the car wash; levels are faster and pricier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612186
+    m_Localized: "reorders fuel and goods; lvl 2 \u221210%, lvl 3 faster; $50/day"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612187
+    m_Localized: +2 overnight spots for truckers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612188
+    m_Localized: change tires for money; levels are faster and pricier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612189
+    m_Localized: +2 rooms for travellers, pricier rooms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612190
+    m_Localized: attendant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612191
+    m_Localized: janitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612192
+    m_Localized: mechanic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612193
+    m_Localized: cashier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612194
+    m_Localized: fuels cars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612195
+    m_Localized: cleans litter and the restroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612196
+    m_Localized: repairs pumps, changes tires
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612197
+    m_Localized: speeds up shopping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612198
+    m_Localized: excellent references
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612199
+    m_Localized: average references
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612200
+    m_Localized: dubious references
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612201
+    m_Localized: John
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612202
+    m_Localized: Olivia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612203
+    m_Localized: Peter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612204
+    m_Localized: Anna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612205
+    m_Localized: Sam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612206
+    m_Localized: Mary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612207
+    m_Localized: Alex
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612208
+    m_Localized: Helen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612209
+    m_Localized: Daniel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612210
+    m_Localized: Natalie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612211
+    m_Localized: Andrew
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612212
+    m_Localized: Tina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612213
+    m_Localized: Michael
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612214
+    m_Localized: Irene
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612215
+    m_Localized: Nick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612216
+    m_Localized: Susan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612217
+    m_Localized: Peeling paint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612218
+    m_Localized: Classic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612219
+    m_Localized: Desert sunset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612220
+    m_Localized: 80s neon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612221
+    m_Localized: customer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612222
+    m_Localized: trucker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612223
+    m_Localized: in a hurry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612224
+    m_Localized: tourist
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612225
+    m_Localized: shady type
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612226
+    m_Localized: critic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612227
+    m_Localized: biker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612228
+    m_Localized: ambulance / police
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612229
+    m_Localized: tour bus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612230
+    m_Localized: tow truck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612231
+    m_Localized: Abandoned station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612232
+    m_Localized: First customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612233
+    m_Localized: Tidying up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612234
+    m_Localized: Fuel truck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612235
+    m_Localized: First investment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612236
+    m_Localized: Regulars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612237
+    m_Localized: Spring cleaning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612238
+    m_Localized: Good name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612239
+    m_Localized: Profitable day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612240
+    m_Localized: Expansion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612241
+    m_Localized: Spotless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612242
+    m_Localized: Broken pump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612243
+    m_Localized: Rising fame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612244
+    m_Localized: Stop, thief!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612245
+    m_Localized: First sales
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612246
+    m_Localized: Car wash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612247
+    m_Localized: Restroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612248
+    m_Localized: A place to sleep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612249
+    m_Localized: Fresh look
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612250
+    m_Localized: Tire service
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612251
+    m_Localized: First employee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612252
+    m_Localized: Roadside motel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612253
+    m_Localized: Daily task
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612254
+    m_Localized: 'Pick up litter (E): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612255
+    m_Localized: 'Serve customers: {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612256
+    m_Localized: 'Order a fuel truck (O): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612257
+    m_Localized: 'Buy an upgrade (Tab): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612258
+    m_Localized: 'Get cleanliness to {1:0}%: now {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612259
+    m_Localized: 'Raise reputation to {1:0}%: now {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612260
+    m_Localized: 'Earn ${1:0} in one day: now ${0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612261
+    m_Localized: 'Open a new pump (Tab): {0}/1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612262
+    m_Localized: 'Repair a pump (E next to it): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1227612263
+    m_Localized: 'Reach station level {1:0}: now {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806464
+    m_Localized: 'Stand next to a thief''s car while it fuels: {0}/1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806465
+    m_Localized: "Sell goods in the shop (M \u2014 stock): {0}/{1:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806466
+    m_Localized: 'Open the car wash (Tab): {0}/1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806467
+    m_Localized: 'Clean the restroom (E at the door): {0}/1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806468
+    m_Localized: 'Host truckers overnight (Truck parking): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806469
+    m_Localized: 'Repaint the station (C): {0}/1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806470
+    m_Localized: 'Change customers'' tires (E at the tire bay): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806471
+    m_Localized: 'Hire an employee (H): {0}/1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806472
+    m_Localized: "Host motel guests (Tab \u2192 Motel): {0}/{1:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806473
+    m_Localized: ${0:0} and +{1:0}% reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806474
+    m_Localized: ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806475
+    m_Localized: +{0:0}% reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806476
+    m_Localized: 'Task: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806477
+    m_Localized: 'Reward: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806478
+    m_Localized: 'Task complete: {0}! Reward: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806479
+    m_Localized: "WASD \u2014 walk   E / LMB \u2014 action   1/2/3 \u2014 fuel   +/- \u2014 price   O \u2014 order 500 L\nTab \u2014 upgrades   M \u2014 shop   C \u2014 paint   H \u2014 staff   J \u2014 achievements   K \u2014 regulars   F \u2014 finances   B \u2014 build   N \u2014 laptop   F12 \u2014 photo\nT \u2014 speed   R \u2014 radio   L \u2014 language   F1 \u2014 hints   F5 \u2014 save   F9 \u2014 load   Esc \u2014 menu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806480
+    m_Localized: Day {0}   {1:00}:{2:00}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806481
+    m_Localized: 'Money: ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806482
+    m_Localized: 'Reputation: {0:0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806483
+    m_Localized: 'Cleanliness: {0:0}% (litter: {1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806484
+    m_Localized: 'Staff: {0}, wages ${1:0}/day'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806485
+    m_Localized: 'Station level: {0} (max)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806486
+    m_Localized: 'Station level: {0}   xp {1:0}/{2:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806487
+    m_Localized: 'Event: {0} ({1:0.0} h left)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806488
+    m_Localized: Rush hour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806489
+    m_Localized: Sandstorm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806490
+    m_Localized: 'Today: +${0:0} / -${1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806491
+    m_Localized: 'Served: {0}   Lost: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806492
+    m_Localized: '{0}: {1:0}/{2:0} L   ${3:0.00} (market ${4:0.00})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806493
+    m_Localized: '   +{0:0} L on the way'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806494
+    m_Localized: 'Queue: {0}   Cars on site: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806495
+    m_Localized: 'Car wash: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806496
+    m_Localized: closed (Car wash upgrade)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806497
+    m_Localized: washing, {0:0} s left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806498
+    m_Localized: car arriving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806499
+    m_Localized: free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806500
+    m_Localized: free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806501
+    m_Localized: 'Truck parking: closed (Truck parking upgrade)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806502
+    m_Localized: 'Truck parking: {0}/{1} spots taken'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806503
+    m_Localized: 'Tire service: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806504
+    m_Localized: closed (Tire service upgrade)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806505
+    m_Localized: changing tires, {0:0} s left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806506
+    m_Localized: "CAR WAITING \u2014 E at the bay"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806507
+    m_Localized: 'Motel: closed (Motel upgrade)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806508
+    m_Localized: 'Motel: {0}/{1} rooms taken'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806509
+    m_Localized: ", {0} dirty \u2014 E at reception"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806510
+    m_Localized: 'Restroom: DISGUSTING'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806511
+    m_Localized: 'Restroom: {0:0}% dirty'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806512
+    m_Localized: 'Pump {0}: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806513
+    m_Localized: closed (Extra pump upgrade)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806514
+    m_Localized: "BROKEN \u2014 repair it (E nearby)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806515
+    m_Localized: ' [wear {0:0}%]'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806516
+    m_Localized: '{0} {1}, {2} {3:0}/{4:0} L, patience {5:0}%{6}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806517
+    m_Localized: arriving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806518
+    m_Localized: waiting for fuel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806519
+    m_Localized: fueling
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806520
+    m_Localized: driver in the shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806521
+    m_Localized: leaving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806522
+    m_Localized: 'Day {0} summary
+
+      Income: ${1:0}   Expenses: ${2:0}
+
+      Profit: ${3:0}
+
+      Served: {4}   Lost: {5}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806523
+    m_Localized: '[E / LMB] Fuel the car'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806524
+    m_Localized: Fueling...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806525
+    m_Localized: Car arriving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806526
+    m_Localized: '[E / LMB] Pick up litter'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806527
+    m_Localized: '[E / LMB] Clean the restroom'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806528
+    m_Localized: '[E / LMB] Change tires'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806529
+    m_Localized: '[E / LMB] Clean a motel room'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806530
+    m_Localized: '[E / LMB] Repair the pump (${0:0} per step)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806531
+    m_Localized: "UPGRADES, page {0}/{1} (digit \u2014 buy, Tab \u2014 next / close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806532
+    m_Localized: "{0}. {1} [{2}/{3}] \u2014 {4}: {5}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806533
+    m_Localized: max
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806534
+    m_Localized: needs level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806535
+    m_Localized: ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806536
+    m_Localized: "STAFF {0}/{1} (1\u20133 \u2014 hire, 4\u20139 \xD72 \u2014 fire, H \u2014 close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806537
+    m_Localized: 'Today''s applicants:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806538
+    m_Localized: '{0}. {1}, {2} ({3}), skill {4:0.00}, ${5:0}/day, {6}; hiring ${7:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806539
+    m_Localized: No employees yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806540
+    m_Localized: 'Employed:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806541
+    m_Localized: '{0}. {1}, {2}, skill {3:0.00}, ${4:0}/day, {5} days'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806542
+    m_Localized: Press {0} again to fire {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806543
+    m_Localized: "PAINT (digit \u2014 repaint, C \u2014 close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806544
+    m_Localized: 'Now: "{0}", customers {1:+0;-0;0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806545
+    m_Localized: "{0}. \"{1}\" \u2014 {2}, customers {3:+0;-0;0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806546
+    m_Localized: current
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806547
+    m_Localized: "SHOP (1\u20135 \u2014 item, +/- \u2014 price, O \u2014 order {0}, M \u2014 close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806548
+    m_Localized: 'Shoppers inside: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806549
+    m_Localized: '{0}. {1}: {2}/{3}   ${4:0.00} (cost ${5:0.00}, usual ${6:0.00})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806550
+    m_Localized: '   +{0} on the way'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806551
+    m_Localized: Press F10 again to start over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806552
+    m_Localized: 'Language: English'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806553
+    m_Localized: A customer left unhappy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806554
+    m_Localized: Out of {0}! Order a fuel truck (O)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806555
+    m_Localized: The fuel truck delivered {0:0} L of {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806556
+    m_Localized: Pump {0:0} broke down! Repair it (E)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806557
+    m_Localized: Pump {0:0} is as good as new
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806558
+    m_Localized: 'Not enough money: ${0:0} needed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806559
+    m_Localized: Station level {0:0}! New upgrades and customers unlocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806560
+    m_Localized: 'Tip: ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806561
+    m_Localized: A thief drove off without paying! Lost ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806562
+    m_Localized: "Thief caught \u2014 he paid!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806563
+    m_Localized: 'Oil prices: {0:+0.0;-0.0;0}%. Check your prices'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806564
+    m_Localized: Vandals came at night and left a mess
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806565
+    m_Localized: 'Rush hour: tourists are coming!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806566
+    m_Localized: 'Sandstorm: few customers, lots of litter'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806567
+    m_Localized: Inspection passed! Bonus ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806568
+    m_Localized: 'Inspection: dirty! Fine ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806569
+    m_Localized: "A shopper left empty-handed \u2014 order goods (M)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806570
+    m_Localized: A customer is horrified by the restroom! Clean it (E at the door)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806571
+    m_Localized: "${0:0} is missing from the till. Someone on staff is not honest\u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806572
+    m_Localized: A trucker parked for the night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806573
+    m_Localized: 'A trucker paid for the night: ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806574
+    m_Localized: 'Goods delivered to the shop: {0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806575
+    m_Localized: 'A motel guest paid: ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806576
+    m_Localized: Game saved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806577
+    m_Localized: Game loaded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806578
+    m_Localized: No saved game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806579
+    m_Localized: New game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806580
+    m_Localized: 'Welcome back: day {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806581
+    m_Localized: The tank is full
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806582
+    m_Localized: Ordered {0:0} L of {1}, arriving in {2:0} s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806583
+    m_Localized: There is no shop at the station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806584
+    m_Localized: '{0}: shelves are full'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806585
+    m_Localized: "Ordered {0} \xD7 {1}, arriving in {2:0} s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806586
+    m_Localized: 'Staff is full: at most {0} employees'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806587
+    m_Localized: 'Not enough money to hire: ${0:0} needed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806588
+    m_Localized: 'Hired {0}: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806589
+    m_Localized: 'Fired {0}: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806590
+    m_Localized: The station already has this paint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806591
+    m_Localized: '"{0}": needs station level {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806592
+    m_Localized: 'Station repainted: "{0}"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806593
+    m_Localized: '{0}: maximum level'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806594
+    m_Localized: '{0}: needs station level {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806595
+    m_Localized: 'Bought: {0}, level {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806596
+    m_Localized: First customer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806597
+    m_Localized: Serve your first customer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806598
+    m_Localized: A hundred
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806599
+    m_Localized: Serve 100 customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806600
+    m_Localized: A thousand cars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806601
+    m_Localized: Serve 1000 customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806602
+    m_Localized: Street sweeper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806603
+    m_Localized: Pick up 100 pieces of litter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806604
+    m_Localized: Neat freak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806605
+    m_Localized: Pick up 1000 pieces of litter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806606
+    m_Localized: First $10,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806607
+    m_Localized: Earn $10,000 from customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806608
+    m_Localized: Oil baron
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806609
+    m_Localized: Earn $100,000 from customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806610
+    m_Localized: Known place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806611
+    m_Localized: Reach station level 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806612
+    m_Localized: Highway legend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806613
+    m_Localized: Reach station level 10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806614
+    m_Localized: Sheriff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806615
+    m_Localized: Catch a thief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806616
+    m_Localized: Hospitality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806617
+    m_Localized: Host 10 motel guests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806618
+    m_Localized: Truckers' friend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806619
+    m_Localized: Host 10 truckers overnight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806620
+    m_Localized: Shine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806621
+    m_Localized: Wash 50 cars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806622
+    m_Localized: Tire master
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806623
+    m_Localized: Change tires 25 times
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806624
+    m_Localized: Perfect day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806625
+    m_Localized: Serve 20+ customers in a day with nobody leaving unhappy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806626
+    m_Localized: Tycoon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806627
+    m_Localized: Save up $50,000
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806628
+    m_Localized: Spotless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806629
+    m_Localized: Get station cleanliness to 100%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806630
+    m_Localized: Full staff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806631
+    m_Localized: Hire 6 employees
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806632
+    m_Localized: "ACHIEVEMENTS {0}/{1} (J \u2014 close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806633
+    m_Localized: "[{0}] {1} \u2014 {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806634
+    m_Localized: 'Days: {0}   customers: {1}   earned: ${2:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806635
+    m_Localized: 'Achievement unlocked: {0}!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806636
+    m_Localized: Reputation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806637
+    m_Localized: Cleanliness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806638
+    m_Localized: Experience
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806639
+    m_Localized: boarded-up windows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806640
+    m_Localized: graffiti on the walls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806641
+    m_Localized: broken fence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806642
+    m_Localized: old lamps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806643
+    m_Localized: rusty vending machine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806644
+    m_Localized: crooked sign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806645
+    m_Localized: '[E / LMB] Renovate: {0} (${1:0}, level {2})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806646
+    m_Localized: 'Renovated: {0}. The station looks better!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806647
+    m_Localized: This renovation needs station level {0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806648
+    m_Localized: First repairs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806649
+    m_Localized: A new life
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806650
+    m_Localized: "Renovate the station (E at broken windows, fence, sign\u2026): {0}/{1:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806651
+    m_Localized: Good as new
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806652
+    m_Localized: Renovate everything at the station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806653
+    m_Localized: The fuel tanker arrived and is unloading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806654
+    m_Localized: The goods truck is unloading at the shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806655
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806656
+    m_Localized: Skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806657
+    m_Localized: Let's go!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806658
+    m_Localized: Tutorial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806659
+    m_Localized: Page {0} of {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806660
+    m_Localized: Welcome to the highway
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806661
+    m_Localized: 'You bought an abandoned gas station in the middle of the desert. The pumps are broken, the windows are boarded up, there is litter everywhere and hardly any money.
+
+
+      Your job is to bring the station back to life: clean up, serve passing drivers and invest the money in repairs and new buildings.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806662
+    m_Localized: How to play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806663
+    m_Localized: "Walk with WASD. E (or LMB) is the nearby action: fuel a waiting car, repair a pump, renovate something broken, clean the restroom, pick up litter.\n\nCars queue up on their own. Walk to a pump where a car is waiting and press E. The customer pays and drives off \u2014 or visits the shop."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806664
+    m_Localized: Money and growth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806665
+    m_Localized: "Watch the fuel stock (top right) and order a fuel tanker with O \u2014 it will drive in and unload. Change prices with +/\u2212.\n\nTab \u2014 upgrades, M \u2014 shop goods, H \u2014 hire staff, C \u2014 paint. New buildings are built once you buy their upgrade."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806666
+    m_Localized: Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806667
+    m_Localized: "The current task is at the top of the screen, and the orange arrow \u25BC shows where to go. Tasks lead you from picking up litter to running your own motel.\n\nEsc \u2014 pause and settings, T \u2014 speed up time, J \u2014 achievements."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806668
+    m_Localized: The laptop and building
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806669
+    m_Localized: "A laptop stands on the desk by the shop door (E next to it, or N anywhere). It has contract mail, the bank, staff, suppliers, owner skills, events and your collection \u2014 all with the mouse.\n\nB \u2014 build mode: trash bins, benches, lamps, cameras and more, each one useful.\n\nK \u2014 regulars, F \u2014 finances, F12 \u2014 photo mode. Good luck!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806670
+    m_Localized: Best gas station on the highway!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806671
+    m_Localized: Fast, clean, friendly. I'll be back.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806672
+    m_Localized: Five stars, great coffee too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806673
+    m_Localized: Nice place, hardly any queue.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806674
+    m_Localized: All good, fair prices.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806675
+    m_Localized: A pleasant stop on the road.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806676
+    m_Localized: Okay, but could be better.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806677
+    m_Localized: Had to wait a bit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806678
+    m_Localized: Prices bite.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806679
+    m_Localized: Slow and a bit dirty.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806680
+    m_Localized: Expensive for a place like this.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806681
+    m_Localized: Not impressed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806682
+    m_Localized: Waited forever and left.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806683
+    m_Localized: Terrible service!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806684
+    m_Localized: Never coming back.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806685
+    m_Localized: "{0}{1} \xB7 {2:0} L"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806686
+    m_Localized: "{0}{1} \xB7 {2:0}/{3:0} L"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806687
+    m_Localized: '{0}waiting for tires'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806688
+    m_Localized: "FINANCES (F \u2014 bank)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806689
+    m_Localized: 'Today: +${0:0} / -${1:0} = ${2:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806690
+    m_Localized: 'Yesterday: +${0:0} / -${1:0} = ${2:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806691
+    m_Localized: 'Last {0} days: +${1:0} / -${2:0} = ${3:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806692
+    m_Localized: 'Rating: {0} {1:0.0} ({2} reviews)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806693
+    m_Localized: No reviews yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806694
+    m_Localized: 'Latest reviews:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806695
+    m_Localized: 'Income (green) and expenses (red) per day:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806696
+    m_Localized: The chart appears after the first day.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806697
+    m_Localized: Decorations
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806698
+    m_Localized: 'flags, flowers, benches and string lights: +3% customers per level'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806699
+    m_Localized: Oasis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806700
+    m_Localized: Station name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806701
+    m_Localized: The name appears on the roadside sign. Leave it empty to use the default.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806702
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806703
+    m_Localized: Music (radio)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806704
+    m_Localized: Radio station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806705
+    m_Localized: off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806706
+    m_Localized: "Route 66 FM \u2014 country"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806707
+    m_Localized: "Neon Drive \u2014 synthwave"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806708
+    m_Localized: "Desert Chill \u2014 lo-fi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806709
+    m_Localized: 'Radio: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806710
+    m_Localized: "   \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806711
+    m_Localized: GAS STATION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806712
+    m_Localized: Roadside gas station simulator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806713
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806714
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806715
+    m_Localized: New game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806716
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806717
+    m_Localized: Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806718
+    m_Localized: Quit game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806719
+    m_Localized: Version {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806720
+    m_Localized: Paused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806721
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806722
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806723
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806724
+    m_Localized: Main menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806725
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806726
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806727
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806728
+    m_Localized: Start a new game? The current save will be deleted.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806729
+    m_Localized: Load the last save? Unsaved progress will be lost.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806730
+    m_Localized: DISPLAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806731
+    m_Localized: Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806732
+    m_Localized: Screen mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806733
+    m_Localized: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806734
+    m_Localized: Borderless window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806735
+    m_Localized: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806736
+    m_Localized: V-Sync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806737
+    m_Localized: Frame rate limit (without V-Sync)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806738
+    m_Localized: Unlimited
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806739
+    m_Localized: GRAPHICS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806740
+    m_Localized: Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806741
+    m_Localized: Render scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806742
+    m_Localized: AUDIO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806743
+    m_Localized: Master volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806744
+    m_Localized: Sound effects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806745
+    m_Localized: INTERFACE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806746
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806747
+    m_Localized: UI scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806748
+    m_Localized: Key hints
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806749
+    m_Localized: GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806750
+    m_Localized: Game speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806751
+    m_Localized: Autosave at the end of each day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806752
+    m_Localized: "WASD / arrows \u2014 walk\nE / LMB \u2014 nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 \u2014 select fuel   + / \u2212 \u2014 price   O \u2014 order 500 L\nTab \u2014 upgrades (flip through the pages)   M \u2014 shop   C \u2014 paint   H \u2014 staff   J \u2014 achievements   K \u2014 regulars   F \u2014 finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics \u2014 all with the mouse\nB \u2014 build mode: WASD \u2014 camera, wheel \u2014 zoom, 1\u20138 \u2014 object, Q / E \u2014 rotate, LMB \u2014 place, RMB \u2014 remove\nF12 \u2014 photo mode: free camera, Space \u2014 screenshot\n\nT \u2014 game speed \xD71 / \xD72 / \xD73   R \u2014 radio   F1 \u2014 hints   L \u2014 language\nF5 \u2014 save   F9 \u2014 load   Esc \u2014 pause"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806753
+    m_Localized: Repay the current loan first
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806754
+    m_Localized: Loan of ${0:0} received. ${1:0} a week for {2} weeks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806755
+    m_Localized: No loan to repay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806756
+    m_Localized: Loan repaid early for ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806757
+    m_Localized: "Last loan payment made \u2014 the debt is cleared!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806758
+    m_Localized: 'Insurance taken out: ${0:0} a week'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806759
+    m_Localized: Insurance cancelled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806760
+    m_Localized: Insurance paid out ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806761
+    m_Localized: "Week closed: tax and payments \u2014 ${0:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806762
+    m_Localized: 'The station is in the red! Days until bankruptcy: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806763
+    m_Localized: You can buy out the competitor from level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806764
+    m_Localized: A PetroMax station opened across the road!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806765
+    m_Localized: PetroMax cut its prices
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806766
+    m_Localized: PetroMax raised its prices
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806767
+    m_Localized: "PetroMax is running a sale: \u221210% on fuel"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806768
+    m_Localized: PetroMax launched a highway ad campaign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806769
+    m_Localized: PetroMax is yours now! Every driver on the road comes to you
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806770
+    m_Localized: Relaxed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806771
+    m_Localized: Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806772
+    m_Localized: Survival
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806773
+    m_Localized: Half bills, no bankruptcy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806774
+    m_Localized: Normal bills. 7 days in the red means bankruptcy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806775
+    m_Localized: Bills are 50% higher. 4 days in the red and the game is over.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806776
+    m_Localized: "BANK \u2014 difficulty: {0} (F \u2014 competitor)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806777
+    m_Localized: 'No loan. The bank offers:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806778
+    m_Localized: "{0}. ${1:0} at {2:0}% for {3} weeks \u2014 ${4:0} a week"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806779
+    m_Localized: 'Loan balance: ${0:0}, ${1:0} a week'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806780
+    m_Localized: 3. Repay early for ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806781
+    m_Localized: '4. Insurance: ON (${0:0}/week, covers {1:0}% of thefts)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806782
+    m_Localized: '4. Insurance: OFF (${0:0}/week, covers {1:0}% of thefts)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806783
+    m_Localized: 'Power and water last night: ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806784
+    m_Localized: "Tax {0:0}% of revenue: ${1:0} this week \u2192 ${2:0}, due in {3} days"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806785
+    m_Localized: 'Days in the red: {0} of {1}!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806786
+    m_Localized: 'Days in the red: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806787
+    m_Localized: "1 / 2 \u2014 take a loan   3 \u2014 repay   4 \u2014 insurance"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806788
+    m_Localized: "COMPETITOR \u2014 PetroMax (F \u2014 close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806789
+    m_Localized: The lot across the road is still empty. Construction ends by day {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806790
+    m_Localized: The station across the road is part of "{0}" now. No competition on this road.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806791
+    m_Localized: Fuel         us     them
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806792
+    m_Localized: 'Reputation: us {0:0}%, them {1:0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806793
+    m_Localized: 'They are running a sale, days left: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806794
+    m_Localized: 'They are advertising on the road, days left: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806795
+    m_Localized: 'Our share of drivers: {0:0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806796
+    m_Localized: "1 \u2014 buy out PetroMax for ${0:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806797
+    m_Localized: Buyout for ${0:0} unlocks at level {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806798
+    m_Localized: Buy out PetroMax for ${0:0}? Press 1 again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806799
+    m_Localized: Choose difficulty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806800
+    m_Localized: Bankrupt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806801
+    m_Localized: 'The bank took "{0}" for its debts on day {1}.
+
+      Customers served: {2}. Station level: {3}.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806802
+    m_Localized: Trash bin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806803
+    m_Localized: Bench
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806804
+    m_Localized: Planter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806805
+    m_Localized: Lamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806806
+    m_Localized: Road sign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806807
+    m_Localized: Air pump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806808
+    m_Localized: Water machine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806809
+    m_Localized: Security camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806810
+    m_Localized: Customers nearby (6 m) litter 70% less.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806811
+    m_Localized: 'Waiting is easier: +4% customer patience (up to 5 benches).'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806812
+    m_Localized: 'A nicer station: +2% traffic (up to 10 planters).'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806813
+    m_Localized: Lights up the night, scares off vandals and thieves.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806814
+    m_Localized: 'Drivers notice the station: +6% traffic (up to 3 signs).'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806815
+    m_Localized: 'Customers pump up their tires: a little money and reputation.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806816
+    m_Localized: 'Customers buy water: $3 every now and then.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806817
+    m_Localized: Thieves at pumps within 12 m get caught more often.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806818
+    m_Localized: This is outside our lot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806819
+    m_Localized: Cars drive here or a building stands here
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806820
+    m_Localized: Too close to another object
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806821
+    m_Localized: No room for more objects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806822
+    m_Localized: 'Placed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806823
+    m_Localized: 'Removed: {0}, refund ${1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806824
+    m_Localized: '{0} unlocks at level {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806825
+    m_Localized: "BUILD \u2014 {0} of {1} objects (B \u2014 exit)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806826
+    m_Localized: "{0}. {1} \u2014 ${2:0} (placed: {3})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806827
+    m_Localized: "{0}. {1} \u2014 from level {2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806828
+    m_Localized: "LMB \u2014 place   RMB \u2014 remove (half the price back)   Q / E \u2014 rotate   wheel \u2014 zoom"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806829
+    m_Localized: Bob
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806830
+    m_Localized: trucker, loves diesel and coffee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806831
+    m_Localized: 'The usual: diesel, fill her up. And strong coffee!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806832
+    m_Localized: Seven hundred miles behind, three hundred ahead. That's life!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806833
+    m_Localized: Marina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806834
+    m_Localized: taxi driver, drops in almost every day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806835
+    m_Localized: Quick one, I've got a fare to the airport!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806836
+    m_Localized: They dug up the whole town again, only here it's quiet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806837
+    m_Localized: The Ivanov family
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806838
+    m_Localized: driving to the seaside for the weekend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806839
+    m_Localized: Kids, restroom and back, quick!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806840
+    m_Localized: A car wash and we're off, the holiday awaits!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806841
+    m_Localized: Harry the biker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806842
+    m_Localized: rides on Fridays and Saturdays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806843
+    m_Localized: Fill up my beauty with 95.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806844
+    m_Localized: Heard about the desert rally? It's going to be loud!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806845
+    m_Localized: Old Pete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806846
+    m_Localized: retiree, comes for the paper and coffee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806847
+    m_Localized: Gas used to cost pennies here, oh well...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806848
+    m_Localized: Your coffee beats the town's, honest.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806849
+    m_Localized: Lena
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806850
+    m_Localized: courier, always in a hurry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806851
+    m_Localized: Eight parcels and half an hour!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806852
+    m_Localized: Not a queue, not today...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806853
+    m_Localized: Big Mike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806854
+    m_Localized: night trucker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806855
+    m_Localized: At night it's just me and the coyotes out here.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806856
+    m_Localized: Diesel, a donut and ten minutes of quiet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806857
+    m_Localized: Dr. Carter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806858
+    m_Localized: doctor, drives to the hospital in the mornings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806859
+    m_Localized: My shift starts in forty minutes, help me out.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806860
+    m_Localized: A clean restroom is public health!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806861
+    m_Localized: Sheriff Dawson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806862
+    m_Localized: keeps the highway in order
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806863
+    m_Localized: All quiet? Seen any thieves?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806864
+    m_Localized: A good station means less work for the police.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806865
+    m_Localized: Rosa the farmer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806866
+    m_Localized: takes her crops to the market
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806867
+    m_Localized: The pickup's full of melons and the tank is empty!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806868
+    m_Localized: Dry year, but we're hanging on.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806869
+    m_Localized: Tony the salesman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806870
+    m_Localized: sells vacuum cleaners all over the state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806871
+    m_Localized: Need a vacuum cleaner, by the way? Kidding!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806872
+    m_Localized: Three more towns before dark. Coffee, please!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806873
+    m_Localized: The Kim family
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806874
+    m_Localized: Sunday travellers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806875
+    m_Localized: What souvenirs have you got?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806876
+    m_Localized: Let's take a photo by your sign!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806877
+    m_Localized: Jake the student
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806878
+    m_Localized: drives home for the weekend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806879
+    m_Localized: Ten dollars' worth, that's all I've got...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806880
+    m_Localized: Chips and soda, the dinner of champions.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806881
+    m_Localized: Grandma Olga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806882
+    m_Localized: visits her grandchildren on Wednesdays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806883
+    m_Localized: I'll get sweets for the grandkids, are they fresh?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806884
+    m_Localized: What a polite young man!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806885
+    m_Localized: Sam the mechanic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806886
+    m_Localized: fixes anything with wheels
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806887
+    m_Localized: Isn't that pump due for grease? I hear it squeak.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806888
+    m_Localized: A wash, or customers won't believe I'm a mechanic.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806889
+    m_Localized: Nina the photographer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806890
+    m_Localized: shoots desert sunsets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806891
+    m_Localized: The light is magical today!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806892
+    m_Localized: Your station at sunset is a ready-made cover.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806893
+    m_Localized: Viktor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806894
+    m_Localized: long-hauler, drives through the night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806895
+    m_Localized: Three a.m. is the best time for the road.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806896
+    m_Localized: Diesel, and I'm gone till next week.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806897
+    m_Localized: Chef Luigi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806898
+    m_Localized: drives supplies to his restaurant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806899
+    m_Localized: Mamma mia, the smell of gasoline! Kidding, fill it up.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806900
+    m_Localized: Come for pasta, tell them Luigi sent you!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806901
+    m_Localized: The Dust Devils band
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806902
+    m_Localized: tour in an old van
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806903
+    m_Localized: We're playing in the next town tonight, come along!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806904
+    m_Localized: Full tank, new strings, let's roll!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806905
+    m_Localized: Mayor Brooks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806906
+    m_Localized: the county mayor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806907
+    m_Localized: A good station is the county's pride.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806908
+    m_Localized: A wash, please, I have a meeting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806909
+    m_Localized: 'New face: {0}, {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806910
+    m_Localized: '{0}: "{1}"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806911
+    m_Localized: '{0} is upset and now fills up at PetroMax'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806912
+    m_Localized: '{0} is upset and stopped coming'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806913
+    m_Localized: '{0} is now the station''s best friend: tips and new customers!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806914
+    m_Localized: A glowing article about the station is out! +10% customers for a week
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806915
+    m_Localized: "A critic panned the station in the paper. \u221210% customers for a week"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806916
+    m_Localized: A tour bus! {0} passengers are heading for the shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806917
+    m_Localized: 'A biker convoy: {0} bikes'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806918
+    m_Localized: Emergency vehicle! Let it skip the queue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806919
+    m_Localized: A tow truck brings a car to the tire service
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806920
+    m_Localized: Emergency vehicle fueled in time. Reputation up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806921
+    m_Localized: "REGULARS \u2014 met {0} of {1} (K \u2014 close)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806922
+    m_Localized: 'Glowing newspaper article: {0} more days'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806923
+    m_Localized: 'Scathing newspaper article: {0} more days'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806924
+    m_Localized: "{0} \u2014 {1}, {2}, ~{3}:00, {4} visits  {5}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806925
+    m_Localized: went to the competitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806926
+    m_Localized: upset ({0} of {1})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806927
+    m_Localized: Nobody yet. Regulars come on their own days and hours.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806928
+    m_Localized: Happy regulars come more often, tip and bring friends. Three bad visits in a row and they leave.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806929
+    m_Localized: every day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806930
+    m_Localized: weekdays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806931
+    m_Localized: weekends
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806932
+    m_Localized: Mon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806933
+    m_Localized: Tue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806934
+    m_Localized: Wed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806935
+    m_Localized: Thu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806936
+    m_Localized: Fri
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806937
+    m_Localized: Sat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806938
+    m_Localized: Sun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806939
+    m_Localized: Yellow Coyote Cabs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806940
+    m_Localized: Two taxis in the morning and in the evening. Small but steady.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806941
+    m_Localized: County police
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806942
+    m_Localized: Patrol cars at a discount. While the contract runs, thieves stay away.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806943
+    m_Localized: Cactus Express deliveries
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806944
+    m_Localized: A van every two hours during the day. Keep a pump free!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806945
+    m_Localized: Desert Line buses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806946
+    m_Localized: Three buses every morning at 8:00, lots of diesel.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806947
+    m_Localized: You can't handle more than {0} contracts at once
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806948
+    m_Localized: Requires station level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806949
+    m_Localized: Contract "{0}" terminated. Penalty ${1:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806950
+    m_Localized: 'New mail on the laptop: an offer from "{0}"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806951
+    m_Localized: Contract with "{0}" signed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806952
+    m_Localized: A contract vehicle left without fuel. Penalty ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806953
+    m_Localized: Contract completed! Bonus ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806954
+    m_Localized: '"{0}" cancelled the contract: too many misses'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806955
+    m_Localized: contract {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806956
+    m_Localized: "E \u2014 open the laptop"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806957
+    m_Localized: "{0} \u2014 day {1} \u2014 ${2:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806958
+    m_Localized: Mail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806959
+    m_Localized: Bank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806960
+    m_Localized: Competitor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806961
+    m_Localized: Regulars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806962
+    m_Localized: Statistics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806963
+    m_Localized: Offers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806964
+    m_Localized: No new offers. They arrive every couple of days.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806965
+    m_Localized: Active contracts ({0} of {1})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806966
+    m_Localized: No contracts yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806967
+    m_Localized: '{0} vehicles a day, {1} at ${2:0.00}/L (market ${3:0.00}), {4} days'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806968
+    m_Localized: Penalty per missed vehicle ${0:0}, bonus at the end ${1:0}. The offer expires in {2} days.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806969
+    m_Localized: Sign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806970
+    m_Localized: Decline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806971
+    m_Localized: '{0} days left. Served {1}, missed {2} of {3}. Price ${4:0.00}/L'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806972
+    m_Localized: 'Schedule: {0}, fuel {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806973
+    m_Localized: every day at {0}:00, {1} vehicles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806974
+    m_Localized: every {0} h from {1}:00 to {2}:00, {3} vehicles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806975
+    m_Localized: "Terminate (\u2212${0:0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806976
+    m_Localized: Really terminate?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806977
+    m_Localized: "Bank \u2014 difficulty: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806978
+    m_Localized: Loan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806979
+    m_Localized: "${0:0} at {1:0}% for {2} weeks \u2014 ${3:0} a week"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806980
+    m_Localized: Take ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806981
+    m_Localized: Repay for ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806982
+    m_Localized: Insurance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806983
+    m_Localized: 'Active: ${0:0} a week, covers {1:0}% of thefts'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806984
+    m_Localized: None. Costs ${0:0} a week, covers {1:0}% of thefts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806985
+    m_Localized: Take out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806986
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806987
+    m_Localized: Bills and taxes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806988
+    m_Localized: PetroMax across the road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806989
+    m_Localized: Prices
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806990
+    m_Localized: '{0}: us ${1:0.00}, them ${2:0.00}, market ${3:0.00}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806991
+    m_Localized: Market
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806992
+    m_Localized: Buyout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806993
+    m_Localized: 'You can buy out PetroMax for ${0:0}: every driver on the road will be yours.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806994
+    m_Localized: Buy out for ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806995
+    m_Localized: Really buy out?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806996
+    m_Localized: "Regulars \u2014 met {0} of {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806997
+    m_Localized: '{0}, around {1}:00, {2} visits  {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806998
+    m_Localized: Statistics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231806999
+    m_Localized: Money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807000
+    m_Localized: Station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807001
+    m_Localized: No reviews yet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807002
+    m_Localized: "day shift (7\u201319)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807003
+    m_Localized: "night shift (19\u20137)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807004
+    m_Localized: no quirks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807005
+    m_Localized: chatty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807006
+    m_Localized: pedant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807007
+    m_Localized: night owl
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807008
+    m_Localized: tireless
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807009
+    m_Localized: An ordinary worker.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807010
+    m_Localized: Customers enjoy the chat (+reputation), but works slower.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807011
+    m_Localized: Walks slowly but does every job thoroughly.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807012
+    m_Localized: Works 30% better at night, a bit worse by day.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807013
+    m_Localized: Gets tired almost half as fast.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807014
+    m_Localized: about to quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807015
+    m_Localized: unhappy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807016
+    m_Localized: okay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807017
+    m_Localized: happy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807018
+    m_Localized: '    {0}, {1}, energy {2:0}%, mood: {3}, {4}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807019
+    m_Localized: on shift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807020
+    m_Localized: at home
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807021
+    m_Localized: Praise, train, raise pay and change shifts on the laptop (N).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807022
+    m_Localized: '{0} {1} quit: the mood was too bad'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807023
+    m_Localized: '{0} was already praised today'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1231807024
+    m_Localized: '{0} is glad to be praised: mood up'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195072
+    m_Localized: '{0}: no more courses needed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195073
+    m_Localized: '{0} finished a course: skill {1:0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195074
+    m_Localized: '{0} gets a raise: ${1:0} a day'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195075
+    m_Localized: '{0} now works the {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195076
+    m_Localized: Staff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195077
+    m_Localized: "Staff \u2014 {0} of {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195078
+    m_Localized: "{0} \u2014 {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195079
+    m_Localized: "Skill {0:0.00}, ${1:0}/day, {2} days \u2014 {3}. Energy {4:0}%, mood: {5}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195080
+    m_Localized: Skill {0:0.00}, asks ${1:0}/day, {2}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195081
+    m_Localized: Praise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195082
+    m_Localized: Course ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195083
+    m_Localized: "Raise \u2192 ${0:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195084
+    m_Localized: Switch shift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195085
+    m_Localized: Fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195086
+    m_Localized: Really fire?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195087
+    m_Localized: Hire for ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195088
+    m_Localized: Cheap supplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195089
+    m_Localized: Reliable supplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195090
+    m_Localized: "20% cheaper, 1.5\xD7 slower, sometimes delivers less"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195091
+    m_Localized: 10% dearer, faster, always complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195092
+    m_Localized: 'Now ordering from: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195093
+    m_Localized: '"2 for 1" promo: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195094
+    m_Localized: 'Promo ended: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195095
+    m_Localized: '{0:0} expired items written off: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195096
+    m_Localized: 'The supplier came {0:0} short: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195097
+    m_Localized: A suspicious customer went into the shop! Stand by the door
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195098
+    m_Localized: The shoplifter was caught at the till and had to pay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195099
+    m_Localized: Goods worth ${0:0} were stolen from the shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195100
+    m_Localized: "The till was robbed tonight: \u2212${0:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195101
+    m_Localized: Someone tried to rob the till tonight, but the lights, cameras and night staff scared them off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195102
+    m_Localized: 'The inspector found expired food on the shelves: fine ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195103
+    m_Localized: " \u2014 age {0:0}/{1:0} days"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195104
+    m_Localized: " \u2014 EXPIRED ({0:0}/{1:0} days)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195105
+    m_Localized: " \u2014 2 for 1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195106
+    m_Localized: "P \u2014 \"2 for 1\" promo. Supplier: {0} (change it on the laptop)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195107
+    m_Localized: Suppliers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195108
+    m_Localized: Suppliers and stock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195109
+    m_Localized: 'Current: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195110
+    m_Localized: On the shelf {0}/{1}, selling at ${2:0.00}, buying at ${3:0.00}, on the way {4}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195111
+    m_Localized: Stock age {0:0} of {1:0} days
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195112
+    m_Localized: "EXPIRED: {0:0} of {1:0} days \u2014 half is written off tonight"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195113
+    m_Localized: Order {0} (${1:0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195114
+    m_Localized: 2 for 1 promo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195115
+    m_Localized: End promo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195116
+    m_Localized: EV chargers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195117
+    m_Localized: "2 chargers per level: EVs charge for 20\u201340 minutes while drivers visit the shop and the diner"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195118
+    m_Localized: Diner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195119
+    m_Localized: 'hot dogs (burgers from level 2, faster from level 3): needs a cook or you at the grill (E)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195120
+    m_Localized: cook
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195121
+    m_Localized: cooks at the diner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195122
+    m_Localized: electric car
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195123
+    m_Localized: driving to a charger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195124
+    m_Localized: charging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195125
+    m_Localized: hot dog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195126
+    m_Localized: burger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195127
+    m_Localized: "E \u2014 cook at the grill"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195128
+    m_Localized: There is no diner yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195129
+    m_Localized: The diner fridge is full
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195130
+    m_Localized: Bought {0} ingredients for ${1:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195131
+    m_Localized: The diner is out of ingredients! Order more (I in the shop panel)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195132
+    m_Localized: 'Went cold and was thrown away: {0:0} ({1})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195133
+    m_Localized: 'Ready: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195134
+    m_Localized: "Diner: hot dogs {0}, burgers {1}, ingredients {2}/{3}. I \u2014 order {4} for ${5:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195135
+    m_Localized: Diner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195136
+    m_Localized: 'On the counter: hot dogs {0}, burgers {1}. Ingredients {2}/{3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195137
+    m_Localized: The cook on shift cooks, or you do at the grill (E). Food goes cold after 3 hours.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195138
+    m_Localized: 'Ingredients: {0} for ${1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195139
+    m_Localized: 'Chargers: {0} of {1} in use'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195140
+    m_Localized: Mechanics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195141
+    m_Localized: Charm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195142
+    m_Localized: Trade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195143
+    m_Localized: Stamina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195144
+    m_Localized: Quick hands
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195145
+    m_Localized: "pump repairs go 1.5\xD7 faster"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195146
+    m_Localized: Cheap parts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195147
+    m_Localized: repairs cost 30% less
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195148
+    m_Localized: Pump care
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195149
+    m_Localized: pumps wear out 30% slower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195150
+    m_Localized: Smile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195151
+    m_Localized: tips +50%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195152
+    m_Localized: Small talk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195153
+    m_Localized: customers wait 10% longer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195154
+    m_Localized: Local celebrity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195155
+    m_Localized: +5% customers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195156
+    m_Localized: Wholesale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195157
+    m_Localized: fuel costs 5% less to buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195158
+    m_Localized: Haggler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195159
+    m_Localized: shop goods cost 10% less
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195160
+    m_Localized: Negotiator
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195161
+    m_Localized: contract offers pay 5% more
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195162
+    m_Localized: Runner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195163
+    m_Localized: you walk 20% faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195164
+    m_Localized: Long arms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195165
+    m_Localized: interaction and pickup radius +30%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195166
+    m_Localized: Role model
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195167
+    m_Localized: staff tire 20% slower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195168
+    m_Localized: 'No skill points: you get one for every station level'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195169
+    m_Localized: Learn the previous skill of this branch first
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195170
+    m_Localized: 'New skill: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195171
+    m_Localized: '{0}: needs a {1}-star station'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195172
+    m_Localized: 'The station earned a new star: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195173
+    m_Localized: 'The station lost a star: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195174
+    m_Localized: 'Stars: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195175
+    m_Localized: 'On the road: {0} ({1:0} h left)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195176
+    m_Localized: 'Event: {0}, {1} guests'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195177
+    m_Localized: all quiet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195178
+    m_Localized: accident, road closed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195179
+    m_Localized: "road reopened \u2014 the jam is heading our way"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195180
+    m_Localized: road works, detour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195181
+    m_Localized: festival in town
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195182
+    m_Localized: oil crisis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195183
+    m_Localized: An accident on the highway! The road is closed for a couple of hours
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195184
+    m_Localized: "The road is open again \u2014 everyone stuck in the jam is coming!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195185
+    m_Localized: 'Road works begin: a detour for 5 days, fewer cars'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195186
+    m_Localized: A festival in town! Two days of tourists
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195187
+    m_Localized: 'Oil crisis: fuel gets pricier, customers buy less'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195188
+    m_Localized: The road is open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195189
+    m_Localized: The jam has cleared
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195190
+    m_Localized: Road works are over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195191
+    m_Localized: The festival is over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195192
+    m_Localized: The crisis is over, prices come back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195193
+    m_Localized: "Almost no cars. A rush follows \u2014 check the stock and pumps."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195194
+    m_Localized: "2.5\xD7 the usual traffic."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195195
+    m_Localized: 30% fewer cars.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195196
+    m_Localized: 'More cars and lots of tourists: souvenirs, the wash, the motel.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195197
+    m_Localized: The market price climbs 25%, customers buy 30% less fuel.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195198
+    m_Localized: Fair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195199
+    m_Localized: Classic car meet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195200
+    m_Localized: Drive-in movie night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195201
+    m_Localized: 'Stalls and music on the lot: a crowd all day, lots of tourists.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195202
+    m_Localized: Classic car owners come from all over the state.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195203
+    m_Localized: A screen on the lot, a film until midnight. Pricier tickets.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195204
+    m_Localized: An event is already planned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195205
+    m_Localized: The next event can be held from day {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195206
+    m_Localized: "{0} \u2014 tomorrow at {1}:00. Get ready: cleanliness, stock, staff"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195207
+    m_Localized: 'Starting now: {0}!'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195208
+    m_Localized: 'The event is over: ${0:0} in tickets, preparation {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195209
+    m_Localized: Events
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195210
+    m_Localized: Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195211
+    m_Localized: 'Station: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195212
+    m_Localized: To earn {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195213
+    m_Localized: 'weekly rating {0:0.0}+, cleanliness {1:0}%+, level {2}, services: {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195214
+    m_Localized: Stars are recounted every night. +4% customers per star; the EV licence needs {0} stars.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195215
+    m_Localized: Highway
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195216
+    m_Localized: All quiet on the highway.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195217
+    m_Localized: Host an event
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195218
+    m_Localized: 'Planned: {0}, day {1}, from {2}:00'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195219
+    m_Localized: "{0}:00\u2013{1}:00, costs ${2:0}, ${3:0} ticket per car, +{4:0}% visitors, from level {5}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195220
+    m_Localized: For tomorrow (${0:0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195221
+    m_Localized: Once a week. Cleanliness, full shelves and people on shift decide the reputation afterwards.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195222
+    m_Localized: "Owner skills \u2014 free points: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195223
+    m_Localized: 'Learn: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195224
+    m_Localized: spring
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195225
+    m_Localized: summer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195226
+    m_Localized: autumn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195227
+    m_Localized: winter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195228
+    m_Localized: 'Spring is here: changeable weather, rain'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195229
+    m_Localized: Summer! Tourists, heat, water and souvenirs sell fast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195230
+    m_Localized: 'Autumn: rain, coffee sells better'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195231
+    m_Localized: 'Winter: few tourists, more trucks, coffee sells fast, sometimes snow'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195232
+    m_Localized: clear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195233
+    m_Localized: rain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195234
+    m_Localized: heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195235
+    m_Localized: snow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195236
+    m_Localized: "Rain today: dirty cars \u2014 the wash will be busy"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195237
+    m_Localized: 'Heat today: water flies off the shelves'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195238
+    m_Localized: 'Snow today: fewer cars, more coffee'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195239
+    m_Localized: '{0}, day {1}/{2}, {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195240
+    m_Localized: 'New plate in the collection: {0} ({1:0}/{2})'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195241
+    m_Localized: "Photo mode: WASD \u2014 camera, Q/E \u2014 orbit, wheel \u2014 zoom, Space \u2014 screenshot, F12 \u2014 exit"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195242
+    m_Localized: 'Screenshot saved: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195243
+    m_Localized: Whiskers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195244
+    m_Localized: '{0} rubs against your legs and purrs'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195245
+    m_Localized: Collection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195246
+    m_Localized: 'Plates from all over the country: {0} of {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195247
+    m_Localized: The office wall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195248
+    m_Localized: 'Station cat: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195249
+    m_Localized: Lives at the station and naps on warm car roofs. What's its name?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195250
+    m_Localized: Name it
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195251
+    m_Localized: Photo mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195252
+    m_Localized: 'F12 in game: the interface hides, the camera is free, Space saves a screenshot to the Screenshots folder.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195253
+    m_Localized: Nevada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195254
+    m_Localized: Arizona
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195255
+    m_Localized: California
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195256
+    m_Localized: Utah
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195257
+    m_Localized: New Mexico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195258
+    m_Localized: Texas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195259
+    m_Localized: Colorado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195260
+    m_Localized: Oregon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195261
+    m_Localized: Idaho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195262
+    m_Localized: Wyoming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195263
+    m_Localized: Montana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195264
+    m_Localized: Washington
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195265
+    m_Localized: Oklahoma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195266
+    m_Localized: Kansas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195267
+    m_Localized: Nebraska
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195268
+    m_Localized: Louisiana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195269
+    m_Localized: Florida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195270
+    m_Localized: New York
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195271
+    m_Localized: Alaska
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195272
+    m_Localized: Hawaii
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195273
+    m_Localized: New game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195274
+    m_Localized: 'Campaign: The Inheritance'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195275
+    m_Localized: Your uncle left you a ruined gas station and a $50,000 bank debt. You have 30 days.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195276
+    m_Localized: 'Free play: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195277
+    m_Localized: Sandbox
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195278
+    m_Localized: ${0:0} to start, half bills, no bankruptcy. Just build.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195279
+    m_Localized: 'Chapter {0}: repaid ${1:0} of ${2:0} by day {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195280
+    m_Localized: Chapter {0}! A new letter on the laptop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195281
+    m_Localized: Paid ${0:0} towards your uncle's debt. ${1:0} left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195282
+    m_Localized: You sold the land to PetroMax...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195283
+    m_Localized: You turned PetroMax down. The station stays in the family!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195284
+    m_Localized: Letters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195285
+    m_Localized: 'Goal by the end of day {0}: repay ${1:0} (${2:0} paid), station level {3}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195286
+    m_Localized: 'Debt left: ${0:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195287
+    m_Localized: Pay ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195288
+    m_Localized: Pay all I can (${0:0})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195289
+    m_Localized: Chapter 1. A letter from the lawyer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195290
+    m_Localized: "\"Your uncle left you his gas station by the highway \u2014 and a $50,000 bank debt. The bank expects the first $5,000 within ten days, and the station must be running again (level 3). Good luck.\""
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195291
+    m_Localized: Chapter 2. PetroMax makes an offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195292
+    m_Localized: '"The bank is pleased with the first payment. Have $20,000 paid in total by day twenty. P.S. The PetroMax chain is interested in your land."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195293
+    m_Localized: Chapter 3. The final deadline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195294
+    m_Localized: '"The rest of the debt must be paid by day thirty. Otherwise the station goes to the bank."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195295
+    m_Localized: 'PetroMax: we''ll buy your land'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195296
+    m_Localized: '"We offer ${0:0} for the lot. The debts won''t be your problem any more. Sign and it''s over."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195297
+    m_Localized: Sell for ${0:0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195298
+    m_Localized: Decline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195299
+    m_Localized: The debt is paid!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195300
+    m_Localized: The station is yours. Your uncle would be proud. Free play from here on.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195301
+    m_Localized: The bank took the station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195302
+    m_Localized: Time ran out.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195303
+    m_Localized: The land is sold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195304
+    m_Localized: PetroMax will tear the old station down.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195305
+    m_Localized: No letters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195306
+    m_Localized: No new letters.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195307
+    m_Localized: The bank took the station
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195308
+    m_Localized: '"{0}" did not pay off the uncle''s debt in time: on day {1} the bank took the station.
+
+      Customers served: {2}. Station level: {3}.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195309
+    m_Localized: The end of the story
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195310
+    m_Localized: 'You sold "{0}" to PetroMax on day {1}. You have the money, but not the station.
+
+      Customers served: {2}. Station level: {3}.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195311
+    m_Localized: The inheritance is saved!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195312
+    m_Localized: "\"{0}\" paid off the bank on day {1}.\nCustomers served: {2}. Station stars: {3}.\nYour uncle would be proud. The station is yours \u2014 keep playing as long as you like."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195313
+    m_Localized: Keep playing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195314
+    m_Localized: A cosy place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195315
+    m_Localized: Familiar faces
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195316
+    m_Localized: The first contract
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195317
+    m_Localized: Never too late to learn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195318
+    m_Localized: Collector
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195319
+    m_Localized: A party by the road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195320
+    m_Localized: 'Place a trash bin or a bench in build mode (B): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195321
+    m_Localized: "Meet your regulars (K \u2014 the list): {0}/{1:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195322
+    m_Localized: 'Sign a contract in the laptop mail (N, or E at the desk): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195323
+    m_Localized: 'Learn an owner skill on the laptop (Skills): {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195324
+    m_Localized: 'Collect plates from different states: {0}/{1:0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1240195325
+    m_Localized: "Host an event (laptop \u2192 Events): {0}/{1:0}"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
