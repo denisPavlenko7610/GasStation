@@ -46,6 +46,8 @@ namespace GasStation.Mono
         private FuelType _selectedFuel;
         private int _shownReportDay;
         private float _reportShownAt = float.NegativeInfinity;
+        private const float MoneyPopupLifetime = 1.4f;
+        private readonly System.Collections.Generic.List<MoneyPopup> _moneyPopups = new();
 
         private void Awake()
         {
@@ -76,6 +78,7 @@ namespace GasStation.Mono
                 : BuildQuest());
             _view.SetChart(_financeOpen && _financePage == 0 && !BuildMode.Active ? HudModel.History : null);
             UpdateCards();
+            UpdateMoneyPopups();
 
             _view.SetMarker(HudModel.HasQuestTarget && !_upgradesOpen && !_storeOpen, HudModel.QuestTarget);
 
@@ -318,6 +321,65 @@ namespace GasStation.Mono
         private static int UpgradePages() => (UpgradeMath.Purchasable.Length + UpgradesPerPage - 1) / UpgradesPerPage;
 
         // ---------------------------------------------------------------- car cards (panels: StationHud.Panels.cs, status: StationHud.Status.cs)
+
+        // ---------------------------------------------------------------- money popups
+
+        /// <summary>Floating "+$12"/"-$300" by the money panel, from this frame's station events.</summary>
+        private void UpdateMoneyPopups()
+        {
+            for (int i = _moneyPopups.Count - 1; i >= 0; i--)
+            {
+                if (Time.time - _moneyPopups[i].BornAt > MoneyPopupLifetime)
+                    _moneyPopups.RemoveAt(i);
+            }
+
+            foreach (var stationEvent in HudModel.Events)
+            {
+                bool income;
+                switch (stationEvent.Type)
+                {
+                    case StationEventType.CustomerPaid:
+                    case StationEventType.TipReceived:
+                    case StationEventType.ShopSale:
+                    case StationEventType.CarWashed:
+                    case StationEventType.ParkingPaid:
+                    case StationEventType.MotelPaid:
+                    case StationEventType.TiresChanged:
+                    case StationEventType.DinerSale:
+                    case StationEventType.EvCharged:
+                    case StationEventType.QuestCompleted:
+                    case StationEventType.HostedEventEnded:
+                        income = true;
+                        break;
+                    case StationEventType.UpgradeBought:
+                    case StationEventType.UtilitiesPaid:
+                    case StationEventType.TaxPaid:
+                    case StationEventType.InsurancePremiumPaid:
+                    case StationEventType.LoanPayment:
+                    case StationEventType.ContractPenalty:
+                    case StationEventType.Robbery:
+                    case StationEventType.GoodsStolen:
+                        income = false;
+                        break;
+                    default:
+                        continue;
+                }
+
+                if (stationEvent.Value <= 0f)
+                    continue;
+
+                _moneyPopups.Add(new MoneyPopup
+                {
+                    Text = (income ? "+$" : "-$") + Mathf.RoundToInt(stationEvent.Value),
+                    Income = income,
+                    BornAt = Time.time
+                });
+                if (_moneyPopups.Count > 12)
+                    _moneyPopups.RemoveAt(0);
+            }
+
+            _view.SetMoneyPopups(_moneyPopups);
+        }
 
         private void UpdateCards()
         {

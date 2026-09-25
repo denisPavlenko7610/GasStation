@@ -25,6 +25,8 @@ namespace GasStation.Mono.Hud
         private readonly List<VisualElement> _cardPool = new();
         private readonly VisualElement _chart;
         private readonly List<VisualElement> _chartColumns = new();
+        private readonly VisualElement _moneyLayer;
+        private readonly List<Label> _moneyPool = new();
 
         public static IHudView TryCreate(GameObject host)
         {
@@ -63,6 +65,10 @@ namespace GasStation.Mono.Hud
             CreateMeter(0, "meter__fill--reputation");
             CreateMeter(1, null);
             CreateMeter(2, "meter__fill--xp");
+
+            _moneyLayer = new VisualElement { pickingMode = PickingMode.Ignore };
+            _moneyLayer.AddToClassList("money-pop__layer");
+            _root.Add(_moneyLayer);
         }
 
         public void SetVisible(bool visible) =>
@@ -171,6 +177,36 @@ namespace GasStation.Mono.Hud
                 column[0][0].style.height = Length.Percent(entry.Income / max * 100f);
                 column[0][1].style.height = Length.Percent(entry.Expenses / max * 100f);
                 ((Label)column[1]).text = entry.Day.ToString();
+            }
+        }
+
+        public void SetMoneyPopups(IReadOnlyList<MoneyPopup> popups)
+        {
+            while (_moneyPool.Count < popups.Count)
+            {
+                var label = new Label { pickingMode = PickingMode.Ignore };
+                label.AddToClassList("money-pop");
+                _moneyLayer.Add(label);
+                _moneyPool.Add(label);
+            }
+
+            for (int i = 0; i < _moneyPool.Count; i++)
+            {
+                var label = _moneyPool[i];
+                if (i >= popups.Count)
+                {
+                    label.style.display = DisplayStyle.None;
+                    continue;
+                }
+
+                var popup = popups[i];
+                float age = Time.time - popup.BornAt;
+                label.style.display = DisplayStyle.Flex;
+                if (label.text != popup.Text)
+                    label.text = popup.Text;
+                label.EnableInClassList("money-pop--expense", !popup.Income);
+                label.style.translate = new Translate(0f, -age * 46f);
+                label.style.opacity = Mathf.Clamp01(1f - age / 1.4f);
             }
         }
 

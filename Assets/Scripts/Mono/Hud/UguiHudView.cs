@@ -11,6 +11,7 @@ namespace GasStation.Mono.Hud
         private readonly Canvas _canvas;
         private readonly Text[] _blocks = new Text[6];
         private readonly Text _marker;
+        private readonly System.Collections.Generic.List<Text> _moneyPool = new();
 
         public UguiHudView(GameObject host)
         {
@@ -71,6 +72,50 @@ namespace GasStation.Mono.Hud
         public void SetChart(System.Collections.Generic.IReadOnlyList<GasStation.Components.DayHistoryEntry> history)
         {
             // The fallback HUD shows the finance table as text only.
+        }
+
+        public void SetMoneyPopups(System.Collections.Generic.IReadOnlyList<GasStation.Bridge.MoneyPopup> popups)
+        {
+            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            while (_moneyPool.Count < popups.Count)
+            {
+                var go = new GameObject("MoneyPopup", typeof(RectTransform));
+                go.transform.SetParent(_canvas.transform, false);
+                var text = go.AddComponent<Text>();
+                text.font = font;
+                text.fontSize = 30;
+                text.fontStyle = FontStyle.Bold;
+                text.raycastTarget = false;
+                text.horizontalOverflow = HorizontalWrapMode.Overflow;
+                text.verticalOverflow = VerticalWrapMode.Overflow;
+                go.AddComponent<Shadow>().effectColor = new Color(0f, 0f, 0f, 0.7f);
+                _moneyPool.Add(text);
+            }
+
+            for (int i = 0; i < _moneyPool.Count; i++)
+            {
+                var text = _moneyPool[i];
+                if (i >= popups.Count)
+                {
+                    text.gameObject.SetActive(false);
+                    continue;
+                }
+
+                var popup = popups[i];
+                float age = Time.time - popup.BornAt;
+                text.gameObject.SetActive(true);
+                text.text = popup.Text;
+                var tint = popup.Income ? new Color(0.55f, 0.95f, 0.6f) : new Color(1f, 0.55f, 0.5f);
+                tint.a = Mathf.Clamp01(1f - age / 1.4f);
+                text.color = tint;
+
+                var rect = (RectTransform)text.transform;
+                rect.anchorMin = new Vector2(0f, 1f);
+                rect.anchorMax = new Vector2(0f, 1f);
+                rect.pivot = new Vector2(0f, 1f);
+                rect.anchoredPosition = new Vector2(24f, -64f + age * 46f);
+                rect.sizeDelta = new Vector2(240f, 36f);
+            }
         }
 
         public void SetMarker(bool visible, Vector3 worldPosition)

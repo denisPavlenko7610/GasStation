@@ -40,5 +40,8 @@ namespace GasStation.Mono.Hud
 
         /// <summary>Income/expense bars per day under the panel; hidden when history is null.</summary>
         void SetChart(IReadOnlyList<DayHistoryEntry> history);
+
+        /// <summary>Floating "+$12" lines by the money panel; StationHud owns their lifetime.</summary>
+        void SetMoneyPopups(IReadOnlyList<MoneyPopup> popups);
     }
 }

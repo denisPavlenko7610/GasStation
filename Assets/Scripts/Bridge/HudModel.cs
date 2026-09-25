@@ -51,6 +51,14 @@ namespace GasStation.Bridge
         public int ContractId;
     }
 
+    /// <summary>A floating "+$12" by the money panel; BornAt is Time.time of the paying frame.</summary>
+    public struct MoneyPopup
+    {
+        public string Text;
+        public bool Income;
+        public float BornAt;
+    }
+
     /// <summary>A worker's body on the lot, for StaffPresenter.</summary>
     public struct StaffBody
     {
