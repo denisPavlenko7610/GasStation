@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Localization;
 using GasStation.Logic;
 using Unity.Entities;
 
@@ -52,70 +53,73 @@ namespace GasStation.Systems
                 switch (stationEvent.Type)
                 {
                     case StationEventType.CustomerLeftAngry:
-                        HudModel.Notify("Клиент уехал недовольным");
+                        HudModel.Notify(Loc.T("msg.customerAngry"));
                         break;
                     case StationEventType.FuelRanOut:
-                        HudModel.Notify($"Закончилось топливо: {fuel}! Закажите бензовоз (O)");
+                        HudModel.Notify(Loc.F("msg.fuelRanOut", fuel));
                         break;
                     case StationEventType.FuelDelivered:
-                        HudModel.Notify($"Бензовоз привёз {stationEvent.Value:0} л {fuel}");
+                        HudModel.Notify(Loc.F("msg.fuelDelivered", stationEvent.Value, fuel));
                         break;
                     case StationEventType.PumpBroken:
-                        HudModel.Notify($"Колонка {stationEvent.Value:0} сломалась! Почините её (E)");
+                        HudModel.Notify(Loc.F("msg.pumpBroken", stationEvent.Value));
                         break;
                     case StationEventType.PumpRepaired:
-                        HudModel.Notify($"Колонка {stationEvent.Value:0} как новая");
+                        HudModel.Notify(Loc.F("msg.pumpRepaired", stationEvent.Value));
                         break;
                     case StationEventType.NotEnoughMoney:
-                        HudModel.Notify($"Не хватает денег: нужно ${stationEvent.Value:0}");
+                        HudModel.Notify(Loc.F("msg.noMoney", stationEvent.Value));
                         break;
                     case StationEventType.LevelUp:
-                        HudModel.Notify($"Уровень станции {stationEvent.Value:0}! Открыты новые улучшения и клиенты");
+                        HudModel.Notify(Loc.F("msg.levelUp", stationEvent.Value));
                         break;
                     case StationEventType.TipReceived:
-                        HudModel.Notify($"Чаевые: ${stationEvent.Value:0}");
+                        HudModel.Notify(Loc.F("msg.tip", stationEvent.Value));
                         break;
                     case StationEventType.FuelStolen:
-                        HudModel.Notify($"Вор уехал без оплаты! Потеряно ${stationEvent.Value:0}");
+                        HudModel.Notify(Loc.F("msg.fuelStolen", stationEvent.Value));
                         break;
                     case StationEventType.ThiefCaught:
-                        HudModel.Notify("Вор пойман и заплатил!");
+                        HudModel.Notify(Loc.T("msg.thiefCaught"));
                         break;
                     case StationEventType.MarketChanged:
-                        HudModel.Notify($"Цены на нефть: {stationEvent.Value:+0.0;-0.0;0}%. Проверьте свои цены");
+                        HudModel.Notify(Loc.F("msg.market", stationEvent.Value));
                         break;
                     case StationEventType.Vandals:
-                        HudModel.Notify("Ночью приходили вандалы и намусорили");
+                        HudModel.Notify(Loc.T("msg.vandals"));
                         break;
                     case StationEventType.RushHourStarted:
-                        HudModel.Notify("Час пик: туристы едут толпой!");
+                        HudModel.Notify(Loc.T("msg.rushHour"));
                         break;
                     case StationEventType.SandstormStarted:
-                        HudModel.Notify("Песчаная буря: клиентов мало, мусора много");
+                        HudModel.Notify(Loc.T("msg.sandstorm"));
                         break;
                     case StationEventType.InspectionPassed:
-                        HudModel.Notify($"Проверка пройдена! Премия ${stationEvent.Value:0}");
+                        HudModel.Notify(Loc.F("msg.inspectionPassed", stationEvent.Value));
                         break;
                     case StationEventType.ShopEmpty:
-                        HudModel.Notify("Покупатель ушёл из магазина ни с чем — закажите товар (M)");
+                        HudModel.Notify(Loc.T("msg.shopEmpty"));
                         break;
                     case StationEventType.RestroomDisgusting:
-                        HudModel.Notify("Клиент в ужасе от туалета! Уберите его (E у двери)");
+                        HudModel.Notify(Loc.T("msg.restroomDisgusting"));
                         break;
                     case StationEventType.WorkerStole:
-                        HudModel.Notify($"Из кассы пропало ${stationEvent.Value:0}. Кто-то из сотрудников нечист на руку…");
+                        HudModel.Notify(Loc.F("msg.workerStole", stationEvent.Value));
+                        break;
+                    case StationEventType.MotelPaid:
+                        HudModel.Notify(Loc.F("msg.motelPaid", stationEvent.Value));
                         break;
                     case StationEventType.TruckParked:
-                        HudModel.Notify("Дальнобойщик встал на ночёвку");
+                        HudModel.Notify(Loc.T("msg.truckParked"));
                         break;
                     case StationEventType.ParkingPaid:
-                        HudModel.Notify($"Дальнобойщик заплатил за ночь: ${stationEvent.Value:0}");
+                        HudModel.Notify(Loc.F("msg.parkingPaid", stationEvent.Value));
                         break;
                     case StationEventType.ProductsDelivered:
-                        HudModel.Notify($"В магазин привезли товар: {stationEvent.Value:0} шт.");
+                        HudModel.Notify(Loc.F("msg.productsDelivered", stationEvent.Value));
                         break;
                     case StationEventType.InspectionFailed:
-                        HudModel.Notify($"Проверка: грязно! Штраф ${stationEvent.Value:0}");
+                        HudModel.Notify(Loc.F("msg.inspectionFailed", stationEvent.Value));
                         break;
                 }
             }
@@ -207,6 +211,22 @@ namespace GasStation.Systems
 
             HudModel.PaintScheme = SystemAPI.HasSingleton<StationStyle>() ? SystemAPI.GetSingleton<StationStyle>().Scheme : 1;
 
+            HudModel.HasMotel = SystemAPI.HasSingleton<Motel>();
+            HudModel.MotelUsed = 0;
+            HudModel.MotelDirty = 0;
+            if (HudModel.HasMotel)
+            {
+                var rooms = SystemAPI.GetBuffer<MotelRoom>(SystemAPI.GetSingletonEntity<Motel>());
+                HudModel.MotelOpen = FacilityMath.OpenRooms(HudModel.Upgrades.Motel, rooms.Length);
+                for (int i = 0; i < rooms.Length; i++)
+                {
+                    if (rooms[i].Occupant != Entity.Null && SystemAPI.Exists(rooms[i].Occupant))
+                        HudModel.MotelUsed++;
+                    if (rooms[i].Dirty)
+                        HudModel.MotelDirty++;
+                }
+            }
+
             HudModel.HasRestroom = SystemAPI.HasSingleton<Restroom>();
             HudModel.RestroomDirt = HudModel.HasRestroom ? SystemAPI.GetSingleton<Restroom>().Dirt : 0f;
         }
@@ -290,6 +310,12 @@ namespace GasStation.Systems
                     fuelingAction = true;
                 }
 
+                if (!fuelingAction && NearDirtyMotel())
+                {
+                    HudModel.Hint = InteractionHint.MotelRoom;
+                    fuelingAction = true;
+                }
+
                 if (!fuelingAction && NearDirtyRestroom())
                 {
                     HudModel.Hint = InteractionHint.Restroom;
@@ -312,6 +338,22 @@ namespace GasStation.Systems
             foreach (var transform in SystemAPI.Query<RefRO<Unity.Transforms.LocalTransform>>().WithAll<PlayerTag>())
             {
                 if (Unity.Mathematics.math.distancesq(transform.ValueRO.Position.xz, bay.xz) <= radius * radius)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool NearDirtyMotel()
+        {
+            if (HudModel.MotelDirty == 0 || !SystemAPI.HasSingleton<StationSettings>())
+                return false;
+
+            var door = SystemAPI.GetSingleton<Motel>().Door;
+            float radius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
+            foreach (var transform in SystemAPI.Query<RefRO<Unity.Transforms.LocalTransform>>().WithAll<PlayerTag>())
+            {
+                if (Unity.Mathematics.math.distancesq(transform.ValueRO.Position.xz, door.xz) <= radius * radius)
                     return true;
             }
 

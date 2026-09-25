@@ -39,6 +39,20 @@ namespace GasStation.Logic
         /// <summary>Supply manager level 3 halves delivery time.</summary>
         public static float SupplyDeliveryFactor(int level) => level >= 3 ? 0.5f : 1f;
 
+        public const int RoomsPerMotelLevel = 2;
+        public const float MotelReputationBonus = 0.01f;
+
+        public static int OpenRooms(int motelLevel, int totalRooms) => math.min(totalRooms, motelLevel * RoomsPerMotelLevel);
+
+        /// <summary>Travellers look for a room in the evening.</summary>
+        public static bool WantsRoom(float hour) => hour >= 18f || hour < 3f;
+
+        public static float RoomPrice(float basePrice, int motelLevel) =>
+            basePrice * (1f + 0.25f * math.max(0, motelLevel - 1));
+
+        /// <summary>Seconds a janitor needs per dirty room.</summary>
+        public static float JanitorRoomInterval(float janitorPower) => janitorPower > 0f ? 30f / janitorPower : float.PositiveInfinity;
+
         public static bool NeedsReorder(float stockWithPending, float capacity) =>
             capacity > 0f && stockWithPending < capacity * ReorderThreshold;
     }

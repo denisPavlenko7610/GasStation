@@ -98,8 +98,10 @@ namespace GasStation.Editor
             Place("Vending_machine_Rusted", scene, parent, new Vector3(10f, 0f, 19f), 180f);
             Place("Trash_can", scene, parent, new Vector3(-8f, 0f, 17f), 0f);
             Place("Trash_can_2", scene, parent, new Vector3(5f, 0f, -9f), 0f);
-            Place("Gas_Cistern", scene, parent, new Vector3(-27f, 0f, 19f), 90f);
-            Place("Old_Rust_Car", scene, parent, new Vector3(-18f, 0f, 24f), 35f);
+            Place("Gas_Cistern", scene, parent, new Vector3(-33f, 0f, -7f), 90f);
+            // Motel: the second operator's room model serves as the reception with rooms.
+            primary.Add(Place("Operator 's_room_2", scene, parent, new Vector3(-26f, 0f, 22f), 180f));
+            Place("Old_Rust_Car", scene, parent, new Vector3(-46f, 0f, 22f), 35f);
             // Car wash bay, opened by the CarWash upgrade.
             primary.Add(Place("Station_Canopy_2", scene, parent, new Vector3(26f, 0f, 12f), 90f));
 
@@ -282,6 +284,17 @@ namespace GasStation.Editor
             var shop = Create("Shop_Door", parent, new Vector3(0f, 0f, 17.5f));
             shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
 
+            var motel = Create("Motel_Reception", parent, new Vector3(-26f, 0f, 17.5f));
+            var motelAuthoring = motel.AddComponent<MotelAuthoring>();
+            motelAuthoring.entry = Create("Motel_Entry", parent, new Vector3(-12f, 0f, 9f)).transform;
+            motelAuthoring.rooms = new Transform[6];
+            for (int i = 0; i < 6; i++)
+            {
+                var room = Create($"Motel_Room_{i + 1}", parent, new Vector3(-34f + i * 4f, 0f, 13f));
+                room.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+                motelAuthoring.rooms[i] = room.transform;
+            }
+
             // Restroom on the right side of the shop; the hut is a placeholder until a real model is added.
             Create("Restroom_Door", parent, new Vector3(9f, 0f, 21f)).AddComponent<RestroomAuthoring>();
 
@@ -329,7 +342,8 @@ namespace GasStation.Editor
                 new(-4f, 15f, 8f, 5f),     // shop door
                 new(8f, 4f, 30f, 12f),     // wash lane
                 new(10f, 17f, 26f, 10f),   // truck parking and restroom
-                new(8f, -13f, 26f, 9f)     // tire service lane
+                new(8f, -13f, 26f, 9f),    // tire service lane
+                new(-36f, 11f, 26f, 14f)   // motel parking
             };
             StationEditorUtility.ScatterTrash(scene, trash.transform, new Vector3(Lot.center.x, 0f, Lot.center.y),
                 new Vector2(Lot.width / 2f - 2f, Lot.height / 2f - 2f), 45, 1234, keepOut);

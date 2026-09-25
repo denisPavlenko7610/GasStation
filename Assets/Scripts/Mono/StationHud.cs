@@ -1,6 +1,7 @@
 using System.Text;
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Localization;
 using GasStation.Logic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,16 +9,21 @@ using UnityEngine.UI;
 
 namespace GasStation.Mono
 {
-    /// <summary>Minimal text HUD built at runtime. Reads HudModel and sends StationCommands.</summary>
+    /// <summary>
+    /// HUD built at runtime from uGUI: text blocks on semi-transparent panels. Reads HudModel, sends
+    /// StationCommands and takes all strings from Loc (Unity Localization).
+    /// </summary>
     public class StationHud : MonoBehaviour
     {
         private const float PriceStep = 0.05f;
         private const float OrderLiters = 500f;
         private const float MessageDuration = 3f;
         private const float ReportDuration = 8f;
-
-        private const float NewGameConfirmTime = 2f;
+        private const float ConfirmTime = 2f;
         private const float ProductPriceStep = 0.25f;
+        private const int UpgradesPerPage = 6;
+
+        private static readonly Color PanelColor = new(0.05f, 0.06f, 0.08f, 0.62f);
 
         private readonly StringBuilder _builder = new();
         private Canvas _canvas;
@@ -26,8 +32,8 @@ namespace GasStation.Mono
         private Text _pumps;
         private Text _center;
         private Text _help;
-        private Text _shop;
-        private const int UpgradesPerPage = 6;
+        private Text _panel;
+
         private bool _upgradesOpen;
         private int _upgradePage;
         private bool _storeOpen;
@@ -35,8 +41,8 @@ namespace GasStation.Mono
         private bool _staffOpen;
         private int _fireRequestedId = -1;
         private float _fireRequestedAt = float.NegativeInfinity;
-        private ProductType _selectedProduct;
         private float _newGameRequestedAt = float.NegativeInfinity;
+        private ProductType _selectedProduct;
         private FuelType _selectedFuel;
         private int _shownReportDay;
         private float _reportShownAt = float.NegativeInfinity;
@@ -53,14 +59,12 @@ namespace GasStation.Mono
             scaler.matchWidthOrHeight = 0.5f;
 
             var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            _status = CreateText("Status", font, new Vector2(0f, 1f), TextAnchor.UpperLeft, 28);
-            _fuel = CreateText("Fuel", font, new Vector2(1f, 1f), TextAnchor.UpperRight, 26);
-            _pumps = CreateText("Pumps", font, new Vector2(0f, 0f), TextAnchor.LowerLeft, 26);
-            _center = CreateText("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 34);
-            _help = CreateText("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 22);
-            _help.text = "WASD — ходить   E / ЛКМ — заправить / убрать мусор\n1/2/3 — топливо   +/- — цена   O — заказать 500 л\n" +
-                         "Tab — улучшения   M — магазин   C — покраска   H — персонал   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
-            _shop = CreateText("Shop", font, new Vector2(0.5f, 1f), TextAnchor.UpperCenter, 26);
+            _status = CreateBlock("Status", font, new Vector2(0f, 1f), TextAnchor.UpperLeft, 26);
+            _fuel = CreateBlock("Fuel", font, new Vector2(1f, 1f), TextAnchor.UpperRight, 24);
+            _pumps = CreateBlock("Pumps", font, new Vector2(0f, 0f), TextAnchor.LowerLeft, 22);
+            _center = CreateBlock("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 32);
+            _help = CreateBlock("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 18);
+            _panel = CreateBlock("Panel", font, new Vector2(0.5f, 1f), TextAnchor.UpperLeft, 24);
         }
 
         private void Update()
@@ -70,16 +74,19 @@ namespace GasStation.Mono
                 return;
 
             HandleKeys();
-            _status.text = BuildStatus();
-            _fuel.text = BuildFuel();
-            _pumps.text = BuildPumps();
-            _center.text = BuildCenter();
-            _shop.text = _upgradesOpen ? BuildUpgrades()
+            SetText(_status, BuildStatus());
+            SetText(_fuel, BuildFuel());
+            SetText(_pumps, BuildPumps());
+            SetText(_center, BuildCenter());
+            SetText(_help, Loc.T("hud.help"));
+            SetText(_panel, _upgradesOpen ? BuildUpgrades()
                 : _storeOpen ? BuildStore()
                 : _paintOpen ? BuildPaint()
                 : _staffOpen ? BuildStaff()
-                : BuildQuest();
+                : BuildQuest());
         }
+
+        // ---------------------------------------------------------------- input
 
         private void HandleKeys()
         {
@@ -90,44 +97,24 @@ namespace GasStation.Mono
             if (keyboard.tabKey.wasPressedThisFrame)
             {
                 // Tab: page 1 → page 2 → closed.
-                int pages = (UpgradeMath.Purchasable.Length + UpgradesPerPage - 1) / UpgradesPerPage;
+                int pages = UpgradePages();
                 if (!_upgradesOpen)
-                {
-                    _upgradesOpen = true;
-                    _upgradePage = 0;
-                }
+                    OpenOnly(ref _upgradesOpen);
                 else if (++_upgradePage >= pages)
-                {
                     _upgradesOpen = false;
-                }
-
-                _storeOpen = false;
-                _paintOpen = false;
-                _staffOpen = false;
             }
 
             if (keyboard.mKey.wasPressedThisFrame && HudModel.HasShop)
-            {
-                _storeOpen = !_storeOpen;
-                _upgradesOpen = false;
-                _paintOpen = false;
-                _staffOpen = false;
-            }
-
+                Toggle(ref _storeOpen);
             if (keyboard.cKey.wasPressedThisFrame)
-            {
-                _paintOpen = !_paintOpen;
-                _upgradesOpen = false;
-                _storeOpen = false;
-                _staffOpen = false;
-            }
-
+                Toggle(ref _paintOpen);
             if (keyboard.hKey.wasPressedThisFrame)
+                Toggle(ref _staffOpen);
+
+            if (keyboard.lKey.wasPressedThisFrame)
             {
-                _staffOpen = !_staffOpen;
-                _upgradesOpen = false;
-                _storeOpen = false;
-                _paintOpen = false;
+                Loc.ToggleLanguage();
+                HudModel.Notify(Loc.T("msg.language"));
             }
 
             if (keyboard.f5Key.wasPressedThisFrame)
@@ -136,7 +123,7 @@ namespace GasStation.Mono
                 StationCommands.LoadGame();
             if (keyboard.f10Key.wasPressedThisFrame)
             {
-                if (Time.unscaledTime - _newGameRequestedAt < NewGameConfirmTime)
+                if (Time.unscaledTime - _newGameRequestedAt < ConfirmTime)
                 {
                     StationCommands.NewGame();
                     _newGameRequestedAt = float.NegativeInfinity;
@@ -144,104 +131,91 @@ namespace GasStation.Mono
                 else
                 {
                     _newGameRequestedAt = Time.unscaledTime;
-                    HudModel.Notify("Нажмите F10 ещё раз, чтобы начать заново");
+                    HudModel.Notify(Loc.T("msg.confirmNewGame"));
                 }
             }
 
             if (_staffOpen)
-            {
                 HandleStaffKeys(keyboard);
-                return;
-            }
+            else if (_paintOpen)
+                HandlePaintKeys(keyboard);
+            else if (_upgradesOpen)
+                HandleUpgradeKeys(keyboard);
+            else if (_storeOpen)
+                HandleStoreKeys(keyboard);
+            else
+                HandleFuelKeys(keyboard);
+        }
 
-            if (_paintOpen)
-            {
-                for (int scheme = 1; scheme < StyleMath.SchemeCount; scheme++)
-                {
-                    if (DigitPressed(keyboard, scheme))
-                        StationCommands.PaintStation(scheme);
-                }
+        private void Toggle(ref bool panel)
+        {
+            bool open = !panel;
+            CloseAll();
+            panel = open;
+        }
 
-                return;
-            }
+        private void OpenOnly(ref bool panel)
+        {
+            CloseAll();
+            panel = true;
+            _upgradePage = 0;
+        }
 
-            if (_upgradesOpen)
-            {
-                for (int slot = 0; slot < UpgradesPerPage; slot++)
-                {
-                    int index = _upgradePage * UpgradesPerPage + slot;
-                    if (index < UpgradeMath.Purchasable.Length && DigitPressed(keyboard, slot + 1))
-                        StationCommands.BuyUpgrade(UpgradeMath.Purchasable[index]);
-                }
+        private void CloseAll()
+        {
+            _upgradesOpen = false;
+            _storeOpen = false;
+            _paintOpen = false;
+            _staffOpen = false;
+        }
 
-                return;
-            }
-
-            if (_storeOpen)
-            {
-                for (int i = 0; i < ProductTypes.Count; i++)
-                {
-                    if (DigitPressed(keyboard, i + 1))
-                        _selectedProduct = (ProductType)i;
-                }
-
-                if (keyboard.equalsKey.wasPressedThisFrame || keyboard.numpadPlusKey.wasPressedThisFrame)
-                    StationCommands.ChangeProductPrice(_selectedProduct, ProductPriceStep);
-                if (keyboard.minusKey.wasPressedThisFrame || keyboard.numpadMinusKey.wasPressedThisFrame)
-                    StationCommands.ChangeProductPrice(_selectedProduct, -ProductPriceStep);
-                if (keyboard.oKey.wasPressedThisFrame)
-                    StationCommands.OrderProducts(_selectedProduct, ShopMath.OrderSize);
-                return;
-            }
-
+        private void HandleFuelKeys(Keyboard keyboard)
+        {
             if (keyboard.digit1Key.wasPressedThisFrame) _selectedFuel = FuelType.Petrol92;
             if (keyboard.digit2Key.wasPressedThisFrame) _selectedFuel = FuelType.Petrol95;
             if (keyboard.digit3Key.wasPressedThisFrame) _selectedFuel = FuelType.Diesel;
 
-            if (keyboard.equalsKey.wasPressedThisFrame || keyboard.numpadPlusKey.wasPressedThisFrame)
+            if (PlusPressed(keyboard))
                 StationCommands.ChangePrice(_selectedFuel, PriceStep);
-            if (keyboard.minusKey.wasPressedThisFrame || keyboard.numpadMinusKey.wasPressedThisFrame)
+            if (MinusPressed(keyboard))
                 StationCommands.ChangePrice(_selectedFuel, -PriceStep);
             if (keyboard.oKey.wasPressedThisFrame)
                 StationCommands.OrderFuel(_selectedFuel, OrderLiters);
         }
 
-        private static bool DigitPressed(Keyboard keyboard, int digit) => digit switch
+        private void HandleStoreKeys(Keyboard keyboard)
         {
-            1 => keyboard.digit1Key.wasPressedThisFrame,
-            2 => keyboard.digit2Key.wasPressedThisFrame,
-            3 => keyboard.digit3Key.wasPressedThisFrame,
-            4 => keyboard.digit4Key.wasPressedThisFrame,
-            5 => keyboard.digit5Key.wasPressedThisFrame,
-            6 => keyboard.digit6Key.wasPressedThisFrame,
-            7 => keyboard.digit7Key.wasPressedThisFrame,
-            8 => keyboard.digit8Key.wasPressedThisFrame,
-            9 => keyboard.digit9Key.wasPressedThisFrame,
-            _ => false
-        };
-
-        private string BuildUpgrades()
-        {
-            _builder.Clear();
-            int pages = (UpgradeMath.Purchasable.Length + UpgradesPerPage - 1) / UpgradesPerPage;
-            _builder.AppendLine($"УЛУЧШЕНИЯ, стр. {_upgradePage + 1}/{pages} (цифра — купить, Tab — дальше / закрыть)");
-            for (int slot = 0; slot < UpgradesPerPage; slot++)
+            for (int i = 0; i < ProductTypes.Count; i++)
             {
-                int i = _upgradePage * UpgradesPerPage + slot;
-                if (i >= UpgradeMath.Purchasable.Length)
-                    break;
-
-                var type = UpgradeMath.Purchasable[i];
-                int level = HudModel.Upgrades.Get(type);
-                int max = UpgradeMath.MaxLevel(type);
-                int requiredLevel = ProgressMath.RequiredLevel(type, level);
-                string price = !UpgradeMath.CanUpgrade(type, level) ? "макс."
-                    : HudModel.Level.Level < requiredLevel ? $"нужен уровень {requiredLevel}"
-                    : $"${UpgradeMath.Cost(type, level):0}";
-                _builder.AppendLine($"{slot + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
+                if (DigitPressed(keyboard, i + 1))
+                    _selectedProduct = (ProductType)i;
             }
 
-            return _builder.ToString();
+            if (PlusPressed(keyboard))
+                StationCommands.ChangeProductPrice(_selectedProduct, ProductPriceStep);
+            if (MinusPressed(keyboard))
+                StationCommands.ChangeProductPrice(_selectedProduct, -ProductPriceStep);
+            if (keyboard.oKey.wasPressedThisFrame)
+                StationCommands.OrderProducts(_selectedProduct, ShopMath.OrderSize);
+        }
+
+        private void HandleUpgradeKeys(Keyboard keyboard)
+        {
+            for (int slot = 0; slot < UpgradesPerPage; slot++)
+            {
+                int index = _upgradePage * UpgradesPerPage + slot;
+                if (index < UpgradeMath.Purchasable.Length && DigitPressed(keyboard, slot + 1))
+                    StationCommands.BuyUpgrade(UpgradeMath.Purchasable[index]);
+            }
+        }
+
+        private void HandlePaintKeys(Keyboard keyboard)
+        {
+            for (int scheme = 1; scheme < StyleMath.SchemeCount; scheme++)
+            {
+                if (DigitPressed(keyboard, scheme))
+                    StationCommands.PaintStation(scheme);
+            }
         }
 
         private void HandleStaffKeys(Keyboard keyboard)
@@ -259,7 +233,7 @@ namespace GasStation.Mono
                     continue;
 
                 var worker = HudModel.Workers[slot];
-                if (_fireRequestedId == worker.Id && Time.unscaledTime - _fireRequestedAt < NewGameConfirmTime)
+                if (_fireRequestedId == worker.Id && Time.unscaledTime - _fireRequestedAt < ConfirmTime)
                 {
                     StationCommands.FireWorker(worker.Id);
                     _fireRequestedId = -1;
@@ -268,36 +242,83 @@ namespace GasStation.Mono
                 {
                     _fireRequestedId = worker.Id;
                     _fireRequestedAt = Time.unscaledTime;
-                    HudModel.Notify($"Нажмите {slot + 4} ещё раз, чтобы уволить: {GameTexts.StaffName(worker.NameIndex)}");
+                    HudModel.Notify(Loc.F("panel.staff.confirmFire", slot + 4, GameTexts.StaffName(worker.NameIndex)));
                 }
             }
+        }
+
+        private static bool PlusPressed(Keyboard keyboard) =>
+            keyboard.equalsKey.wasPressedThisFrame || keyboard.numpadPlusKey.wasPressedThisFrame;
+
+        private static bool MinusPressed(Keyboard keyboard) =>
+            keyboard.minusKey.wasPressedThisFrame || keyboard.numpadMinusKey.wasPressedThisFrame;
+
+        private static bool DigitPressed(Keyboard keyboard, int digit) => digit switch
+        {
+            1 => keyboard.digit1Key.wasPressedThisFrame,
+            2 => keyboard.digit2Key.wasPressedThisFrame,
+            3 => keyboard.digit3Key.wasPressedThisFrame,
+            4 => keyboard.digit4Key.wasPressedThisFrame,
+            5 => keyboard.digit5Key.wasPressedThisFrame,
+            6 => keyboard.digit6Key.wasPressedThisFrame,
+            7 => keyboard.digit7Key.wasPressedThisFrame,
+            8 => keyboard.digit8Key.wasPressedThisFrame,
+            9 => keyboard.digit9Key.wasPressedThisFrame,
+            _ => false
+        };
+
+        private static int UpgradePages() => (UpgradeMath.Purchasable.Length + UpgradesPerPage - 1) / UpgradesPerPage;
+
+        // ---------------------------------------------------------------- panels
+
+        private string BuildUpgrades()
+        {
+            _builder.Clear();
+            _builder.AppendLine(Loc.F("panel.upgrades", _upgradePage + 1, UpgradePages()));
+            for (int slot = 0; slot < UpgradesPerPage; slot++)
+            {
+                int i = _upgradePage * UpgradesPerPage + slot;
+                if (i >= UpgradeMath.Purchasable.Length)
+                    break;
+
+                var type = UpgradeMath.Purchasable[i];
+                int level = HudModel.Upgrades.Get(type);
+                int requiredLevel = ProgressMath.RequiredLevel(type, level);
+                string price = !UpgradeMath.CanUpgrade(type, level) ? Loc.T("panel.max")
+                    : HudModel.Level.Level < requiredLevel ? Loc.F("panel.needLevel", requiredLevel)
+                    : Loc.F("panel.price", UpgradeMath.Cost(type, level));
+                _builder.AppendLine(Loc.F("panel.upgrades.line", slot + 1, GameTexts.UpgradeName(type), level,
+                    UpgradeMath.MaxLevel(type), price, GameTexts.UpgradeDescription(type)));
+            }
+
+            return _builder.ToString();
         }
 
         private string BuildStaff()
         {
             _builder.Clear();
-            _builder.AppendLine($"ПЕРСОНАЛ {HudModel.Workers.Count}/{StaffMath.MaxStaff} (1–3 — нанять, 4–9 ×2 — уволить, H — закрыть)");
-            _builder.AppendLine("Кандидаты сегодня:");
+            _builder.AppendLine(Loc.F("panel.staff", HudModel.Workers.Count, StaffMath.MaxStaff));
+            _builder.AppendLine(Loc.T("panel.staff.candidates"));
             for (int i = 0; i < HudModel.Candidates.Count; i++)
             {
                 var candidate = HudModel.Candidates[i];
-                _builder.AppendLine($"{i + 1}. {GameTexts.StaffName(candidate.NameIndex)}, {GameTexts.RoleName(candidate.Role)} " +
-                                    $"({GameTexts.RoleDuty(candidate.Role)}), навык {candidate.Skill:0.00}, ${candidate.Wage:0}/день, " +
-                                    $"{GameTexts.ReferenceText(StaffMath.ReferenceGrade(candidate.Honesty))}; найм ${StaffMath.HiringFee(candidate.Wage):0}");
+                _builder.AppendLine(Loc.F("panel.staff.candidate", i + 1, GameTexts.StaffName(candidate.NameIndex),
+                    GameTexts.RoleName(candidate.Role), GameTexts.RoleDuty(candidate.Role), candidate.Skill, candidate.Wage,
+                    GameTexts.ReferenceText(StaffMath.ReferenceGrade(candidate.Honesty)), StaffMath.HiringFee(candidate.Wage)));
             }
 
             if (HudModel.Workers.Count == 0)
             {
-                _builder.AppendLine("Сотрудников пока нет.");
+                _builder.Append(Loc.T("panel.staff.none"));
                 return _builder.ToString();
             }
 
-            _builder.AppendLine("Работают:");
+            _builder.AppendLine(Loc.T("panel.staff.working"));
             for (int slot = 0; slot < HudModel.Workers.Count && slot < StaffMath.MaxStaff; slot++)
             {
                 var worker = HudModel.Workers[slot];
-                _builder.AppendLine($"{slot + 4}. {GameTexts.StaffName(worker.NameIndex)}, {GameTexts.RoleName(worker.Role)}, " +
-                                    $"навык {worker.Skill:0.00}, ${worker.Wage:0}/день, стаж {worker.DaysWorked} дн.");
+                _builder.AppendLine(Loc.F("panel.staff.worker", slot + 4, GameTexts.StaffName(worker.NameIndex),
+                    GameTexts.RoleName(worker.Role), worker.Skill, worker.Wage, worker.DaysWorked));
             }
 
             return _builder.ToString();
@@ -306,33 +327,37 @@ namespace GasStation.Mono
         private string BuildPaint()
         {
             _builder.Clear();
-            _builder.AppendLine("ПОКРАСКА (цифра — перекрасить, C — закрыть)");
-            _builder.AppendLine($"Сейчас: «{GameTexts.SchemeName(HudModel.PaintScheme)}», клиентов {StyleMath.TrafficFactor(HudModel.PaintScheme) * 100f - 100f:+0;-0;0}%");
+            _builder.AppendLine(Loc.T("panel.paint"));
+            _builder.AppendLine(Loc.F("panel.paint.current", GameTexts.SchemeName(HudModel.PaintScheme),
+                TrafficPercent(HudModel.PaintScheme)));
             for (int scheme = 1; scheme < StyleMath.SchemeCount; scheme++)
             {
                 int required = StyleMath.RequiredLevel(scheme);
-                string price = scheme == HudModel.PaintScheme ? "уже так"
-                    : HudModel.Level.Level < required ? $"нужен уровень {required}"
-                    : $"${StyleMath.Cost(scheme):0}";
-                _builder.AppendLine($"{scheme}. «{GameTexts.SchemeName(scheme)}» — {price}, клиентов {StyleMath.TrafficFactor(scheme) * 100f - 100f:+0;-0;0}%");
+                string price = scheme == HudModel.PaintScheme ? Loc.T("panel.paint.current.short")
+                    : HudModel.Level.Level < required ? Loc.F("panel.needLevel", required)
+                    : Loc.F("panel.price", StyleMath.Cost(scheme));
+                _builder.AppendLine(Loc.F("panel.paint.line", scheme, GameTexts.SchemeName(scheme), price, TrafficPercent(scheme)));
             }
 
             return _builder.ToString();
         }
 
+        private static float TrafficPercent(int scheme) => StyleMath.TrafficFactor(scheme) * 100f - 100f;
+
         private string BuildStore()
         {
             _builder.Clear();
-            _builder.AppendLine($"МАГАЗИН (1–5 — товар, +/- — цена, O — заказать {ShopMath.OrderSize} шт., M — закрыть)");
-            _builder.AppendLine($"Покупателей внутри: {HudModel.PedestriansInShop}");
+            _builder.AppendLine(Loc.F("panel.store", ShopMath.OrderSize));
+            _builder.AppendLine(Loc.F("panel.store.inside", HudModel.PedestriansInShop));
             for (int i = 0; i < ProductTypes.Count; i++)
             {
                 var product = HudModel.Products[i];
-                string marker = (int)_selectedProduct == i ? "▶ " : "";
-                _builder.Append($"{marker}{i + 1}. {GameTexts.ProductName((ProductType)i)}: {product.Stock}/{product.Capacity}   " +
-                                $"${product.SellPrice:0.00} (закупка ${product.BuyPrice:0.00}, обычно ${product.ReferencePrice:0.00})");
+                if ((int)_selectedProduct == i)
+                    _builder.Append("▶ ");
+                _builder.Append(Loc.F("panel.store.line", i + 1, GameTexts.ProductName((ProductType)i), product.Stock,
+                    product.Capacity, product.SellPrice, product.BuyPrice, product.ReferencePrice));
                 if (HudModel.PendingProducts[i] > 0)
-                    _builder.Append($"   +{HudModel.PendingProducts[i]} в пути");
+                    _builder.Append(Loc.F("panel.store.pending", HudModel.PendingProducts[i]));
                 _builder.AppendLine();
             }
 
@@ -342,10 +367,14 @@ namespace GasStation.Mono
         private string BuildQuest()
         {
             var quest = HudModel.Quest;
-            string title = quest.IsDaily ? "Задание дня" : $"Задание: {GameTexts.QuestTitle(quest)}";
-            string goal = string.Format(GameTexts.QuestGoalText(quest), HudModel.QuestProgress.ToString("0"));
-            return $"{title}\n{goal}\nНаграда: {GameTexts.QuestReward(quest)}";
+            _builder.Clear();
+            _builder.AppendLine(Loc.F("quest.header", GameTexts.QuestTitle(quest)));
+            _builder.AppendLine(GameTexts.QuestGoalText(quest, HudModel.QuestProgress));
+            _builder.Append(Loc.F("quest.reward", GameTexts.QuestReward(quest)));
+            return _builder.ToString();
         }
+
+        // ---------------------------------------------------------------- status blocks
 
         private string BuildStatus()
         {
@@ -354,32 +383,28 @@ namespace GasStation.Mono
             int minutes = (int)((HudModel.Hour - hours) * 60f);
 
             _builder.Clear();
-            _builder.AppendLine($"День {HudModel.Day}   {hours:00}:{minutes:00}");
-            _builder.AppendLine($"Деньги: ${economy.Money:0}");
-            _builder.AppendLine($"Репутация: {economy.Reputation * 100f:0}%");
-            _builder.AppendLine($"Чистота: {HudModel.Cleanliness.Value * 100f:0}% (мусора: {HudModel.Cleanliness.TrashCount})");
+            _builder.AppendLine(Loc.F("hud.day", HudModel.Day, hours, minutes));
+            _builder.AppendLine(Loc.F("hud.money", economy.Money));
+            _builder.AppendLine(Loc.F("hud.reputation", economy.Reputation * 100f));
+            _builder.AppendLine(Loc.F("hud.cleanliness", HudModel.Cleanliness.Value * 100f, HudModel.Cleanliness.TrashCount));
             if (HudModel.Workers.Count > 0)
             {
                 float wages = 0f;
                 foreach (var worker in HudModel.Workers)
                     wages += worker.Wage;
-                _builder.AppendLine($"Персонал: {HudModel.Workers.Count} чел., зарплаты ${wages:0}/день");
+                _builder.AppendLine(Loc.F("hud.staff", HudModel.Workers.Count, wages));
             }
 
             var level = HudModel.Level;
             _builder.AppendLine(level.Level >= ProgressMath.MaxLevel
-                ? $"Уровень станции: {level.Level} (макс.)"
-                : $"Уровень станции: {level.Level}   опыт {level.Experience:0}/{ProgressMath.ExperienceToNext(level.Level):0}");
-            string worldEvent = HudModel.World.Active switch
-            {
-                WorldEventKind.RushHour => "Час пик",
-                WorldEventKind.Sandstorm => "Песчаная буря",
-                _ => null
-            };
-            if (worldEvent != null)
-                _builder.AppendLine($"Событие: {worldEvent} (ещё {HudModel.World.HoursLeft:0.0} ч)");
-            _builder.AppendLine($"Сегодня: +${economy.DayIncome:0} / -${economy.DayExpenses:0}");
-            _builder.Append($"Обслужено: {economy.DayServed}   Уехали: {economy.DayLost}");
+                ? Loc.F("hud.level.max", level.Level)
+                : Loc.F("hud.level", level.Level, level.Experience, ProgressMath.ExperienceToNext(level.Level)));
+
+            if (HudModel.World.Active != WorldEventKind.None)
+                _builder.AppendLine(Loc.F("hud.event", Loc.T($"event.{HudModel.World.Active}"), HudModel.World.HoursLeft));
+
+            _builder.AppendLine(Loc.F("hud.today", economy.DayIncome, economy.DayExpenses));
+            _builder.Append(Loc.F("hud.served", economy.DayServed, economy.DayLost));
             return _builder.ToString();
         }
 
@@ -389,11 +414,13 @@ namespace GasStation.Mono
             for (int i = 0; i < FuelTypes.Count; i++)
             {
                 var fuel = HudModel.Fuel[i];
-                string marker = (int)_selectedFuel == i ? "▶ " : "";
-                _builder.Append($"{marker}{GameTexts.FuelName((FuelType)i)}: {fuel.Amount:0}/{fuel.Capacity:0} л   ${fuel.SellPrice:0.00} (рынок ${fuel.MarketPrice:0.00})");
+                if ((int)_selectedFuel == i)
+                    _builder.Append("▶ ");
+                _builder.Append(Loc.F("hud.fuel", GameTexts.FuelName((FuelType)i), fuel.Amount, fuel.Capacity, fuel.SellPrice, fuel.MarketPrice));
                 if (HudModel.PendingDelivery[i] > 0f)
-                    _builder.Append($"   +{HudModel.PendingDelivery[i]:0} л в пути");
-                _builder.AppendLine();
+                    _builder.Append(Loc.F("hud.fuel.pending", HudModel.PendingDelivery[i]));
+                if (i < FuelTypes.Count - 1)
+                    _builder.AppendLine();
             }
 
             return _builder.ToString();
@@ -402,71 +429,84 @@ namespace GasStation.Mono
         private string BuildPumps()
         {
             _builder.Clear();
-            _builder.AppendLine($"Очередь: {HudModel.QueueLength}   Машин на станции: {HudModel.CarsOnSite}");
+            _builder.AppendLine(Loc.F("hud.queue", HudModel.QueueLength, HudModel.CarsOnSite));
+
             if (HudModel.HasWash)
             {
-                string wash = HudModel.Upgrades.CarWash == 0 ? "закрыта (улучшение «Автомойка»)"
-                    : HudModel.WashTimeLeft > 0f ? $"моет машину, ещё {HudModel.WashTimeLeft:0} с"
-                    : HudModel.WashBusy ? "машина подъезжает"
-                    : "свободна";
-                _builder.AppendLine($"Мойка: {wash}");
+                string wash = HudModel.Upgrades.CarWash == 0 ? Loc.T("hud.wash.closed")
+                    : HudModel.WashTimeLeft > 0f ? Loc.F("hud.wash.working", HudModel.WashTimeLeft)
+                    : HudModel.WashBusy ? Loc.T("hud.wash.arriving")
+                    : Loc.T("hud.free.f");
+                _builder.AppendLine(Loc.F("hud.wash", wash));
             }
 
             if (HudModel.HasParking)
             {
                 _builder.AppendLine(HudModel.ParkingOpen == 0
-                    ? "Стоянка для фур: закрыта (улучшение «Стоянка для фур»)"
-                    : $"Стоянка для фур: {HudModel.ParkingUsed}/{HudModel.ParkingOpen} мест занято");
+                    ? Loc.T("hud.parking.closed")
+                    : Loc.F("hud.parking", HudModel.ParkingUsed, HudModel.ParkingOpen));
             }
 
             if (HudModel.HasTireService)
             {
-                string tires = HudModel.Upgrades.TireService == 0 ? "закрыт (улучшение «Шиномонтаж»)"
-                    : HudModel.TireTimeLeft > 0f ? $"меняем шины, ещё {HudModel.TireTimeLeft:0} с"
-                    : HudModel.TireCarWaiting ? "МАШИНА ЖДЁТ — E у бокса"
-                    : "свободен";
-                _builder.AppendLine($"Шиномонтаж: {tires}");
+                string tires = HudModel.Upgrades.TireService == 0 ? Loc.T("hud.tires.closed")
+                    : HudModel.TireTimeLeft > 0f ? Loc.F("hud.tires.working", HudModel.TireTimeLeft)
+                    : HudModel.TireCarWaiting ? Loc.T("hud.tires.waiting")
+                    : Loc.T("hud.free.m");
+                _builder.AppendLine(Loc.F("hud.tires", tires));
+            }
+
+            if (HudModel.HasMotel)
+            {
+                if (HudModel.MotelOpen == 0)
+                {
+                    _builder.AppendLine(Loc.T("hud.motel.closed"));
+                }
+                else
+                {
+                    _builder.Append(Loc.F("hud.motel", HudModel.MotelUsed, HudModel.MotelOpen));
+                    if (HudModel.MotelDirty > 0)
+                        _builder.Append(Loc.F("hud.motel.dirty", HudModel.MotelDirty));
+                    _builder.AppendLine();
+                }
             }
 
             if (HudModel.HasRestroom)
-                _builder.AppendLine($"Туалет: {(HudModel.RestroomDirt >= FacilityMath.RestroomDisgustingDirt ? "ОТВРАТИТЕЛЬНО" : $"грязь {HudModel.RestroomDirt * 100f:0}%")}");
+            {
+                _builder.AppendLine(HudModel.RestroomDirt >= FacilityMath.RestroomDisgustingDirt
+                    ? Loc.T("hud.restroom.disgusting")
+                    : Loc.F("hud.restroom", HudModel.RestroomDirt * 100f));
+            }
+
             foreach (var pump in HudModel.Pumps)
             {
-                _builder.Append($"Колонка {pump.Number}: ");
+                _builder.Append(Loc.F("hud.pump", pump.Number));
                 if (pump.Locked)
                 {
-                    _builder.AppendLine("закрыта (улучшение «Новая колонка»)");
+                    _builder.AppendLine(Loc.T("hud.pump.locked"));
                     continue;
                 }
 
                 if (pump.Condition <= 0f && !pump.Occupied)
                 {
-                    _builder.AppendLine("СЛОМАНА — почините (E рядом)");
+                    _builder.AppendLine(Loc.T("hud.pump.broken"));
                     continue;
                 }
 
-                string wear = pump.Condition < ProgressMath.RepairThreshold ? $" [износ {100f - pump.Condition * 100f:0}%]" : string.Empty;
+                string wear = pump.Condition < ProgressMath.RepairThreshold
+                    ? Loc.F("hud.pump.wear", 100f - pump.Condition * 100f)
+                    : string.Empty;
                 if (!pump.Occupied)
                 {
-                    _builder.AppendLine($"свободна{wear}");
+                    _builder.AppendLine(Loc.T("hud.free.f") + wear);
                     continue;
                 }
 
-                string fuel = GameTexts.FuelName(pump.FuelType);
-                string state = pump.CarState switch
-                {
-                    CarState.DrivingToPump => "подъезжает",
-                    CarState.WaitingForService => "ждёт заправки",
-                    CarState.Fueling => "заправляется",
-                    CarState.Shopping => "водитель в магазине",
-                    CarState.ReadyToLeave => "уезжает",
-                    _ => pump.CarState.ToString()
-                };
-                _builder.AppendLine($"{GameTexts.CustomerName(pump.Customer)} {state}, {fuel} {pump.ReceivedLiters:0}/{pump.RequestedLiters:0} л, " +
-                                    $"терпение {pump.PatienceRatio * 100f:0}%{wear}");
+                _builder.AppendLine(Loc.F("hud.pump.car", GameTexts.CustomerName(pump.Customer), GameTexts.CarStateName(pump.CarState),
+                    GameTexts.FuelName(pump.FuelType), pump.ReceivedLiters, pump.RequestedLiters, pump.PatienceRatio * 100f, wear));
             }
 
-            return _builder.ToString();
+            return _builder.ToString().TrimEnd();
         }
 
         private string BuildCenter()
@@ -480,8 +520,8 @@ namespace GasStation.Mono
 
             if (Time.unscaledTime - _reportShownAt < ReportDuration)
             {
-                return $"Итоги дня {report.Day}\nДоход: ${report.Income:0}   Расходы: ${report.Expenses:0}\n" +
-                       $"Прибыль: ${report.Income - report.Expenses:0}\nОбслужено: {report.Served}   Уехали: {report.Lost}";
+                return Loc.F("hud.report", report.Day, report.Income, report.Expenses, report.Income - report.Expenses,
+                    report.Served, report.Lost);
             }
 
             if (HudModel.Message != null && Time.unscaledTime - HudModel.MessageTime < MessageDuration)
@@ -489,31 +529,56 @@ namespace GasStation.Mono
 
             return HudModel.Hint switch
             {
-                InteractionHint.CanStartFueling => "[E / ЛКМ] Заправить",
-                InteractionHint.Fueling => "Идёт заправка...",
-                InteractionHint.CarArriving => "Машина подъезжает",
-                InteractionHint.Trash => "[E / ЛКМ] Убрать мусор",
-                InteractionHint.Restroom => "[E / ЛКМ] Убрать туалет",
-                InteractionHint.Tires => "[E / ЛКМ] Поменять шины",
-                InteractionHint.Repair => $"[E / ЛКМ] Чинить колонку (${ProgressMath.RepairStepCost:0} за шаг)",
-                _ => string.Empty
+                InteractionHint.None => string.Empty,
+                InteractionHint.PumpFree => string.Empty,
+                InteractionHint.Repair => Loc.F("hint.Repair", ProgressMath.RepairStepCost),
+                _ => Loc.T($"hint.{HudModel.Hint}")
             };
         }
 
-        private Text CreateText(string name, Font font, Vector2 anchor, TextAnchor alignment, int fontSize)
-        {
-            var go = new GameObject(name, typeof(RectTransform));
-            go.transform.SetParent(transform, false);
+        // ---------------------------------------------------------------- widgets
 
-            var rect = (RectTransform)go.transform;
+        private static void SetText(Text text, string value)
+        {
+            bool visible = !string.IsNullOrEmpty(value);
+            var panel = text.transform.parent.gameObject;
+            if (panel.activeSelf != visible)
+                panel.SetActive(visible);
+            if (visible && text.text != value)
+                text.text = value;
+        }
+
+        /// <summary>A text block on a dark panel that grows with its content, anchored to a screen corner or edge.</summary>
+        private Text CreateBlock(string name, Font font, Vector2 anchor, TextAnchor alignment, int fontSize)
+        {
+            var panel = new GameObject(name, typeof(RectTransform));
+            panel.transform.SetParent(transform, false);
+
+            var rect = (RectTransform)panel.transform;
             rect.anchorMin = anchor;
             rect.anchorMax = anchor;
             rect.pivot = anchor;
-            rect.anchoredPosition = new Vector2(anchor.x < 0.5f ? 24f : anchor.x > 0.5f ? -24f : 0f,
-                anchor.y < 0.5f ? 24f : anchor.y > 0.5f ? -24f : 0f);
-            rect.sizeDelta = new Vector2(900f, 400f);
+            rect.anchoredPosition = new Vector2(anchor.x < 0.5f ? 16f : anchor.x > 0.5f ? -16f : 0f,
+                anchor.y < 0.5f ? 16f : anchor.y > 0.5f ? -16f : 0f);
 
-            var text = go.AddComponent<Text>();
+            var background = panel.AddComponent<Image>();
+            background.color = PanelColor;
+            background.raycastTarget = false;
+
+            var layout = panel.AddComponent<VerticalLayoutGroup>();
+            layout.padding = new RectOffset(14, 14, 10, 10);
+            layout.childControlWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandWidth = false;
+            layout.childForceExpandHeight = false;
+
+            var fitter = panel.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var textObject = new GameObject("Text", typeof(RectTransform));
+            textObject.transform.SetParent(panel.transform, false);
+            var text = textObject.AddComponent<Text>();
             text.font = font;
             text.fontSize = fontSize;
             text.alignment = alignment;
@@ -521,9 +586,10 @@ namespace GasStation.Mono
             text.raycastTarget = false;
             text.horizontalOverflow = HorizontalWrapMode.Overflow;
             text.verticalOverflow = VerticalWrapMode.Overflow;
+            text.lineSpacing = 1.1f;
 
-            var outline = go.AddComponent<Outline>();
-            outline.effectColor = new Color(0f, 0f, 0f, 0.8f);
+            var shadow = textObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.6f);
             return text;
         }
     }

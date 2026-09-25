@@ -31,7 +31,10 @@ namespace GasStation.Components
         Parked,
         DrivingToTires,
         WaitingForTires,
-        ChangingTires
+        ChangingTires,
+        DrivingToMotel,
+        /// <summary>Guests sleeping in a motel room until morning; the car stands at the room.</summary>
+        InMotel
     }
 
     public struct Car : IComponentData

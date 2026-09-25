@@ -42,7 +42,10 @@ namespace GasStation.Components
         StationPainted,
         WorkerHired,
         WorkerFired,
-        WorkerStole
+        WorkerStole,
+        MotelCheckIn,
+        MotelPaid,
+        MotelRoomCleaned
     }
 
     /// <summary>

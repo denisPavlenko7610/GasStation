@@ -78,7 +78,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 7;
+        public const int CurrentVersion = 8;
 
         public int version = CurrentVersion;
         public int day;
@@ -118,6 +118,9 @@ namespace GasStation.Save
 
         // Version 7. Null in older saves: staff is converted from the old Attendant/Janitor/Mechanic upgrades.
         public WorkerSaveData[] workers;
+
+        // Version 8. Null in older saves: rooms stay as in the scene.
+        public bool[] motelRoomsDirty;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

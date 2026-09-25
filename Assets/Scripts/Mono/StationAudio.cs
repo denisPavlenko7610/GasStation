@@ -91,6 +91,8 @@ namespace GasStation.Mono
             StationEventType.StationPainted => questClip,
             StationEventType.WorkerHired => cashClip,
             StationEventType.WorkerStole => angryClip,
+            StationEventType.MotelPaid => cashClip,
+            StationEventType.MotelRoomCleaned => trashClip,
             StationEventType.RestroomCleaned => trashClip,
             StationEventType.RestroomDisgusting => angryClip,
             _ => null

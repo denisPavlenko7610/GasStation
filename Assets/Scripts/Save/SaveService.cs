@@ -52,6 +52,17 @@ namespace GasStation.Save
 
             CaptureShop(entityManager, data);
 
+            using (var motelQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Motel>()))
+            {
+                if (motelQuery.CalculateEntityCount() == 1)
+                {
+                    var rooms = entityManager.GetBuffer<MotelRoom>(motelQuery.GetSingletonEntity(), true);
+                    data.motelRoomsDirty = new bool[rooms.Length];
+                    for (int i = 0; i < rooms.Length; i++)
+                        data.motelRoomsDirty[i] = rooms[i].Dirty;
+                }
+            }
+
             using (var workerQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Worker>()))
             using (var workers = workerQuery.ToComponentDataArray<Worker>(Allocator.Temp))
             {
@@ -142,6 +153,21 @@ namespace GasStation.Save
                     var restroom = entityManager.GetComponentData<Restroom>(restroomEntity);
                     restroom.Dirt = Mathf.Clamp01(data.restroomDirt);
                     entityManager.SetComponentData(restroomEntity, restroom);
+                }
+            }
+
+            if (data.motelRoomsDirty != null)
+            {
+                using var motelQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Motel>());
+                if (motelQuery.CalculateEntityCount() == 1)
+                {
+                    var rooms = entityManager.GetBuffer<MotelRoom>(motelQuery.GetSingletonEntity());
+                    for (int i = 0; i < rooms.Length && i < data.motelRoomsDirty.Length; i++)
+                    {
+                        var room = rooms[i];
+                        room.Dirty = data.motelRoomsDirty[i];
+                        rooms[i] = room;
+                    }
                 }
             }
 
@@ -289,7 +315,7 @@ namespace GasStation.Save
             }
             catch (Exception exception)
             {
-                Debug.LogWarning($"GasStation: не удалось прочитать сохранение: {exception.Message}");
+                Debug.LogWarning($"GasStation: could not read the save file: {exception.Message}");
                 return false;
             }
         }
@@ -325,6 +351,21 @@ namespace GasStation.Save
                         var spot = spots[i];
                         spot.Occupant = Entity.Null;
                         spots[i] = spot;
+                    }
+                }
+            }
+
+            using (var motelQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Motel>()))
+            using (var motels = motelQuery.ToEntityArray(Allocator.Temp))
+            {
+                foreach (var motelEntity in motels)
+                {
+                    var rooms = entityManager.GetBuffer<MotelRoom>(motelEntity);
+                    for (int i = 0; i < rooms.Length; i++)
+                    {
+                        var room = rooms[i];
+                        room.Occupant = Entity.Null;
+                        rooms[i] = room;
                     }
                 }
             }

@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Localization;
 using GasStation.Logic;
 using Unity.Entities;
 
@@ -51,7 +52,7 @@ namespace GasStation.Systems
                 SystemAPI.SetComponent(station, economy);
 
                 StationEvent.Push(events, StationEventType.QuestCompleted, default, quest.RewardMoney);
-                HudModel.Notify($"Задание выполнено: {GameTexts.QuestTitle(quest)}! Награда: {GameTexts.QuestReward(quest)}");
+                HudModel.Notify(Loc.F("quest.completed", GameTexts.QuestTitle(quest), GameTexts.QuestReward(quest)));
 
                 progress.Index++;
                 progress.Counter = 0f;
@@ -79,6 +80,7 @@ namespace GasStation.Systems
             QuestGoal.HostTruckers => type == StationEventType.ParkingPaid,
             QuestGoal.ChangeTires => type == StationEventType.TiresChanged,
             QuestGoal.HireWorker => type == StationEventType.WorkerHired,
+            QuestGoal.HostGuests => type == StationEventType.MotelPaid,
             _ => false
         };
     }

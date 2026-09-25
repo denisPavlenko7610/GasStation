@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Localization;
 using GasStation.Logic;
 using GasStation.Save;
 using Unity.Entities;
@@ -39,17 +40,17 @@ namespace GasStation.Systems
                         break;
                     case StationCommandType.SaveGame:
                         SaveService.Write(SaveService.Capture(EntityManager, station));
-                        HudModel.Notify("Игра сохранена");
+                        HudModel.Notify(Loc.T("msg.saved"));
                         break;
                     case StationCommandType.LoadGame:
                         if (SaveService.TryRead(out var data))
                         {
                             SaveService.Apply(EntityManager, station, data);
-                            HudModel.Notify("Игра загружена");
+                            HudModel.Notify(Loc.T("msg.loaded"));
                         }
                         else
                         {
-                            HudModel.Notify("Сохранение не найдено");
+                            HudModel.Notify(Loc.T("msg.noSave"));
                         }
                         break;
                     case StationCommandType.ChangeProductPrice:
@@ -71,7 +72,7 @@ namespace GasStation.Systems
                         SaveService.Delete();
                         if (SaveService.Defaults != null)
                             SaveService.Apply(EntityManager, station, SaveService.Defaults);
-                        HudModel.Notify("Новая игра");
+                        HudModel.Notify(Loc.T("msg.newGame"));
                         break;
                 }
             }
@@ -99,7 +100,7 @@ namespace GasStation.Systems
             liters = math.min(liters, stock.Capacity - stock.Amount - pending);
             if (liters < 1f)
             {
-                HudModel.Notify("Резервуар полон");
+                HudModel.Notify(Loc.T("msg.tankFull"));
                 return;
             }
 
@@ -107,7 +108,7 @@ namespace GasStation.Systems
             float cost = liters * stock.BuyPrice;
             if (economy.ValueRO.Money < cost)
             {
-                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                HudModel.Notify(Loc.F("msg.noMoney", cost));
                 return;
             }
 
@@ -124,7 +125,7 @@ namespace GasStation.Systems
             });
 
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.FuelOrdered, fuel, liters);
-            HudModel.Notify($"Заказано {liters:0} л {GameTexts.FuelName(fuel)}, привезут через {settings.FuelDeliveryTime:0} с");
+            HudModel.Notify(Loc.F("msg.fuelOrdered", liters, GameTexts.FuelName(fuel), settings.FuelDeliveryTime));
         }
 
         private void ChangeProductPrice(ProductType product, float delta)
@@ -142,7 +143,7 @@ namespace GasStation.Systems
         {
             if (!SystemAPI.HasSingleton<Shop>())
             {
-                HudModel.Notify("На станции нет магазина");
+                HudModel.Notify(Loc.T("msg.noShop"));
                 return;
             }
 
@@ -159,7 +160,7 @@ namespace GasStation.Systems
             count = math.min(count, shelf.Capacity - shelf.Stock - pending);
             if (count <= 0)
             {
-                HudModel.Notify($"{GameTexts.ProductName(product)}: полки заполнены");
+                HudModel.Notify(Loc.F("msg.shelvesFull", GameTexts.ProductName(product)));
                 return;
             }
 
@@ -167,7 +168,7 @@ namespace GasStation.Systems
             float cost = count * shelf.BuyPrice;
             if (economy.ValueRO.Money < cost)
             {
-                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                HudModel.Notify(Loc.F("msg.noMoney", cost));
                 return;
             }
 
@@ -177,7 +178,7 @@ namespace GasStation.Systems
             var order = EntityManager.CreateEntity();
             EntityManager.AddComponentData(order, new ProductDelivery { Type = product, Count = count, TimeLeft = shop.DeliveryTime });
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.ProductsOrdered, default, count);
-            HudModel.Notify($"Заказано: {GameTexts.ProductName(product)} × {count}, привезут через {shop.DeliveryTime:0} с");
+            HudModel.Notify(Loc.F("msg.productsOrdered", GameTexts.ProductName(product), count, shop.DeliveryTime));
         }
 
         private void HireCandidate(Entity station, int index)
@@ -191,7 +192,7 @@ namespace GasStation.Systems
 
             if (SystemAPI.GetComponent<StaffPower>(station).Headcount >= StaffMath.MaxStaff)
             {
-                HudModel.Notify($"Штат полон: не больше {StaffMath.MaxStaff} сотрудников");
+                HudModel.Notify(Loc.F("msg.staffFull", StaffMath.MaxStaff));
                 return;
             }
 
@@ -200,7 +201,7 @@ namespace GasStation.Systems
             var economy = SystemAPI.GetComponentRW<Economy>(station);
             if (economy.ValueRO.Money < fee)
             {
-                HudModel.Notify($"Не хватает денег на найм: нужно ${fee:0}");
+                HudModel.Notify(Loc.F("msg.noMoneyHire", fee));
                 return;
             }
 
@@ -224,7 +225,7 @@ namespace GasStation.Systems
                 NameIndex = candidate.NameIndex
             });
 
-            HudModel.Notify($"Нанят {GameTexts.RoleName(candidate.Role)}: {GameTexts.StaffName(candidate.NameIndex)}");
+            HudModel.Notify(Loc.F("msg.hired", GameTexts.RoleName(candidate.Role), GameTexts.StaffName(candidate.NameIndex)));
         }
 
         private void FireWorker(Entity station, int id)
@@ -238,7 +239,7 @@ namespace GasStation.Systems
                 var role = worker.ValueRO.Role;
                 StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.WorkerFired, default, id);
                 EntityManager.DestroyEntity(entity);
-                HudModel.Notify($"Уволен {GameTexts.RoleName(role)}: {name}");
+                HudModel.Notify(Loc.F("msg.fired", GameTexts.RoleName(role), name));
                 return;
             }
         }
@@ -250,7 +251,7 @@ namespace GasStation.Systems
 
             if (SystemAPI.GetComponent<StationStyle>(station).Scheme == scheme)
             {
-                HudModel.Notify("Станция уже так покрашена");
+                HudModel.Notify(Loc.T("msg.alreadyPainted"));
                 return;
             }
 
@@ -258,7 +259,7 @@ namespace GasStation.Systems
             int stationLevel = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
             if (stationLevel < requiredLevel)
             {
-                HudModel.Notify($"«{GameTexts.SchemeName(scheme)}»: нужен уровень станции {requiredLevel}");
+                HudModel.Notify(Loc.F("msg.schemeNeedsLevel", GameTexts.SchemeName(scheme), requiredLevel));
                 return;
             }
 
@@ -266,7 +267,7 @@ namespace GasStation.Systems
             float cost = StyleMath.Cost(scheme);
             if (economy.ValueRO.Money < cost)
             {
-                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                HudModel.Notify(Loc.F("msg.noMoney", cost));
                 return;
             }
 
@@ -274,7 +275,7 @@ namespace GasStation.Systems
             economy.ValueRW.DayExpenses += cost;
             SystemAPI.SetComponent(station, new StationStyle { Scheme = scheme });
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.StationPainted, default, scheme);
-            HudModel.Notify($"Станция перекрашена: «{GameTexts.SchemeName(scheme)}»");
+            HudModel.Notify(Loc.F("msg.painted", GameTexts.SchemeName(scheme)));
         }
 
         private void BuyUpgrade(Entity station, UpgradeType type)
@@ -283,7 +284,7 @@ namespace GasStation.Systems
             int level = upgrades.ValueRO.Get(type);
             if (!UpgradeMath.CanUpgrade(type, level))
             {
-                HudModel.Notify($"{GameTexts.UpgradeName(type)}: максимальный уровень");
+                HudModel.Notify(Loc.F("msg.upgradeMax", GameTexts.UpgradeName(type)));
                 return;
             }
 
@@ -291,7 +292,7 @@ namespace GasStation.Systems
             int stationLevel = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
             if (stationLevel < requiredLevel)
             {
-                HudModel.Notify($"{GameTexts.UpgradeName(type)}: нужен уровень станции {requiredLevel}");
+                HudModel.Notify(Loc.F("msg.upgradeNeedsLevel", GameTexts.UpgradeName(type), requiredLevel));
                 return;
             }
 
@@ -299,7 +300,7 @@ namespace GasStation.Systems
             float cost = UpgradeMath.Cost(type, level);
             if (economy.ValueRO.Money < cost)
             {
-                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                HudModel.Notify(Loc.F("msg.noMoney", cost));
                 return;
             }
 
@@ -323,7 +324,7 @@ namespace GasStation.Systems
                     break;
             }
 
-            HudModel.Notify($"Куплено: {GameTexts.UpgradeName(type)}, уровень {level + 1}");
+            HudModel.Notify(Loc.F("msg.upgradeBought", GameTexts.UpgradeName(type), level + 1));
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.UpgradeBought, default, cost);
         }
     }

@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Localization;
 using GasStation.Save;
 using Unity.Entities;
 
@@ -31,7 +32,7 @@ namespace GasStation.Systems
                 if (SaveService.TryRead(out var data))
                 {
                     SaveService.Apply(EntityManager, station, data);
-                    HudModel.Notify($"Продолжаем: день {data.day}");
+                    HudModel.Notify(Loc.F("msg.continue", data.day));
                 }
 
                 _lastSavedDay = SystemAPI.GetSingleton<DayReport>().Day;

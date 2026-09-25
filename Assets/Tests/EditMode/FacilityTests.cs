@@ -51,6 +51,29 @@ namespace GasStation.Tests
         }
 
         [Test]
+        public void Motel_OpensTwoRoomsPerLevel_AndCostsMoreWithLevel()
+        {
+            Assert.AreEqual(0, FacilityMath.OpenRooms(0, 6));
+            Assert.AreEqual(4, FacilityMath.OpenRooms(2, 6));
+            Assert.AreEqual(6, FacilityMath.OpenRooms(3, 6));
+            Assert.Greater(FacilityMath.RoomPrice(40f, 3), FacilityMath.RoomPrice(40f, 1));
+        }
+
+        [TestCase(20f, ExpectedResult = true)]
+        [TestCase(1f, ExpectedResult = true)]
+        [TestCase(10f, ExpectedResult = false)]
+        public bool Travellers_WantRoomsInTheEvening(float hour) => FacilityMath.WantsRoom(hour);
+
+        [Test]
+        public void OnlyRegularsAndTourists_StayAtTheMotel()
+        {
+            Assert.Greater(CustomerProfiles.Get(CustomerType.Tourist).MotelChance, 0f);
+            Assert.Greater(CustomerProfiles.Get(CustomerType.Regular).MotelChance, 0f);
+            Assert.AreEqual(0f, CustomerProfiles.Get(CustomerType.Trucker).MotelChance, "truckers use the truck parking");
+            Assert.AreEqual(0f, CustomerProfiles.Get(CustomerType.Thief).MotelChance);
+        }
+
+        [Test]
         public void TruckParking_HasTwoLevels()
         {
             Assert.AreEqual(2, UpgradeMath.MaxLevel(UpgradeType.TruckParking));

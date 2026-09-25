@@ -64,6 +64,17 @@ namespace GasStation.Editor
                 parkingAuthoring.spots[i] = spot.transform;
             }
 
+            var motel = Create("Motel_Reception", root.transform, new Vector3(-20f, 0f, 20f));
+            var motelAuthoring = motel.AddComponent<MotelAuthoring>();
+            motelAuthoring.entry = Create("Motel_Entry", root.transform, new Vector3(-10f, 0f, 8f)).transform;
+            motelAuthoring.rooms = new Transform[6];
+            for (int i = 0; i < 6; i++)
+            {
+                var room = Create($"Motel_Room_{i + 1}", root.transform, new Vector3(-30f + i * 4f, 0f, 14f));
+                room.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+                motelAuthoring.rooms[i] = room.transform;
+            }
+
             var tires = Create("TireService_Bay", root.transform, new Vector3(20f, 0f, -8f));
             tires.transform.rotation = Quaternion.LookRotation(Vector3.right);
             tires.AddComponent<TireServiceAuthoring>().entryRoute =

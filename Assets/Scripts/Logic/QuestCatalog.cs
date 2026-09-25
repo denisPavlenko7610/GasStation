@@ -39,7 +39,9 @@ namespace GasStation.Logic
         /// <summary>Counter: tire jobs done.</summary>
         ChangeTires,
         /// <summary>Counter: workers hired.</summary>
-        HireWorker
+        HireWorker,
+        /// <summary>Counter: motel guests who paid.</summary>
+        HostGuests
     }
 
     public struct QuestDefinition
@@ -54,7 +56,8 @@ namespace GasStation.Logic
         public bool IsCounter => Goal is QuestGoal.CollectTrash or QuestGoal.ServeCustomers
             or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief
             or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers
-            or QuestGoal.ChangeTires or QuestGoal.HireWorker;
+            or QuestGoal.ChangeTires or QuestGoal.HireWorker
+            or QuestGoal.HostGuests;
     }
 
     /// <summary>
@@ -85,6 +88,7 @@ namespace GasStation.Logic
             Quest(9, QuestGoal.OpenPumps, 1f, 1000f),
             Quest(15, QuestGoal.OpenCarWash, 1f, 800f),
             Quest(17, QuestGoal.HostTruckers, 3f, 600f),
+            Quest(21, QuestGoal.HostGuests, 5f, 1200f, 0.05f),
             Quest(19, QuestGoal.ChangeTires, 3f, 500f),
             Quest(13, QuestGoal.CatchThief, 1f, 500f, 0.05f),
             Quest(10, QuestGoal.Cleanliness, 100f, 500f, 0.05f),

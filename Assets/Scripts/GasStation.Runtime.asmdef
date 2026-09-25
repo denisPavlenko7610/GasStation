@@ -10,6 +10,7 @@
         "Unity.Collections",
         "Unity.InputSystem",
         "UnityEngine.UI",
+        "Unity.Localization",
         "Zenject"
     ],
     "includePlatforms": [],

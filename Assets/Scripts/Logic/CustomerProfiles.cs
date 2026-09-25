@@ -17,6 +17,7 @@ namespace GasStation.Logic
         public float ShopChance;
         public float WashChance;
         public float TireChance;
+        public float MotelChance;
     }
 
     public static class CustomerProfiles
@@ -41,7 +42,7 @@ namespace GasStation.Logic
             {
                 Weight = 10f, MinStationLevel = 3, LitersMultiplier = 1f, PatienceMultiplier = 1.2f,
                 SpeedMultiplier = 0.9f, TipShare = 0.05f, LitterMultiplier = 3f,
-                ShopChance = 0.8f, WashChance = 0.3f, TireChance = 0.1f
+                ShopChance = 0.8f, WashChance = 0.3f, TireChance = 0.1f, MotelChance = 0.5f
             },
             CustomerType.Thief => new CustomerProfile
             {
@@ -53,7 +54,7 @@ namespace GasStation.Logic
             {
                 Weight = 60f, MinStationLevel = 1, LitersMultiplier = 1f, PatienceMultiplier = 1f,
                 SpeedMultiplier = 1f, TipShare = 0f, LitterMultiplier = 1f,
-                ShopChance = 0.35f, WashChance = 0.2f, TireChance = 0.1f
+                ShopChance = 0.35f, WashChance = 0.2f, TireChance = 0.1f, MotelChance = 0.25f
             }
         };
 

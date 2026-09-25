@@ -22,7 +22,7 @@ namespace GasStation.Logic
         {
             UpgradeType.PumpSpeed, UpgradeType.TankCapacity, UpgradeType.Comfort, UpgradeType.Advertising,
             UpgradeType.ExtraPump, UpgradeType.SupplyManager, UpgradeType.CarWash, UpgradeType.TruckParking,
-            UpgradeType.TireService
+            UpgradeType.TireService, UpgradeType.Motel
         };
 
         public static StaffRole LegacyRole(UpgradeType type) => type switch
@@ -46,6 +46,7 @@ namespace GasStation.Logic
             UpgradeType.SupplyManager => 700f,
             UpgradeType.TruckParking => 900f,
             UpgradeType.TireService => 800f,
+            UpgradeType.Motel => 2000f,
             _ => 1000f
         };
 

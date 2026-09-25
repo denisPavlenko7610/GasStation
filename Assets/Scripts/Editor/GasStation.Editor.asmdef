@@ -4,7 +4,9 @@
     "references": [
         "GasStation.Runtime",
         "Unity.Scenes",
-        "Unity.Entities"
+        "Unity.Entities",
+        "Unity.Localization",
+        "Unity.Localization.Editor"
     ],
     "includePlatforms": [
         "Editor"

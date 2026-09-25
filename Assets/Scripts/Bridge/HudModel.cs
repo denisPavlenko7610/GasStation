@@ -15,7 +15,8 @@ namespace GasStation.Bridge
         Trash,
         Repair,
         Restroom,
-        Tires
+        Tires,
+        MotelRoom
     }
 
     public struct PumpInfo
@@ -77,6 +78,11 @@ namespace GasStation.Bridge
         public static readonly List<Worker> Workers = new();
         public static readonly List<StaffCandidate> Candidates = new();
         public static StaffPower Staff;
+
+        public static bool HasMotel;
+        public static int MotelOpen;
+        public static int MotelUsed;
+        public static int MotelDirty;
 
         public static bool HasRestroom;
         public static float RestroomDirt;

@@ -37,6 +37,8 @@ namespace GasStation.Logic
             StationEventType.TiresChanged => 8f,
             StationEventType.StationPainted => 30f,
             StationEventType.WorkerHired => 10f,
+            StationEventType.MotelPaid => 12f,
+            StationEventType.MotelRoomCleaned => 3f,
             _ => 0f
         };
 
@@ -75,6 +77,7 @@ namespace GasStation.Logic
                 UpgradeType.SupplyManager => 2,
                 UpgradeType.TruckParking => 3,
                 UpgradeType.TireService => 2,
+                UpgradeType.Motel => 4,
                 _ => 1
             };
 

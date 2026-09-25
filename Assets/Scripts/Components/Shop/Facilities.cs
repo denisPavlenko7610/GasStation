@@ -50,6 +50,26 @@ namespace GasStation.Components
         public int Scheme;
     }
 
+    /// <summary>Roadside motel. Rooms open two at a time with the Motel upgrade; each guest leaves a room to clean.</summary>
+    public struct Motel : IComponentData
+    {
+        public float3 Door;
+        public float3 Entry;
+        public float RoomPrice;
+        public float CleanTimer;
+        public Random Random;
+    }
+
+    [InternalBufferCapacity(6)]
+    public struct MotelRoom : IBufferElementData
+    {
+        /// <summary>Parking place in front of the room.</summary>
+        public float3 Position;
+        public quaternion Rotation;
+        public Entity Occupant;
+        public bool Dirty;
+    }
+
     /// <summary>Timer of the SupplyManager upgrade.</summary>
     public struct SupplyManagerState : IComponentData
     {
