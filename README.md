@@ -55,6 +55,7 @@
 | M | магазин: 1–5 — товар, +/- — цена, O — заказать 20 шт. |
 | C | покраска станции: 1–3 — выбрать схему |
 | H | персонал: 1–3 — нанять кандидата, 4–9 дважды — уволить |
+| J | достижения |
 | L | переключить язык (русский / английский) |
 | F5 / F9 | сохранить / загрузить |
 | F10 дважды | новая игра (удаляет сохранение) |
@@ -229,6 +230,26 @@
   с InstanceID на EntityId; используются `FindAnyObjectByType` и `Resources.FindObjectsOfTypeAll`;
 - `ComponentLookup.GetRefRWOptional/GetRefROOptional` не используются.
 
+## Интерфейс (UI Toolkit)
+
+HUD рисуется через **UI Toolkit**: карточки со скруглёнными углами, полосы репутации, чистоты и
+опыта. Ассеты лежат в `Assets/Resources/UI`:
+- `GasStationTheme.tss` — тема (импортирует стандартную `unity-theme://default`);
+- `Hud.uss` — стили карточек, текста и полос.
+
+Panel Settings создаются при запуске кодом (`Mono/Hud/ToolkitHudView.cs`), дерево элементов тоже
+строится в коде. Шрифт — встроенный `LegacyRuntime.ttf`: он берёт недостающие символы из системных
+шрифтов, поэтому кириллица отображается. Если ассетов в `Resources/UI` нет, включается прежний HUD
+на uGUI (`UguiHudView`). Логика HUD одна: `StationHud` собирает тексты и передаёт их в `IHudView`.
+
+## Достижения
+
+18 достижений за всю игру (клавиша J): первый клиент, 100 и 1000 клиентов, 100 и 1000 кусков
+мусора, $10 000 и $100 000 выручки, 5 и 10 уровень станции, пойманный вор, 10 гостей мотеля,
+10 дальнобойщиков, 50 моек, 25 замен шин, идеальный день (20+ клиентов и никто не уехал
+недовольным), $50 000 на счету, чистота 100%, полный штат. Статистика и достижения сохраняются
+(версия сохранения 9).
+
 ## Локализация (русский / английский)
 
 Тексты интерфейса идут через **Unity Localization** (пакет `com.unity.localization`, таблица строк
@@ -256,7 +277,7 @@ Assets/Scripts/                 GasStation.Runtime.asmdef
   Bridge/      HudModel (ECS → UI), StationCommands (UI → ECS), GameTexts
   Localization/ LocTable (строки RU/EN) и Loc (обёртка над Unity Localization)
   Save/        SaveData (JSON) и SaveService
-  Mono/        HUD, звук, смена дня и ночи, камера, Zenject-инсталлер
+  Mono/        HUD (Hud/: StationHud + UI Toolkit / uGUI вид), звук, смена дня и ночи, покраска, камера, Zenject-инсталлер
   Input/       сгенерированный PlayerInputAction
   Editor/      генератор уровня «Пустыня», меню станции и мусора (GasStation.Editor.asmdef)
 Assets/Tests/EditMode/          EditMode-тесты (Window → General → Test Runner)

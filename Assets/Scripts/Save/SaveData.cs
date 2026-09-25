@@ -59,6 +59,49 @@ namespace GasStation.Save
     }
 
     [Serializable]
+    public class StatsSaveData
+    {
+        public int served;
+        public int trashCollected;
+        public float income;
+        public int thievesCaught;
+        public int motelGuests;
+        public int truckersHosted;
+        public int tiresChanged;
+        public int carsWashed;
+        public int perfectDays;
+        public int daysPlayed;
+
+        public static StatsSaveData From(StationStats stats) => new()
+        {
+            served = stats.Served,
+            trashCollected = stats.TrashCollected,
+            income = stats.Income,
+            thievesCaught = stats.ThievesCaught,
+            motelGuests = stats.MotelGuests,
+            truckersHosted = stats.TruckersHosted,
+            tiresChanged = stats.TiresChanged,
+            carsWashed = stats.CarsWashed,
+            perfectDays = stats.PerfectDays,
+            daysPlayed = stats.DaysPlayed
+        };
+
+        public StationStats ToStats() => new()
+        {
+            Served = served,
+            TrashCollected = trashCollected,
+            Income = income,
+            ThievesCaught = thievesCaught,
+            MotelGuests = motelGuests,
+            TruckersHosted = truckersHosted,
+            TiresChanged = tiresChanged,
+            CarsWashed = carsWashed,
+            PerfectDays = perfectDays,
+            DaysPlayed = daysPlayed
+        };
+    }
+
+    [Serializable]
     public class PumpSaveData
     {
         public int number;
@@ -78,7 +121,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 8;
+        public const int CurrentVersion = 9;
 
         public int version = CurrentVersion;
         public int day;
@@ -121,6 +164,10 @@ namespace GasStation.Save
 
         // Version 8. Null in older saves: rooms stay as in the scene.
         public bool[] motelRoomsDirty;
+
+        // Version 9. Older saves start with empty statistics and no achievements.
+        public StatsSaveData stats;
+        public long achievements;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

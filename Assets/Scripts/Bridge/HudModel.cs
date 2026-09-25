@@ -84,6 +84,9 @@ namespace GasStation.Bridge
         public static int MotelUsed;
         public static int MotelDirty;
 
+        public static StationStats Stats;
+        public static Achievements Achievements;
+
         public static bool HasRestroom;
         public static float RestroomDirt;
         public static WorldEvents World;

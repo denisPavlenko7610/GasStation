@@ -49,6 +49,10 @@ namespace GasStation.Save
                 data.CaptureLevel(entityManager.GetComponentData<StationLevel>(station));
             if (entityManager.HasComponent<StationStyle>(station))
                 data.paintScheme = entityManager.GetComponentData<StationStyle>(station).Scheme;
+            if (entityManager.HasComponent<StationStats>(station))
+                data.stats = StatsSaveData.From(entityManager.GetComponentData<StationStats>(station));
+            if (entityManager.HasComponent<Achievements>(station))
+                data.achievements = (long)entityManager.GetComponentData<Achievements>(station).Unlocked;
 
             CaptureShop(entityManager, data);
 
@@ -135,6 +139,10 @@ namespace GasStation.Save
 
             if (entityManager.HasComponent<StationLevel>(station))
                 entityManager.SetComponentData(station, data.ToStationLevel());
+            if (entityManager.HasComponent<StationStats>(station))
+                entityManager.SetComponentData(station, data.stats != null ? data.stats.ToStats() : default);
+            if (entityManager.HasComponent<Achievements>(station))
+                entityManager.SetComponentData(station, new Achievements { Unlocked = (ulong)data.achievements });
             if (data.paintScheme >= 0 && entityManager.HasComponent<StationStyle>(station))
                 entityManager.SetComponentData(station, new StationStyle { Scheme = Mathf.Clamp(data.paintScheme, 0, 3) });
 

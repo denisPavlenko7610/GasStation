@@ -35,6 +35,8 @@ namespace GasStation.Systems
             CopyWash();
             CopyFacilities();
             CopyStaff();
+            HudModel.Stats = SystemAPI.HasSingleton<StationStats>() ? SystemAPI.GetSingleton<StationStats>() : default;
+            HudModel.Achievements = SystemAPI.HasSingleton<Achievements>() ? SystemAPI.GetSingleton<Achievements>() : default;
             CopyFuel();
             CopyCars();
             CopyPumps();
@@ -105,6 +107,9 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.WorkerStole:
                         HudModel.Notify(Loc.F("msg.workerStole", stationEvent.Value));
+                        break;
+                    case StationEventType.AchievementUnlocked:
+                        HudModel.Notify(Loc.F("msg.achievement", Loc.T($"achievement.{(AchievementId)(int)stationEvent.Value}.name")));
                         break;
                     case StationEventType.MotelPaid:
                         HudModel.Notify(Loc.F("msg.motelPaid", stationEvent.Value));

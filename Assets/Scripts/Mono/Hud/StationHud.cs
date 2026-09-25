@@ -3,15 +3,15 @@ using GasStation.Bridge;
 using GasStation.Components;
 using GasStation.Localization;
 using GasStation.Logic;
+using GasStation.Mono.Hud;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 namespace GasStation.Mono
 {
     /// <summary>
-    /// HUD built at runtime from uGUI: text blocks on semi-transparent panels. Reads HudModel, sends
-    /// StationCommands and takes all strings from Loc (Unity Localization).
+    /// Game HUD: handles keys, reads HudModel, sends StationCommands and builds localized texts (Loc).
+    /// Drawing is done by an IHudView — UI Toolkit when its assets are in Resources/UI, uGUI otherwise.
     /// </summary>
     public class StationHud : MonoBehaviour
     {
@@ -23,22 +23,15 @@ namespace GasStation.Mono
         private const float ProductPriceStep = 0.25f;
         private const int UpgradesPerPage = 6;
 
-        private static readonly Color PanelColor = new(0.05f, 0.06f, 0.08f, 0.62f);
-
         private readonly StringBuilder _builder = new();
-        private Canvas _canvas;
-        private Text _status;
-        private Text _fuel;
-        private Text _pumps;
-        private Text _center;
-        private Text _help;
-        private Text _panel;
+        private IHudView _view;
 
         private bool _upgradesOpen;
         private int _upgradePage;
         private bool _storeOpen;
         private bool _paintOpen;
         private bool _staffOpen;
+        private bool _achievementsOpen;
         private int _fireRequestedId = -1;
         private float _fireRequestedAt = float.NegativeInfinity;
         private float _newGameRequestedAt = float.NegativeInfinity;
@@ -49,41 +42,35 @@ namespace GasStation.Mono
 
         private void Awake()
         {
-            _canvas = gameObject.AddComponent<Canvas>();
-            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _canvas.sortingOrder = 100;
-
-            var scaler = gameObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
-
-            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            _status = CreateBlock("Status", font, new Vector2(0f, 1f), TextAnchor.UpperLeft, 26);
-            _fuel = CreateBlock("Fuel", font, new Vector2(1f, 1f), TextAnchor.UpperRight, 24);
-            _pumps = CreateBlock("Pumps", font, new Vector2(0f, 0f), TextAnchor.LowerLeft, 22);
-            _center = CreateBlock("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 32);
-            _help = CreateBlock("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 18);
-            _panel = CreateBlock("Panel", font, new Vector2(0.5f, 1f), TextAnchor.UpperLeft, 24);
+            _view = ToolkitHudView.TryCreate(gameObject) ?? new UguiHudView(gameObject);
         }
 
         private void Update()
         {
-            _canvas.enabled = HudModel.HasStation;
+            _view.SetVisible(HudModel.HasStation);
             if (!HudModel.HasStation)
                 return;
 
             HandleKeys();
-            SetText(_status, BuildStatus());
-            SetText(_fuel, BuildFuel());
-            SetText(_pumps, BuildPumps());
-            SetText(_center, BuildCenter());
-            SetText(_help, Loc.T("hud.help"));
-            SetText(_panel, _upgradesOpen ? BuildUpgrades()
+            _view.SetText(HudBlock.Status, BuildStatus());
+            _view.SetText(HudBlock.Fuel, BuildFuel());
+            _view.SetText(HudBlock.Pumps, BuildPumps());
+            _view.SetText(HudBlock.Center, BuildCenter());
+            _view.SetText(HudBlock.Help, Loc.T("hud.help"));
+            _view.SetText(HudBlock.Panel, _upgradesOpen ? BuildUpgrades()
                 : _storeOpen ? BuildStore()
                 : _paintOpen ? BuildPaint()
                 : _staffOpen ? BuildStaff()
+                : _achievementsOpen ? BuildAchievements()
                 : BuildQuest());
+
+            var level = HudModel.Level;
+            _view.SetMeters(new HudMeters
+            {
+                Reputation = HudModel.Economy.Reputation,
+                Cleanliness = HudModel.Cleanliness.Value,
+                Experience = level.Level >= ProgressMath.MaxLevel ? 1f : level.Experience / ProgressMath.ExperienceToNext(level.Level)
+            });
         }
 
         // ---------------------------------------------------------------- input
@@ -110,6 +97,8 @@ namespace GasStation.Mono
                 Toggle(ref _paintOpen);
             if (keyboard.hKey.wasPressedThisFrame)
                 Toggle(ref _staffOpen);
+            if (keyboard.jKey.wasPressedThisFrame)
+                Toggle(ref _achievementsOpen);
 
             if (keyboard.lKey.wasPressedThisFrame)
             {
@@ -167,6 +156,7 @@ namespace GasStation.Mono
             _storeOpen = false;
             _paintOpen = false;
             _staffOpen = false;
+            _achievementsOpen = false;
         }
 
         private void HandleFuelKeys(Keyboard keyboard)
@@ -364,6 +354,39 @@ namespace GasStation.Mono
             return _builder.ToString();
         }
 
+        private string BuildAchievements()
+        {
+            var context = new AchievementContext
+            {
+                Stats = HudModel.Stats,
+                Level = HudModel.Level.Level,
+                Money = HudModel.Economy.Money,
+                Cleanliness = HudModel.Cleanliness.Value,
+                Headcount = HudModel.Staff.Headcount
+            };
+
+            int unlocked = 0;
+            for (int i = 0; i < AchievementCatalog.Count; i++)
+            {
+                if (HudModel.Achievements.Has(i))
+                    unlocked++;
+            }
+
+            _builder.Clear();
+            _builder.AppendLine(Loc.F("panel.achievements", unlocked, AchievementCatalog.Count));
+            for (int i = 0; i < AchievementCatalog.Count; i++)
+            {
+                var id = (AchievementId)i;
+                bool done = HudModel.Achievements.Has(i);
+                var progress = AchievementCatalog.Progress(id, context);
+                string state = done ? "✔" : $"{Mathf.Min(progress.x, progress.y):0}/{progress.y:0}";
+                _builder.AppendLine(Loc.F("panel.achievements.line", state, Loc.T($"achievement.{id}.name"), Loc.T($"achievement.{id}.desc")));
+            }
+
+            _builder.Append(Loc.F("panel.achievements.stats", HudModel.Stats.DaysPlayed, HudModel.Stats.Served, HudModel.Stats.Income));
+            return _builder.ToString();
+        }
+
         private string BuildQuest()
         {
             var quest = HudModel.Quest;
@@ -534,63 +557,6 @@ namespace GasStation.Mono
                 InteractionHint.Repair => Loc.F("hint.Repair", ProgressMath.RepairStepCost),
                 _ => Loc.T($"hint.{HudModel.Hint}")
             };
-        }
-
-        // ---------------------------------------------------------------- widgets
-
-        private static void SetText(Text text, string value)
-        {
-            bool visible = !string.IsNullOrEmpty(value);
-            var panel = text.transform.parent.gameObject;
-            if (panel.activeSelf != visible)
-                panel.SetActive(visible);
-            if (visible && text.text != value)
-                text.text = value;
-        }
-
-        /// <summary>A text block on a dark panel that grows with its content, anchored to a screen corner or edge.</summary>
-        private Text CreateBlock(string name, Font font, Vector2 anchor, TextAnchor alignment, int fontSize)
-        {
-            var panel = new GameObject(name, typeof(RectTransform));
-            panel.transform.SetParent(transform, false);
-
-            var rect = (RectTransform)panel.transform;
-            rect.anchorMin = anchor;
-            rect.anchorMax = anchor;
-            rect.pivot = anchor;
-            rect.anchoredPosition = new Vector2(anchor.x < 0.5f ? 16f : anchor.x > 0.5f ? -16f : 0f,
-                anchor.y < 0.5f ? 16f : anchor.y > 0.5f ? -16f : 0f);
-
-            var background = panel.AddComponent<Image>();
-            background.color = PanelColor;
-            background.raycastTarget = false;
-
-            var layout = panel.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(14, 14, 10, 10);
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = false;
-            layout.childForceExpandHeight = false;
-
-            var fitter = panel.AddComponent<ContentSizeFitter>();
-            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            var textObject = new GameObject("Text", typeof(RectTransform));
-            textObject.transform.SetParent(panel.transform, false);
-            var text = textObject.AddComponent<Text>();
-            text.font = font;
-            text.fontSize = fontSize;
-            text.alignment = alignment;
-            text.color = Color.white;
-            text.raycastTarget = false;
-            text.horizontalOverflow = HorizontalWrapMode.Overflow;
-            text.verticalOverflow = VerticalWrapMode.Overflow;
-            text.lineSpacing = 1.1f;
-
-            var shadow = textObject.AddComponent<Shadow>();
-            shadow.effectColor = new Color(0f, 0f, 0f, 0.6f);
-            return text;
         }
     }
 }

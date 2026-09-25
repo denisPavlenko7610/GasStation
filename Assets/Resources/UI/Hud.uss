@@ -1,0 +1,77 @@
+/* HUD of GasStation (UI Toolkit). Loaded at runtime from Resources/UI/Hud. */
+
+.hud-root {
+    flex-grow: 1;
+}
+
+.card {
+    position: absolute;
+    background-color: rgba(12, 14, 20, 0.74);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    padding: 10px 14px 12px 14px;
+}
+
+.card--top-left { left: 16px; top: 16px; max-width: 34%; }
+.card--top-right { right: 16px; top: 16px; max-width: 40%; }
+.card--bottom-left { left: 16px; bottom: 16px; max-width: 48%; }
+.card--bottom-right { right: 16px; bottom: 16px; max-width: 46%; }
+.card--top-center { top: 16px; left: 30%; right: 30%; }
+.card--top-center.card--wide { left: 18%; right: 18%; }
+.card--center {
+    top: 42%;
+    left: 24%;
+    right: 24%;
+    align-items: center;
+    background-color: rgba(20, 22, 30, 0.86);
+    border-color: rgba(240, 150, 60, 0.6);
+}
+
+.accent-line {
+    height: 3px;
+    margin-bottom: 8px;
+    border-radius: 2px;
+    background-color: rgb(240, 130, 45);
+}
+
+.hud-text {
+    color: rgb(238, 240, 244);
+    font-size: 21px;
+    white-space: normal;
+    -unity-text-align: upper-left;
+}
+
+.hud-text--right { -unity-text-align: upper-right; }
+.hud-text--small { font-size: 15px; color: rgb(185, 192, 204); }
+.hud-text--center { font-size: 27px; -unity-text-align: middle-center; -unity-font-style: bold; }
+
+.meter {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.meter__label {
+    width: 130px;
+    font-size: 15px;
+    color: rgb(185, 192, 204);
+}
+
+.meter__track {
+    width: 220px;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.meter__fill {
+    height: 100%;
+    width: 50%;
+    border-radius: 5px;
+    background-color: rgb(80, 190, 120);
+}
+
+.meter__fill--reputation { background-color: rgb(240, 180, 60); }
+.meter__fill--xp { background-color: rgb(90, 150, 240); }
