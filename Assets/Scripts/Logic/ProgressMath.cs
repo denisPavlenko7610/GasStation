@@ -13,7 +13,6 @@ namespace GasStation.Logic
         public const float RepairStepCost = 40f;
         /// <summary>Below this condition the player can repair a pump.</summary>
         public const float RepairThreshold = 0.75f;
-        public const float MechanicSalaryPerLevel = 70f;
 
         public const float InspectionReward = 150f;
         public const float InspectionFine = 200f;
@@ -37,6 +36,7 @@ namespace GasStation.Logic
             StationEventType.RestroomCleaned => 5f,
             StationEventType.TiresChanged => 8f,
             StationEventType.StationPainted => 30f,
+            StationEventType.WorkerHired => 10f,
             _ => 0f
         };
 

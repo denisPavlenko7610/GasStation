@@ -19,7 +19,6 @@ namespace GasStation.Systems
         {
             state.RequireForUpdate<Restroom>();
             state.RequireForUpdate<StationSettings>();
-            state.RequireForUpdate<StationUpgrades>();
             state.RequireForUpdate<StationEvent>();
         }
 
@@ -43,8 +42,8 @@ namespace GasStation.Systems
                 StationEvent.Push(SystemAPI.GetSingletonBuffer<StationEvent>(), StationEventType.RestroomCleaned);
             }
 
-            int janitors = SystemAPI.GetSingleton<StationUpgrades>().Janitor;
-            if (janitors > 0)
+            float janitors = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Janitor : 0f;
+            if (janitors > 0f)
             {
                 restroom.Dirt = math.max(0f,
                     restroom.Dirt - FacilityMath.JanitorRestroomCleaningPerSecond * janitors * SystemAPI.Time.DeltaTime);

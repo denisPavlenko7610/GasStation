@@ -74,6 +74,10 @@ namespace GasStation.Bridge
         public static float TireTimeLeft;
         public static int PaintScheme;
 
+        public static readonly List<Worker> Workers = new();
+        public static readonly List<StaffCandidate> Candidates = new();
+        public static StaffPower Staff;
+
         public static bool HasRestroom;
         public static float RestroomDirt;
         public static WorldEvents World;

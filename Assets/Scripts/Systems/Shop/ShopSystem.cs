@@ -39,6 +39,8 @@ namespace GasStation.Systems
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
             ref var economy = ref SystemAPI.GetSingletonRW<Economy>().ValueRW;
             var ecb = new EntityCommandBuffer(Allocator.Temp);
+            float cashiers = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Cashier : 0f;
+            float shopTime = shop.ShopTime * StaffMath.ShopTimeFactor(cashiers);
 
             foreach (var (car, transform, entity) in SystemAPI.Query<RefRW<Car>, RefRO<LocalTransform>>().WithEntityAccess())
             {
@@ -55,7 +57,7 @@ namespace GasStation.Systems
                     else
                     {
                         float walk = math.distance(transform.ValueRO.Position, shop.Door) / WalkSpeed;
-                        car.ValueRW.Timer = shop.ShopTime + 2f * walk;
+                        car.ValueRW.Timer = shopTime + 2f * walk;
                     }
 
                     continue;
@@ -89,7 +91,7 @@ namespace GasStation.Systems
                         if (path.IsEmpty)
                         {
                             pedestrian.ValueRW.State = PedestrianState.InShop;
-                            pedestrian.ValueRW.Timer = shop.ShopTime;
+                            pedestrian.ValueRW.Timer = shopTime;
                         }
                         break;
 

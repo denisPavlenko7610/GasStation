@@ -33,6 +33,7 @@ namespace GasStation.Systems
             CopyShop();
             CopyWash();
             CopyFacilities();
+            CopyStaff();
             CopyFuel();
             CopyCars();
             CopyPumps();
@@ -100,6 +101,9 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.RestroomDisgusting:
                         HudModel.Notify("Клиент в ужасе от туалета! Уберите его (E у двери)");
+                        break;
+                    case StationEventType.WorkerStole:
+                        HudModel.Notify($"Из кассы пропало ${stationEvent.Value:0}. Кто-то из сотрудников нечист на руку…");
                         break;
                     case StationEventType.TruckParked:
                         HudModel.Notify("Дальнобойщик встал на ночёвку");
@@ -205,6 +209,24 @@ namespace GasStation.Systems
 
             HudModel.HasRestroom = SystemAPI.HasSingleton<Restroom>();
             HudModel.RestroomDirt = HudModel.HasRestroom ? SystemAPI.GetSingleton<Restroom>().Dirt : 0f;
+        }
+
+        private void CopyStaff()
+        {
+            HudModel.Workers.Clear();
+            HudModel.Candidates.Clear();
+            HudModel.Staff = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>() : default;
+
+            foreach (var worker in SystemAPI.Query<RefRO<Worker>>())
+                HudModel.Workers.Add(worker.ValueRO);
+            HudModel.Workers.Sort((a, b) => a.Id.CompareTo(b.Id));
+
+            if (!SystemAPI.HasSingleton<StaffRoster>())
+                return;
+
+            var candidates = SystemAPI.GetBuffer<StaffCandidate>(SystemAPI.GetSingletonEntity<StaffRoster>());
+            for (int i = 0; i < candidates.Length; i++)
+                HudModel.Candidates.Add(candidates[i]);
         }
 
         private void CopyFuel()

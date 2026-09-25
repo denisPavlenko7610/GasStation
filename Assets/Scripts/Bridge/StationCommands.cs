@@ -14,7 +14,9 @@ namespace GasStation.Bridge
         NewGame,
         ChangeProductPrice,
         OrderProducts,
-        PaintStation
+        PaintStation,
+        HireCandidate,
+        FireWorker
     }
 
     public struct StationCommand
@@ -56,6 +58,12 @@ namespace GasStation.Bridge
 
         public static void PaintStation(int scheme) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.PaintStation, Value = scheme });
+
+        public static void HireCandidate(int candidateIndex) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.HireCandidate, Value = candidateIndex });
+
+        public static void FireWorker(int workerId) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.FireWorker, Value = workerId });
 
         public static bool TryDequeue(out StationCommand command) => Queue.TryDequeue(out command);
 

@@ -21,10 +21,19 @@ namespace GasStation.Tests
         }
 
         [Test]
-        public void AttendantDelay_IsInfiniteWithoutAttendant()
+        public void LegacyStaffUpgrades_CannotBeBought()
         {
-            Assert.IsTrue(float.IsPositiveInfinity(UpgradeMath.AttendantDelay(0)));
-            Assert.Less(UpgradeMath.AttendantDelay(2), UpgradeMath.AttendantDelay(1));
+            Assert.IsFalse(UpgradeMath.CanUpgrade(UpgradeType.Attendant, 0));
+            Assert.IsFalse(UpgradeMath.CanUpgrade(UpgradeType.Janitor, 0));
+            Assert.IsFalse(UpgradeMath.CanUpgrade(UpgradeType.Mechanic, 0));
+            CollectionAssert.DoesNotContain(UpgradeMath.Purchasable, UpgradeType.Attendant);
+        }
+
+        [Test]
+        public void EveryPurchasableUpgrade_CanBeBought()
+        {
+            foreach (var type in UpgradeMath.Purchasable)
+                Assert.IsTrue(UpgradeMath.CanUpgrade(type, 0), type.ToString());
         }
 
         [Test]

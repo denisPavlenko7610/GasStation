@@ -68,7 +68,7 @@ namespace GasStation.Tests
             var upgrades = new StationUpgrades();
             upgrades.Set(UpgradeType.Janitor, 2);
             Assert.AreEqual(2, upgrades.Janitor);
-            Assert.Less(UpgradeMath.JanitorInterval(2), UpgradeMath.JanitorInterval(1));
+            Assert.Less(StaffMath.JanitorInterval(2f), StaffMath.JanitorInterval(1f));
         }
     }
 }

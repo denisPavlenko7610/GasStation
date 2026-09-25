@@ -37,7 +37,9 @@ namespace GasStation.Logic
         /// <summary>State: paint scheme number (0 = peeling paint).</summary>
         PaintStation,
         /// <summary>Counter: tire jobs done.</summary>
-        ChangeTires
+        ChangeTires,
+        /// <summary>Counter: workers hired.</summary>
+        HireWorker
     }
 
     public struct QuestDefinition
@@ -52,7 +54,7 @@ namespace GasStation.Logic
         public bool IsCounter => Goal is QuestGoal.CollectTrash or QuestGoal.ServeCustomers
             or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief
             or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers
-            or QuestGoal.ChangeTires;
+            or QuestGoal.ChangeTires or QuestGoal.HireWorker;
     }
 
     /// <summary>
@@ -74,6 +76,7 @@ namespace GasStation.Logic
             Quest(3, QuestGoal.OrderFuel, 1f, 100f),
             Quest(4, QuestGoal.BuyUpgrade, 1f, 250f),
             Quest(18, QuestGoal.PaintStation, 1f, 200f, 0.05f),
+            Quest(20, QuestGoal.HireWorker, 1f, 200f),
             Quest(5, QuestGoal.ServeCustomers, 15f, 400f),
             Quest(6, QuestGoal.CollectTrash, 40f, 400f),
             Quest(7, QuestGoal.Reputation, 70f, 500f),

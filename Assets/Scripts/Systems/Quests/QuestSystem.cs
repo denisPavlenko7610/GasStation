@@ -78,6 +78,7 @@ namespace GasStation.Systems
             QuestGoal.CleanRestroom => type == StationEventType.RestroomCleaned,
             QuestGoal.HostTruckers => type == StationEventType.ParkingPaid,
             QuestGoal.ChangeTires => type == StationEventType.TiresChanged,
+            QuestGoal.HireWorker => type == StationEventType.WorkerHired,
             _ => false
         };
     }

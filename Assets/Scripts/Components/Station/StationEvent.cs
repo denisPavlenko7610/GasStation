@@ -39,7 +39,10 @@ namespace GasStation.Components
         RestroomCleaned,
         AutoOrder,
         TiresChanged,
-        StationPainted
+        StationPainted,
+        WorkerHired,
+        WorkerFired,
+        WorkerStole
     }
 
     /// <summary>

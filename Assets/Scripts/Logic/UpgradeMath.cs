@@ -6,14 +6,31 @@ namespace GasStation.Logic
     public static class UpgradeMath
     {
         public const float TankBonusPerLevel = 1000f;
-        public const float AttendantSalaryPerLevel = 80f;
-        public const float JanitorSalaryPerLevel = 60f;
+
+        /// <summary>
+        /// Attendant, Janitor and Mechanic used to be upgrades; they are hired staff now (StaffMath).
+        /// They keep their enum values so old saves still map correctly, but can no longer be bought.
+        /// </summary>
+        public static bool IsLegacyStaff(UpgradeType type) =>
+            type is UpgradeType.Attendant or UpgradeType.Janitor or UpgradeType.Mechanic;
 
         public static int MaxLevel(UpgradeType type) =>
-            type is UpgradeType.ExtraPump or UpgradeType.TruckParking ? 2 : 3;
+            IsLegacyStaff(type) ? 0 : type is UpgradeType.ExtraPump or UpgradeType.TruckParking ? 2 : 3;
 
-        /// <summary>Condition a mechanic restores per second on each worn pump.</summary>
-        public static float MechanicRepairPerSecond(int level) => 0.01f * level;
+        /// <summary>Upgrades shown in the shop, in display order.</summary>
+        public static readonly UpgradeType[] Purchasable =
+        {
+            UpgradeType.PumpSpeed, UpgradeType.TankCapacity, UpgradeType.Comfort, UpgradeType.Advertising,
+            UpgradeType.ExtraPump, UpgradeType.SupplyManager, UpgradeType.CarWash, UpgradeType.TruckParking,
+            UpgradeType.TireService
+        };
+
+        public static StaffRole LegacyRole(UpgradeType type) => type switch
+        {
+            UpgradeType.Janitor => StaffRole.Janitor,
+            UpgradeType.Mechanic => StaffRole.Mechanic,
+            _ => StaffRole.Attendant
+        };
 
         public static float BaseCost(UpgradeType type) => type switch
         {
@@ -43,11 +60,5 @@ namespace GasStation.Logic
         public static float PatienceMultiplier(int level) => 1f + 0.2f * level;
 
         public static float TrafficMultiplier(int level) => 1f + 0.25f * level;
-
-        /// <summary>Seconds a car waits before a hired attendant starts fueling it.</summary>
-        public static float AttendantDelay(int level) => level > 0 ? 8f / level : float.PositiveInfinity;
-
-        /// <summary>Seconds between two pieces of litter removed by janitors.</summary>
-        public static float JanitorInterval(int level) => level > 0 ? 20f / level : float.PositiveInfinity;
     }
 }

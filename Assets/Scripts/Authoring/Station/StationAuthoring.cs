@@ -79,6 +79,13 @@ namespace GasStation.Authoring
             AddComponent(entity, new QuestProgress());
             AddComponent(entity, new StationLevel { Level = 1 });
             AddComponent(entity, new SupplyManagerState());
+            AddComponent(entity, new StaffPower());
+            AddComponent(entity, new StaffRoster
+            {
+                NextId = 1,
+                Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 101)
+            });
+            AddBuffer<StaffCandidate>(entity);
             AddComponent(entity, new StationStyle { Scheme = Mathf.Clamp(authoring.startPaintScheme, 0, 3) });
             AddComponent(entity, new WorldEvents
             {

@@ -15,7 +15,6 @@ namespace GasStation.Systems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<StationUpgrades>();
             state.RequireForUpdate<StationEvent>();
         }
 
@@ -23,7 +22,8 @@ namespace GasStation.Systems
         public void OnUpdate(ref SystemState state)
         {
             float deltaTime = SystemAPI.Time.DeltaTime;
-            float delay = UpgradeMath.AttendantDelay(SystemAPI.GetSingleton<StationUpgrades>().Attendant);
+            float attendants = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Attendant : 0f;
+            float delay = StaffMath.AttendantDelay(attendants);
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
 
             foreach (var car in SystemAPI.Query<RefRW<Car>>())

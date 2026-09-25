@@ -61,6 +61,12 @@ namespace GasStation.Systems
                     case StationCommandType.PaintStation:
                         PaintStation(station, (int)command.Value);
                         break;
+                    case StationCommandType.HireCandidate:
+                        HireCandidate(station, (int)command.Value);
+                        break;
+                    case StationCommandType.FireWorker:
+                        FireWorker(station, (int)command.Value);
+                        break;
                     case StationCommandType.NewGame:
                         SaveService.Delete();
                         if (SaveService.Defaults != null)
@@ -174,6 +180,69 @@ namespace GasStation.Systems
             HudModel.Notify($"Заказано: {GameTexts.ProductName(product)} × {count}, привезут через {shop.DeliveryTime:0} с");
         }
 
+        private void HireCandidate(Entity station, int index)
+        {
+            if (!SystemAPI.HasComponent<StaffRoster>(station))
+                return;
+
+            var candidates = SystemAPI.GetBuffer<StaffCandidate>(station);
+            if (index < 0 || index >= candidates.Length)
+                return;
+
+            if (SystemAPI.GetComponent<StaffPower>(station).Headcount >= StaffMath.MaxStaff)
+            {
+                HudModel.Notify($"Штат полон: не больше {StaffMath.MaxStaff} сотрудников");
+                return;
+            }
+
+            var candidate = candidates[index];
+            float fee = StaffMath.HiringFee(candidate.Wage);
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            if (economy.ValueRO.Money < fee)
+            {
+                HudModel.Notify($"Не хватает денег на найм: нужно ${fee:0}");
+                return;
+            }
+
+            economy.ValueRW.Money -= fee;
+            economy.ValueRW.DayExpenses += fee;
+            candidates.RemoveAt(index);
+
+            var roster = SystemAPI.GetComponent<StaffRoster>(station);
+            int id = roster.NextId++;
+            SystemAPI.SetComponent(station, roster);
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.WorkerHired, default, id);
+
+            var worker = EntityManager.CreateEntity();
+            EntityManager.AddComponentData(worker, new Worker
+            {
+                Id = id,
+                Role = candidate.Role,
+                Skill = candidate.Skill,
+                Wage = candidate.Wage,
+                Honesty = candidate.Honesty,
+                NameIndex = candidate.NameIndex
+            });
+
+            HudModel.Notify($"Нанят {GameTexts.RoleName(candidate.Role)}: {GameTexts.StaffName(candidate.NameIndex)}");
+        }
+
+        private void FireWorker(Entity station, int id)
+        {
+            foreach (var (worker, entity) in SystemAPI.Query<RefRO<Worker>>().WithEntityAccess())
+            {
+                if (worker.ValueRO.Id != id)
+                    continue;
+
+                string name = GameTexts.StaffName(worker.ValueRO.NameIndex);
+                var role = worker.ValueRO.Role;
+                StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.WorkerFired, default, id);
+                EntityManager.DestroyEntity(entity);
+                HudModel.Notify($"Уволен {GameTexts.RoleName(role)}: {name}");
+                return;
+            }
+        }
+
         private void PaintStation(Entity station, int scheme)
         {
             if (!SystemAPI.HasComponent<StationStyle>(station) || scheme < 1 || scheme >= StyleMath.SchemeCount)
@@ -248,15 +317,6 @@ namespace GasStation.Systems
                         entry.Capacity += UpgradeMath.TankBonusPerLevel;
                         stock[i] = entry;
                     }
-                    break;
-                case UpgradeType.Attendant:
-                    economy.ValueRW.DailyFixedCosts += UpgradeMath.AttendantSalaryPerLevel;
-                    break;
-                case UpgradeType.Janitor:
-                    economy.ValueRW.DailyFixedCosts += UpgradeMath.JanitorSalaryPerLevel;
-                    break;
-                case UpgradeType.Mechanic:
-                    economy.ValueRW.DailyFixedCosts += ProgressMath.MechanicSalaryPerLevel;
                     break;
                 case UpgradeType.SupplyManager:
                     economy.ValueRW.DailyFixedCosts += FacilityMath.SupplyManagerSalaryPerLevel;

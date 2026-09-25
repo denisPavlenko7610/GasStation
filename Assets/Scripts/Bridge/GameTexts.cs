@@ -47,6 +47,39 @@ namespace GasStation.Bridge
 
         public static string ProductName(ProductType type) => ProductNames[(int)type];
 
+        private static readonly string[] StaffNames =
+        {
+            "Иван", "Ольга", "Пётр", "Анна", "Сергей", "Мария", "Алексей", "Елена",
+            "Дмитрий", "Наталья", "Андрей", "Татьяна", "Михаил", "Ирина", "Николай", "Светлана"
+        };
+
+        public static string StaffName(int index) => StaffNames[((index % StaffNames.Length) + StaffNames.Length) % StaffNames.Length];
+
+        public static string RoleName(StaffRole role) => role switch
+        {
+            StaffRole.Attendant => "заправщик",
+            StaffRole.Janitor => "уборщик",
+            StaffRole.Mechanic => "механик",
+            StaffRole.Cashier => "кассир",
+            _ => role.ToString()
+        };
+
+        public static string RoleDuty(StaffRole role) => role switch
+        {
+            StaffRole.Attendant => "сам заправляет машины",
+            StaffRole.Janitor => "убирает мусор и туалет",
+            StaffRole.Mechanic => "чинит колонки, меняет шины",
+            StaffRole.Cashier => "ускоряет покупки в магазине",
+            _ => string.Empty
+        };
+
+        public static string ReferenceText(int grade) => grade switch
+        {
+            2 => "отличные рекомендации",
+            1 => "обычные рекомендации",
+            _ => "сомнительные рекомендации"
+        };
+
         public static string SchemeName(int scheme) => scheme switch
         {
             0 => "Облезлая краска",
@@ -87,6 +120,7 @@ namespace GasStation.Bridge
             17 => "Ночлег",
             18 => "Новый облик",
             19 => "Шиномонтаж",
+            20 => "Первый сотрудник",
             _ => "Задание дня"
         };
 
@@ -104,6 +138,7 @@ namespace GasStation.Bridge
             QuestGoal.StationLevel => $"Подними уровень станции до {quest.Target:0}: сейчас {{0}}",
             QuestGoal.SellProducts => $"Продай товары в магазине (M — ассортимент): {{0}}/{quest.Target:0}",
             QuestGoal.OpenCarWash => "Открой автомойку (Tab): {0}/1",
+            QuestGoal.HireWorker => "Найми сотрудника (H): {0}/1",
             QuestGoal.PaintStation => "Перекрась станцию (C): {0}/1",
             QuestGoal.ChangeTires => $"Поменяй шины клиентам (E у бокса шиномонтажа): {{0}}/{quest.Target:0}",
             QuestGoal.CleanRestroom => "Убери туалет (E у двери): {0}/1",

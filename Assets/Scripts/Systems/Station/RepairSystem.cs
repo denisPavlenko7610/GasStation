@@ -21,7 +21,6 @@ namespace GasStation.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<Economy>();
-            state.RequireForUpdate<StationUpgrades>();
             state.RequireForUpdate<StationEvent>();
         }
 
@@ -57,11 +56,11 @@ namespace GasStation.Systems
                 Repair(ref pump.ValueRW, step, events);
             }
 
-            int mechanics = SystemAPI.GetSingleton<StationUpgrades>().Mechanic;
-            if (mechanics == 0)
+            float mechanics = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Mechanic : 0f;
+            if (mechanics <= 0f)
                 return;
 
-            float amount = UpgradeMath.MechanicRepairPerSecond(mechanics) * SystemAPI.Time.DeltaTime;
+            float amount = StaffMath.MechanicRepairPerSecond(mechanics) * SystemAPI.Time.DeltaTime;
             foreach (var pump in SystemAPI.Query<RefRW<Pump>>())
             {
                 // Mechanics service pumps that are not in use.

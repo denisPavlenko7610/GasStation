@@ -30,12 +30,12 @@ namespace GasStation.Systems
         {
             float deltaTime = SystemAPI.Time.DeltaTime;
             var cleanliness = SystemAPI.GetSingletonRW<StationCleanliness>();
-            int janitors = SystemAPI.GetSingleton<StationUpgrades>().Janitor;
+            float janitors = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Janitor : 0f;
 
-            if (janitors > 0 && !_trash.IsEmpty)
+            if (janitors > 0f && !_trash.IsEmpty)
             {
                 cleanliness.ValueRW.JanitorTimer += deltaTime;
-                if (cleanliness.ValueRO.JanitorTimer >= UpgradeMath.JanitorInterval(janitors))
+                if (cleanliness.ValueRO.JanitorTimer >= StaffMath.JanitorInterval(janitors))
                 {
                     cleanliness.ValueRW.JanitorTimer = 0f;
                     using var trash = _trash.ToEntityArray(Allocator.Temp);

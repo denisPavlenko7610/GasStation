@@ -26,9 +26,13 @@ namespace GasStation.Systems
             if (!StationMath.AdvanceClock(ref time.ValueRW.Hour, ref time.ValueRW.Day, deltaHours))
                 return;
 
+            float wages = 0f;
+            foreach (var worker in SystemAPI.Query<RefRO<Worker>>())
+                wages += worker.ValueRO.Wage;
+
             ref var economy = ref SystemAPI.GetSingletonRW<Economy>().ValueRW;
-            economy.Money -= economy.DailyFixedCosts;
-            economy.DayExpenses += economy.DailyFixedCosts;
+            economy.Money -= economy.DailyFixedCosts + wages;
+            economy.DayExpenses += economy.DailyFixedCosts + wages;
 
             SystemAPI.SetSingleton(new DayReport
             {

@@ -37,6 +37,7 @@ namespace GasStation.Systems
             float deltaTime = SystemAPI.Time.DeltaTime;
             var upgrades = SystemAPI.GetSingleton<StationUpgrades>();
             int level = upgrades.TireService;
+            float mechanics = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Mechanic : 0f;
             var serviceEntity = SystemAPI.GetSingletonEntity<TireService>();
             ref var service = ref SystemAPI.GetComponentRW<TireService>(serviceEntity).ValueRW;
             var entryRoute = SystemAPI.GetBuffer<TireEntryPoint>(serviceEntity);
@@ -91,7 +92,7 @@ namespace GasStation.Systems
                     case CarState.WaitingForTires:
                     {
                         car.ValueRW.ServiceWait += deltaTime;
-                        bool mechanicStarts = upgrades.Mechanic > 0 && car.ValueRO.ServiceWait >= MechanicStartDelay;
+                        bool mechanicStarts = mechanics > 0f && car.ValueRO.ServiceWait >= MechanicStartDelay / mechanics;
                         if (playerStartsJob || mechanicStarts)
                         {
                             playerStartsJob = false;

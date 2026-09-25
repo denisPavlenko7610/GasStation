@@ -25,6 +25,40 @@ namespace GasStation.Save
     }
 
     [Serializable]
+    public class WorkerSaveData
+    {
+        public int id;
+        public int role;
+        public float skill;
+        public float wage;
+        public float honesty;
+        public int daysWorked;
+        public int nameIndex;
+
+        public Worker ToWorker() => new()
+        {
+            Id = id,
+            Role = (StaffRole)Mathf.Clamp(role, 0, StaffRoles.Count - 1),
+            Skill = skill,
+            Wage = wage,
+            Honesty = Mathf.Clamp01(honesty),
+            DaysWorked = daysWorked,
+            NameIndex = nameIndex
+        };
+
+        public static WorkerSaveData From(Worker worker) => new()
+        {
+            id = worker.Id,
+            role = (int)worker.Role,
+            skill = worker.Skill,
+            wage = worker.Wage,
+            honesty = worker.Honesty,
+            daysWorked = worker.DaysWorked,
+            nameIndex = worker.NameIndex
+        };
+    }
+
+    [Serializable]
     public class PumpSaveData
     {
         public int number;
@@ -44,7 +78,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 6;
+        public const int CurrentVersion = 7;
 
         public int version = CurrentVersion;
         public int day;
@@ -81,6 +115,9 @@ namespace GasStation.Save
 
         // Version 6; -1 means "keep the scene paint".
         public int paintScheme = -1;
+
+        // Version 7. Null in older saves: staff is converted from the old Attendant/Janitor/Mechanic upgrades.
+        public WorkerSaveData[] workers;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 
@@ -125,6 +162,52 @@ namespace GasStation.Save
             questIndex = quest.Index;
             questCounter = quest.Counter;
             questsCompleted = quest.Completed;
+        }
+
+        /// <summary>
+        /// Staff to restore. Saves before version 7 bought Attendant, Janitor and Mechanic as upgrades with a
+        /// salary in dailyFixedCosts: each level becomes an average worker and the salary moves to wages.
+        /// </summary>
+        public List<Worker> RestoreStaff(ref StationUpgrades stationUpgrades, ref Economy economy)
+        {
+            var result = new List<Worker>();
+            if (workers != null)
+            {
+                foreach (var worker in workers)
+                {
+                    if (worker != null)
+                        result.Add(worker.ToWorker());
+                }
+
+                return result;
+            }
+
+            int nextId = 1;
+            ConvertLegacy(UpgradeType.Attendant, StaffRole.Attendant, 80f, ref stationUpgrades, ref economy, result, ref nextId);
+            ConvertLegacy(UpgradeType.Janitor, StaffRole.Janitor, 60f, ref stationUpgrades, ref economy, result, ref nextId);
+            ConvertLegacy(UpgradeType.Mechanic, StaffRole.Mechanic, 70f, ref stationUpgrades, ref economy, result, ref nextId);
+            return result;
+        }
+
+        private static void ConvertLegacy(UpgradeType type, StaffRole role, float oldSalary, ref StationUpgrades stationUpgrades,
+            ref Economy economy, List<Worker> result, ref int nextId)
+        {
+            int level = stationUpgrades.Get(type);
+            for (int i = 0; i < level; i++)
+            {
+                result.Add(new Worker
+                {
+                    Id = nextId++,
+                    Role = role,
+                    Skill = 1f,
+                    Wage = oldSalary,
+                    Honesty = 1f,
+                    NameIndex = nextId * 5
+                });
+            }
+
+            economy.DailyFixedCosts = Mathf.Max(0f, economy.DailyFixedCosts - level * oldSalary);
+            stationUpgrades.Set(type, 0);
         }
 
         public void CaptureLevel(StationLevel level)

@@ -52,6 +52,14 @@ namespace GasStation.Save
 
             CaptureShop(entityManager, data);
 
+            using (var workerQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Worker>()))
+            using (var workers = workerQuery.ToComponentDataArray<Worker>(Allocator.Temp))
+            {
+                data.workers = new WorkerSaveData[workers.Length];
+                for (int i = 0; i < workers.Length; i++)
+                    data.workers[i] = WorkerSaveData.From(workers[i]);
+            }
+
             using (var restroomQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Restroom>()))
             {
                 if (restroomQuery.CalculateEntityCount() == 1)
@@ -102,12 +110,14 @@ namespace GasStation.Save
                 stock[i] = stockBuffer[i];
 
             data.ApplyTo(ref economy, ref time, ref upgrades, stock);
+            var staff = data.RestoreStaff(ref upgrades, ref economy);
 
             for (int i = 0; i < stock.Length; i++)
                 stockBuffer[i] = stock[i];
             entityManager.SetComponentData(station, economy);
             entityManager.SetComponentData(station, time);
             entityManager.SetComponentData(station, upgrades);
+            RestoreStaff(entityManager, station, staff);
 
             if (entityManager.HasComponent<QuestProgress>(station))
                 entityManager.SetComponentData(station, data.ToQuestProgress());
@@ -137,6 +147,27 @@ namespace GasStation.Save
 
             if (data.trash != null)
                 RestoreTrash(entityManager, data.trash);
+        }
+
+        private static void RestoreStaff(EntityManager entityManager, Entity station, System.Collections.Generic.List<Worker> staff)
+        {
+            using (var existing = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Worker>()))
+                entityManager.DestroyEntity(existing);
+
+            int nextId = 1;
+            foreach (var worker in staff)
+            {
+                var entity = entityManager.CreateEntity();
+                entityManager.AddComponentData(entity, worker);
+                nextId = Math.Max(nextId, worker.Id + 1);
+            }
+
+            if (entityManager.HasComponent<StaffRoster>(station))
+            {
+                var roster = entityManager.GetComponentData<StaffRoster>(station);
+                roster.NextId = Math.Max(roster.NextId, nextId);
+                entityManager.SetComponentData(station, roster);
+            }
         }
 
         private static void CaptureShop(EntityManager entityManager, SaveData data)
