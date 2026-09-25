@@ -43,24 +43,26 @@ namespace GasStation.Logic
         }
 
         /// <summary>Weight of a product in the customer's choice: demand × preference × price appeal; 0 when out of stock.</summary>
-        public static float Weight(CustomerType customer, ProductType product, ShopProduct shelf)
+        public static float Weight(CustomerType customer, ProductType product, ShopProduct shelf,
+            SeasonKind season = SeasonKind.Spring, WeatherKind weather = WeatherKind.Clear)
         {
             if (shelf.Stock <= 0)
                 return 0f;
             return Defaults(product).Demand * Preference(customer, product)
                                             * StationMath.PriceAttractiveness(shelf.SellPrice, shelf.ReferencePrice)
-                                            * (shelf.Promo ? PromoDemand : 1f);
+                                            * (shelf.Promo ? PromoDemand : 1f)
+                                            * SeasonMath.ProductFactor(product, season, weather);
         }
 
         /// <summary>Weighted random pick. Returns -1 when nothing can be bought.</summary>
         public static int Pick(float random01, CustomerType customer, ShopProduct p0, ShopProduct p1, ShopProduct p2,
-            ShopProduct p3, ShopProduct p4)
+            ShopProduct p3, ShopProduct p4, SeasonKind season = SeasonKind.Spring, WeatherKind weather = WeatherKind.Clear)
         {
-            float w0 = Weight(customer, ProductType.Water, p0);
-            float w1 = Weight(customer, ProductType.Coffee, p1);
-            float w2 = Weight(customer, ProductType.Snacks, p2);
-            float w3 = Weight(customer, ProductType.MotorOil, p3);
-            float w4 = Weight(customer, ProductType.Souvenir, p4);
+            float w0 = Weight(customer, ProductType.Water, p0, season, weather);
+            float w1 = Weight(customer, ProductType.Coffee, p1, season, weather);
+            float w2 = Weight(customer, ProductType.Snacks, p2, season, weather);
+            float w3 = Weight(customer, ProductType.MotorOil, p3, season, weather);
+            float w4 = Weight(customer, ProductType.Souvenir, p4, season, weather);
             float total = w0 + w1 + w2 + w3 + w4;
             if (total <= 0f)
                 return -1;

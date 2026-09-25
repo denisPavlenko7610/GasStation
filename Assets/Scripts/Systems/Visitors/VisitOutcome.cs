@@ -6,6 +6,10 @@ namespace GasStation.Systems
     /// <summary>Events that tie a review to who gave it: a regular (by name) or the incognito critic.</summary>
     public static class VisitOutcome
     {
+        /// <summary>A paying customer's license plate, for the collection.</summary>
+        public static void Plate(DynamicBuffer<StationEvent> events, in Car car) =>
+            StationEvent.Push(events, StationEventType.PlateSeen, default, 0f, car.Plate);
+
         /// <summary>A contract vehicle was fueled (served) or left without fuel.</summary>
         public static void ContractResult(DynamicBuffer<StationEvent> events, in Car car, bool served)
         {

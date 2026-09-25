@@ -71,13 +71,17 @@ namespace GasStation.Mono.Menu
 
             var keyboard = Keyboard.current;
             // The laptop closes itself on Esc.
-            if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame || LaptopState.IsOpen)
+            if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame || LaptopState.IsOpen ||
+                LaptopState.ClosedFrame == Time.frameCount)
                 return;
 
             switch (_screen)
             {
                 case MenuScreen.None when BuildMode.Active:
                     BuildMode.Exit();
+                    break;
+                case MenuScreen.None when PhotoMode.Active:
+                    GasStation.Mono.Collections.PhotoModeController.ExitPhotoMode();
                     break;
                 case MenuScreen.None:
                     Show(MenuScreen.Pause);

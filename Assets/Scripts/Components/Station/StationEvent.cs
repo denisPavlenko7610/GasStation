@@ -139,7 +139,15 @@ namespace GasStation.Components
         /// <summary>Value = ticket income; Subject = preparation in percent.</summary>
         HostedEventEnded,
         /// <summary>Value = OwnerSkill.</summary>
-        SkillLearned
+        SkillLearned,
+        /// <summary>Value = SeasonKind.</summary>
+        SeasonChanged,
+        /// <summary>Value = WeatherKind.</summary>
+        WeatherChanged,
+        /// <summary>Subject = plate id of a paying customer.</summary>
+        PlateSeen,
+        /// <summary>Subject = plate id seen for the first time.</summary>
+        NewPlate
     }
 
     /// <summary>

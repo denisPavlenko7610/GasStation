@@ -500,6 +500,17 @@ namespace GasStation.Save
 
         private static void CaptureGrowth(EntityManager entityManager, Entity station, SaveData data)
         {
+            if (entityManager.HasComponent<SeasonState>(station))
+            {
+                var season = entityManager.GetComponentData<SeasonState>(station);
+                data.season = (int)season.Season;
+                data.weather = (int)season.Weather;
+            }
+
+            if (entityManager.HasComponent<PlateCollection>(station))
+                data.plates = entityManager.GetComponentData<PlateCollection>(station).Seen;
+            data.catName = GasStation.Bridge.StationProfile.CustomCatName;
+
             if (entityManager.HasComponent<OwnerSkillSet>(station))
                 data.skills = entityManager.GetComponentData<OwnerSkillSet>(station).Learned;
             if (entityManager.HasComponent<StationStars>(station))
@@ -528,6 +539,19 @@ namespace GasStation.Save
         /// <summary>A running hosted event is not saved: it simply ends.</summary>
         private static void RestoreGrowth(EntityManager entityManager, Entity station, SaveData data)
         {
+            if (entityManager.HasComponent<SeasonState>(station))
+            {
+                var season = entityManager.GetComponentData<SeasonState>(station);
+                // The calendar decides the season; older saves get the right one for their day.
+                season.Season = SeasonMath.SeasonOf(entityManager.GetComponentData<GameTime>(station).Day);
+                season.Weather = (WeatherKind)Mathf.Clamp(data.weather, 0, (int)WeatherKind.Snow);
+                entityManager.SetComponentData(station, season);
+            }
+
+            if (entityManager.HasComponent<PlateCollection>(station))
+                entityManager.SetComponentData(station, new PlateCollection { Seen = data.plates });
+            GasStation.Bridge.StationProfile.SetCatName(data.catName);
+
             if (entityManager.HasComponent<OwnerSkillSet>(station))
             {
                 var skills = entityManager.GetComponentData<OwnerSkillSet>(station);

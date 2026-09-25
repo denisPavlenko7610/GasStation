@@ -31,7 +31,7 @@ namespace GasStation.Mono.Build
         private void Update()
         {
             var keyboard = Keyboard.current;
-            if (keyboard == null || !HudModel.HasStation || !HudModel.HasBuildArea || GamePause.MenuOpen)
+            if (keyboard == null || !HudModel.HasStation || !HudModel.HasBuildArea || GamePause.MenuOpen || PhotoMode.Active)
             {
                 SetGhostVisible(false);
                 return;

@@ -71,6 +71,8 @@ namespace GasStation.Systems
                          * SkillMath.TrafficFactor(skills)
                          * RoadMath.TrafficFactor(road)
                          * (hostedOn ? HostedEventMath.Get(hosted).Crowd : 1f);
+            var seasonState = SystemAPI.HasSingleton<SeasonState>() ? SystemAPI.GetSingleton<SeasonState>() : default;
+            intensity *= SeasonMath.TrafficFactor(seasonState.Season, seasonState.Weather);
             bool touristBoost = worldEvent == WorldEventKind.RushHour || RoadMath.TouristBoost(road) ||
                                 (hostedOn && hosted != HostedEventKind.MovieNight);
 
@@ -104,6 +106,7 @@ namespace GasStation.Systems
                 return;
 
             var customer = CustomerProfiles.Pick(spawner.Random.NextFloat(), stationLevel, hour, touristBoost);
+            customer = SeasonMath.AdjustCustomer(customer, seasonState.Season, spawner.Random.NextFloat());
             // Lamps scare thieves off at night: some of them become ordinary customers.
             if (customer == CustomerType.Thief && LightingMath.NightFactor(hour) > 0.5f &&
                 spawner.Random.NextFloat() > PropMath.NightCrimeFactor(props.Lamps))
@@ -148,7 +151,9 @@ namespace GasStation.Systems
                 : StationMath.PickFuelType(spawner.Random.NextFloat());
 
             bool wantsShop = request.HasHabits ? request.WantsShop : spawner.Random.NextFloat() < profile.ShopChance;
-            bool wantsWash = request.HasHabits ? request.WantsWash : spawner.Random.NextFloat() < profile.WashChance;
+            var weather = SystemAPI.HasSingleton<SeasonState>() ? SystemAPI.GetSingleton<SeasonState>().Weather : WeatherKind.Clear;
+            bool wantsWash = request.HasHabits ? request.WantsWash
+                : spawner.Random.NextFloat() < profile.WashChance * SeasonMath.WashFactor(weather);
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var car = ecb.Instantiate(prefab);
@@ -169,7 +174,8 @@ namespace GasStation.Systems
                 NeedsTires = spawner.Random.NextFloat() < profile.TireChance,
                 RegularId = request.RegularId,
                 Passengers = request.Passengers,
-                ContractId = request.ContractId
+                ContractId = request.ContractId,
+                Plate = PlateMath.Pick(spawner.Random.NextFloat())
             });
             ecb.AddComponent(car, new Patience { Current = patience, Max = patience });
             ecb.AddComponent(car, new CarMovement

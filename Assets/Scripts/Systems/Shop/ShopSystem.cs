@@ -42,6 +42,7 @@ namespace GasStation.Systems
             float cashiers = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Cashier : 0f;
             float shopTime = shop.ShopTime * StaffMath.ShopTimeFactor(cashiers);
             float hour = SystemAPI.HasSingleton<GameTime>() ? SystemAPI.GetSingleton<GameTime>().Hour : 12f;
+            var season = SystemAPI.HasSingleton<SeasonState>() ? SystemAPI.GetSingleton<SeasonState>() : default;
             var watch = new TheftWatch
             {
                 Cashiers = cashiers,
@@ -91,9 +92,9 @@ namespace GasStation.Systems
                 {
                     var who = i == 0 ? car.ValueRO.Customer : CustomerType.Tourist;
                     if (shop.Random.NextFloat() < ShopMath.ShopliftChance(who))
-                        Shoplift(ref shop, shelves, ref economy, events, who, watch);
+                        Shoplift(ref shop, shelves, ref economy, events, who, watch, season);
                     else
-                        Purchase(ref shop, shelves, ref economy, events, who);
+                        Purchase(ref shop, shelves, ref economy, events, who, season);
                     DinerSale(ref state, ref shop, ref economy, events, who, hour);
                     UseRestroom(ref state, ref shop, ref economy, events);
                 }
@@ -128,9 +129,9 @@ namespace GasStation.Systems
 
                         var customer = SystemAPI.GetComponent<Car>(carEntity).Customer;
                         if (pedestrian.ValueRO.Shoplifter)
-                            Shoplift(ref shop, shelves, ref economy, events, customer, watch);
+                            Shoplift(ref shop, shelves, ref economy, events, customer, watch, season);
                         else
-                            Purchase(ref shop, shelves, ref economy, events, customer);
+                            Purchase(ref shop, shelves, ref economy, events, customer, season);
                         DinerSale(ref state, ref shop, ref economy, events, customer, hour);
                         UseRestroom(ref state, ref shop, ref economy, events);
                         pedestrian.ValueRW.State = PedestrianState.ToCar;
@@ -199,12 +200,12 @@ namespace GasStation.Systems
         /// the loss (FinanceSystem).
         /// </summary>
         private static void Shoplift(ref Shop shop, DynamicBuffer<ShopProduct> shelves, ref Economy economy,
-            DynamicBuffer<StationEvent> events, CustomerType customer, in TheftWatch watch)
+            DynamicBuffer<StationEvent> events, CustomerType customer, in TheftWatch watch, in SeasonState season)
         {
             if (shop.Random.NextFloat() < ShopMath.ShopliftCatchChance(watch.Cashiers, watch.Cameras, watch.PlayerAtDoor))
             {
                 StationEvent.Push(events, StationEventType.ShoplifterCaught);
-                Purchase(ref shop, shelves, ref economy, events, customer);
+                Purchase(ref shop, shelves, ref economy, events, customer, season);
                 return;
             }
 
@@ -215,7 +216,8 @@ namespace GasStation.Systems
             int items = shop.Random.NextInt(1, 4);
             for (int i = 0; i < items; i++)
             {
-                int index = ShopMath.Pick(shop.Random.NextFloat(), customer, shelves[0], shelves[1], shelves[2], shelves[3], shelves[4]);
+                int index = ShopMath.Pick(shop.Random.NextFloat(), customer, shelves[0], shelves[1], shelves[2], shelves[3], shelves[4],
+                    season.Season, season.Weather);
                 if (index < 0)
                     break;
                 var shelf = shelves[index];
@@ -294,7 +296,7 @@ namespace GasStation.Systems
         }
 
         private static void Purchase(ref Shop shop, DynamicBuffer<ShopProduct> shelves, ref Economy economy,
-            DynamicBuffer<StationEvent> events, CustomerType customer)
+            DynamicBuffer<StationEvent> events, CustomerType customer, in SeasonState season)
         {
             if (shelves.Length < ProductTypes.Count)
                 return;
@@ -303,7 +305,8 @@ namespace GasStation.Systems
             int bought = 0;
             for (int i = 0; i < items; i++)
             {
-                int index = ShopMath.Pick(shop.Random.NextFloat(), customer, shelves[0], shelves[1], shelves[2], shelves[3], shelves[4]);
+                int index = ShopMath.Pick(shop.Random.NextFloat(), customer, shelves[0], shelves[1], shelves[2], shelves[3], shelves[4],
+                    season.Season, season.Weather);
                 if (index < 0)
                     break;
 

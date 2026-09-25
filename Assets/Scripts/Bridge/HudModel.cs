@@ -179,6 +179,8 @@ namespace GasStation.Bridge
 
         public static SupplierKind Supplier;
 
+        public static SeasonState Season;
+        public static PlateCollection Plates;
         public static OwnerSkillSet Skills;
         public static StationStars Stars;
         public static RoadEvent Road;

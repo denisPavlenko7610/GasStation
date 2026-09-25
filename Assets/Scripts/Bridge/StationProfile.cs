@@ -19,6 +19,22 @@ namespace GasStation.Bridge
         /// <summary>The custom name only (null when the default is used); this is what is saved.</summary>
         public static string CustomName => _name;
 
+        /// <summary>The station cat's name (null = the localized default). Saved with the game.</summary>
+        public static string CatName => string.IsNullOrWhiteSpace(_catName) ? Loc.T("cat.defaultName") : _catName;
+
+        public static string CustomCatName => _catName;
+
+        private static string _catName;
+
+        public static void SetCatName(string name)
+        {
+            name = name?.Trim();
+            if (name != null && name.Length > MaxNameLength)
+                name = name.Substring(0, MaxNameLength);
+            _catName = string.IsNullOrEmpty(name) ? null : name;
+            Version++;
+        }
+
         public static void SetName(string name)
         {
             name = name?.Trim();
@@ -32,6 +48,7 @@ namespace GasStation.Bridge
         private static void Reset()
         {
             _name = null;
+            _catName = null;
             Version++;
         }
     }

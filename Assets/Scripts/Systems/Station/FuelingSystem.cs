@@ -123,6 +123,7 @@ namespace GasStation.Systems
 
                     StationEvent.Push(events, StationEventType.CustomerPaid, car.ValueRO.FuelType, bill);
                     VisitOutcome.ContractResult(events, car.ValueRO, true);
+                    VisitOutcome.Plate(events, car.ValueRO);
                     if (car.ValueRO.Customer != CustomerType.Thief)
                     {
                         float stars = ReviewMath.Stars(patienceRatio, fuel.SellPrice, fuel.MarketPrice, cleanliness);

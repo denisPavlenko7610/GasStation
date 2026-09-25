@@ -21,6 +21,15 @@ namespace GasStation.Systems
             if (camera == null)
                 return;
 
+            if (PhotoMode.Active)
+            {
+                // Orbit around the focus at the usual camera height and distance, turned by the photo yaw.
+                var orbit = Quaternion.Euler(0f, PhotoMode.Yaw, 0f) * CameraSingleton.Offset * PhotoMode.Zoom;
+                camera.transform.position = PhotoMode.Focus + orbit;
+                camera.transform.rotation = Quaternion.LookRotation(PhotoMode.Focus - camera.transform.position);
+                return;
+            }
+
             if (BuildMode.Active)
             {
                 camera.transform.position = BuildMode.Focus + CameraSingleton.Offset * BuildMode.Zoom;

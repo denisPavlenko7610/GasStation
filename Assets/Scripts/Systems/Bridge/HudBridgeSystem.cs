@@ -75,6 +75,8 @@ namespace GasStation.Systems
                 });
             }
 
+            HudModel.Season = SystemAPI.HasSingleton<SeasonState>() ? SystemAPI.GetSingleton<SeasonState>() : default;
+            HudModel.Plates = SystemAPI.HasSingleton<PlateCollection>() ? SystemAPI.GetSingleton<PlateCollection>() : default;
             HudModel.Skills = SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>() : default;
             HudModel.Stars = SystemAPI.HasSingleton<StationStars>() ? SystemAPI.GetSingleton<StationStars>() : default;
             HudModel.Road = SystemAPI.HasSingleton<RoadEvent>() ? SystemAPI.GetSingleton<RoadEvent>() : default;
@@ -315,6 +317,15 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.DishCooked:
                         HudModel.Notify(Loc.F("msg.dishCooked", Loc.T($"dish.{(DinerDish)stationEvent.Subject}")));
+                        break;
+                    case StationEventType.SeasonChanged:
+                        HudModel.Notify(Loc.T($"season.{(SeasonKind)(int)stationEvent.Value}.start"));
+                        break;
+                    case StationEventType.WeatherChanged:
+                        HudModel.Notify(Loc.T($"weather.{(WeatherKind)(int)stationEvent.Value}.start"));
+                        break;
+                    case StationEventType.NewPlate:
+                        HudModel.Notify(Loc.F("msg.newPlate", Loc.T($"plate.{stationEvent.Subject}"), stationEvent.Value, PlateMath.Count));
                         break;
                     case StationEventType.StarGained:
                         HudModel.Notify(Loc.F("msg.starGained", StarText((int)stationEvent.Value)));

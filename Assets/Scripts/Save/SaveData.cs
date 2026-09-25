@@ -372,7 +372,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 20;
+        public const int CurrentVersion = 21;
 
         public int version = CurrentVersion;
         public int day;
@@ -468,6 +468,12 @@ namespace GasStation.Save
         public int plannedEvent;
         public int plannedEventDay;
         public int lastHostedDay = -100;
+
+        // Version 21. Older saves: spring, no plates, the default cat name.
+        public int season;
+        public int weather;
+        public int plates;
+        public string catName;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

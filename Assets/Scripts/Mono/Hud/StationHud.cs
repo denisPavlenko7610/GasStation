@@ -54,11 +54,11 @@ namespace GasStation.Mono
 
         private void Update()
         {
-            _view.SetVisible(HudModel.HasStation && !LaptopState.IsOpen);
+            _view.SetVisible(HudModel.HasStation && !LaptopState.IsOpen && !PhotoMode.Active);
             if (!HudModel.HasStation)
                 return;
 
-            if (!GamePause.MenuOpen && !BuildMode.Active)
+            if (!GamePause.MenuOpen && !BuildMode.Active && !PhotoMode.Active)
                 HandleKeys();
             _view.SetText(HudBlock.Status, BuildStatus());
             _view.SetText(HudBlock.Fuel, BuildFuel());
@@ -790,6 +790,8 @@ namespace GasStation.Mono
                 : Loc.F("hud.level", level.Level, level.Experience, ProgressMath.ExperienceToNext(level.Level)));
 
             _builder.AppendLine(Loc.F("hud.stars", Stars(HudModel.Stars.Stars)));
+            _builder.AppendLine(Loc.F("hud.season", Loc.T($"season.{HudModel.Season.Season}"), SeasonMath.DayOfSeason(HudModel.Day),
+                SeasonMath.DaysPerSeason, Loc.T($"weather.{HudModel.Season.Weather}")));
             if (HudModel.Road.Kind != RoadEventKind.None)
                 _builder.AppendLine(Loc.F("hud.road", Loc.T($"road.{HudModel.Road.Kind}"), HudModel.Road.HoursLeft));
             if (HudModel.Hosted.Active != HostedEventKind.None)

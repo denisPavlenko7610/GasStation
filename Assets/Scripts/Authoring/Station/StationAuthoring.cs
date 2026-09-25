@@ -123,6 +123,8 @@ namespace GasStation.Authoring
                 Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 503)
             });
             AddComponent(entity, new HostedEvents { PlannedDay = -1, LastHostedDay = -100 });
+            AddComponent(entity, new SeasonState { Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 601) });
+            AddComponent(entity, new PlateCollection());
             AddComponent(entity, new Achievements());
             AddComponent(entity, new StaffRoster
             {

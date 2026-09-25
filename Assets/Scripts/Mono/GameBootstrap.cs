@@ -31,6 +31,8 @@ namespace GasStation.Mono
                 root.AddComponent<Build.PropPresenter>();
                 root.AddComponent<Build.StaffPresenter>();
                 root.AddComponent<Office.LaptopController>();
+                root.AddComponent<Collections.PhotoModeController>();
+                root.AddComponent<Collections.StationCat>();
                 Object.DontDestroyOnLoad(root);
             }
 

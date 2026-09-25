@@ -81,6 +81,8 @@ namespace GasStation.Components
         public byte PeopleAway;
         /// <summary>Id of the contract this vehicle comes for; 0 = none.</summary>
         public int ContractId;
+        /// <summary>Which state the license plate is from (PlateMath).</summary>
+        public byte Plate;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

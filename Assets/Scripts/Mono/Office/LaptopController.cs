@@ -24,6 +24,7 @@ namespace GasStation.Mono.Office
             Suppliers,
             Events,
             Skills,
+            Collection,
             Bank,
             Competitor,
             Regulars,
@@ -156,6 +157,7 @@ namespace GasStation.Mono.Office
                 case App.Suppliers: BuildSuppliers(content); break;
                 case App.Events: BuildEvents(content); break;
                 case App.Skills: BuildSkills(content); break;
+                case App.Collection: BuildCollection(content); break;
                 case App.Bank: BuildBank(content); break;
                 case App.Competitor: BuildCompetitor(content); break;
                 case App.Regulars: BuildRegulars(content); break;
@@ -379,6 +381,34 @@ namespace GasStation.Mono.Office
             }
 
             content.Add(Label(Loc.T("laptop.events.prepHint"), "laptop-muted"));
+        }
+
+        private void BuildCollection(VisualElement content)
+        {
+            int seen = HudModel.Plates.Seen;
+            content.Add(Label(Loc.F("laptop.collection.plates", PlateMath.Collected(seen), PlateMath.Count), "laptop-heading"));
+            var wall = Card(Loc.T("laptop.collection.wall"));
+            var row = new VisualElement();
+            row.style.flexDirection = FlexDirection.Row;
+            row.style.flexWrap = Wrap.Wrap;
+            wall.Add(row);
+            for (int i = 0; i < PlateMath.Count; i++)
+            {
+                var plate = Label(PlateMath.Has(seen, i) ? Loc.T($"plate.{i}") : "???", PlateMath.Has(seen, i) ? "laptop-line" : "laptop-muted");
+                plate.style.width = 170;
+                plate.style.marginRight = 6;
+                row.Add(plate);
+            }
+
+            var cat = Card(Loc.F("laptop.collection.cat", StationProfile.CatName));
+            cat.Add(Label(Loc.T("laptop.collection.catHint"), "laptop-muted"));
+            var field = new TextField { maxLength = StationProfile.MaxNameLength, value = StationProfile.CustomCatName ?? string.Empty };
+            field.AddToClassList("name-field");
+            cat.Add(field);
+            Action(Actions(cat), Loc.T("laptop.collection.rename"), () => StationProfile.SetCatName(field.value));
+
+            var photo = Card(Loc.T("laptop.collection.photoTitle"));
+            photo.Add(Label(Loc.T("laptop.collection.photo"), "laptop-line"));
         }
 
         private void BuildSkills(VisualElement content)
