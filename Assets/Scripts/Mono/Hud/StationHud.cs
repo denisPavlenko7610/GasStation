@@ -51,12 +51,13 @@ namespace GasStation.Mono
             if (!HudModel.HasStation)
                 return;
 
-            HandleKeys();
+            if (!GamePause.MenuOpen)
+                HandleKeys();
             _view.SetText(HudBlock.Status, BuildStatus());
             _view.SetText(HudBlock.Fuel, BuildFuel());
             _view.SetText(HudBlock.Pumps, BuildPumps());
             _view.SetText(HudBlock.Center, BuildCenter());
-            _view.SetText(HudBlock.Help, Loc.T("hud.help"));
+            _view.SetText(HudBlock.Help, GameSettings.ShowControls ? Loc.T("hud.help") : string.Empty);
             _view.SetText(HudBlock.Panel, _upgradesOpen ? BuildUpgrades()
                 : _storeOpen ? BuildStore()
                 : _paintOpen ? BuildPaint()
@@ -99,6 +100,18 @@ namespace GasStation.Mono
                 Toggle(ref _staffOpen);
             if (keyboard.jKey.wasPressedThisFrame)
                 Toggle(ref _achievementsOpen);
+
+            if (keyboard.tKey.wasPressedThisFrame)
+            {
+                GamePause.SetGameSpeed(GameSettings.GameSpeed % 3 + 1);
+                GameSettings.Save();
+            }
+
+            if (keyboard.f1Key.wasPressedThisFrame)
+            {
+                GameSettings.ShowControls = !GameSettings.ShowControls;
+                GameSettings.Save();
+            }
 
             if (keyboard.lKey.wasPressedThisFrame)
             {
@@ -406,7 +419,7 @@ namespace GasStation.Mono
             int minutes = (int)((HudModel.Hour - hours) * 60f);
 
             _builder.Clear();
-            _builder.AppendLine(Loc.F("hud.day", HudModel.Day, hours, minutes));
+            _builder.AppendLine(Loc.F("hud.day", HudModel.Day, hours, minutes) + Loc.F("hud.speed", GameSettings.GameSpeed));
             _builder.AppendLine(Loc.F("hud.money", economy.Money));
             _builder.AppendLine(Loc.F("hud.reputation", economy.Reputation * 100f));
             _builder.AppendLine(Loc.F("hud.cleanliness", HudModel.Cleanliness.Value * 100f, HudModel.Cleanliness.TrashCount));

@@ -51,11 +51,11 @@ namespace GasStation.Mono
             {
                 var clip = ClipFor(stationEvent.Type);
                 if (clip != null)
-                    _oneShots.PlayOneShot(clip, volume);
+                    _oneShots.PlayOneShot(clip, volume * GameSettings.EffectsVolume);
             }
 
-            bool fueling = HudModel.HasStation && HudModel.AnyFueling;
-            _pumpLoop.volume = volume * 0.5f;
+            bool fueling = HudModel.HasStation && HudModel.AnyFueling && !GamePause.MenuOpen;
+            _pumpLoop.volume = volume * 0.5f * GameSettings.EffectsVolume;
             if (fueling && !_pumpLoop.isPlaying)
                 _pumpLoop.Play();
             else if (!fueling && _pumpLoop.isPlaying)

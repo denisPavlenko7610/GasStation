@@ -1,3 +1,4 @@
+using GasStation.Bridge;
 using GasStation.Components;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -26,9 +27,11 @@ namespace GasStation.Systems
 
         protected override void OnUpdate()
         {
-            Vector2 move = _inputAction.Player.Move.ReadValue<Vector2>();
-            bool interact = _inputAction.Player.Fire.WasPressedThisFrame()
-                            || (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame);
+            // Menus pause the game; their clicks must not reach the station.
+            bool menuOpen = GamePause.MenuOpen;
+            Vector2 move = menuOpen ? Vector2.zero : _inputAction.Player.Move.ReadValue<Vector2>();
+            bool interact = !menuOpen && (_inputAction.Player.Fire.WasPressedThisFrame()
+                                          || (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame));
 
             foreach (var (moveInput, interaction) in SystemAPI
                          .Query<RefRW<MoveInput>, RefRW<PlayerInteraction>>()

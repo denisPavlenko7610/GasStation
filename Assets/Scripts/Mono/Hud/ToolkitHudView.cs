@@ -5,13 +5,11 @@ using UnityEngine.UIElements;
 namespace GasStation.Mono.Hud
 {
     /// <summary>
-    /// HUD on UI Toolkit. The panel settings are created at runtime from Resources/UI/GasStationTheme (theme)
-    /// and Resources/UI/Hud (styles); the visual tree is built in code. Returns null from TryCreate when
+    /// HUD on UI Toolkit with the styles from Resources/UI/Hud; the visual tree is built in code. Returns null from TryCreate when
     /// the assets are missing, so StationHud can fall back to uGUI.
     /// </summary>
     public class ToolkitHudView : IHudView
     {
-        private const string ThemePath = "UI/GasStationTheme";
         private const string StylePath = "UI/Hud";
 
         private readonly VisualElement _root;
@@ -23,28 +21,12 @@ namespace GasStation.Mono.Hud
 
         public static IHudView TryCreate(GameObject host)
         {
-            var theme = Resources.Load<ThemeStyleSheet>(ThemePath);
             var style = Resources.Load<StyleSheet>(StylePath);
-            if (theme == null || style == null)
+            if (style == null)
                 return null;
 
-            var panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
-            panelSettings.name = "GasStation HUD";
-            panelSettings.themeStyleSheet = theme;
-            panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-            panelSettings.referenceResolution = new Vector2Int(1920, 1080);
-            panelSettings.match = 0.5f;
-            panelSettings.sortingOrder = 100;
-
-            // Assign the panel before the document is enabled.
-            var documentObject = new GameObject("HUD (UI Toolkit)");
-            documentObject.SetActive(false);
-            documentObject.transform.SetParent(host.transform, false);
-            var document = documentObject.AddComponent<UIDocument>();
-            document.panelSettings = panelSettings;
-            documentObject.SetActive(true);
-
-            return document.rootVisualElement != null ? new ToolkitHudView(document.rootVisualElement, style) : null;
+            var document = UiToolkit.CreateDocument(host, "HUD (UI Toolkit)", 100);
+            return document != null ? new ToolkitHudView(document.rootVisualElement, style) : null;
         }
 
         private ToolkitHudView(VisualElement root, StyleSheet style)
@@ -53,8 +35,6 @@ namespace GasStation.Mono.Hud
             _root.styleSheets.Add(style);
             _root.AddToClassList("hud-root");
             _root.pickingMode = PickingMode.Ignore;
-            // The built-in dynamic font falls back to system fonts, so Cyrillic always renders.
-            _root.style.unityFontDefinition = FontDefinition.FromFont(Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"));
 
             CreateCard(HudBlock.Status, "card--top-left", accent: true);
             CreateCard(HudBlock.Fuel, "card--top-right", textClass: "hud-text--right");

@@ -1,0 +1,141 @@
+/* Main menu, pause menu and settings (UI Toolkit). Loaded at runtime from Resources/UI/Menu. */
+
+.menu-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(5, 6, 10, 0.72);
+}
+
+.menu-overlay--main {
+    align-items: flex-start;
+    padding-left: 7%;
+    background-color: rgba(5, 6, 10, 0.5);
+}
+
+.menu-window {
+    min-width: 460px;
+    padding: 24px 28px 22px 28px;
+    border-radius: 14px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(18, 20, 28, 0.95);
+}
+
+.menu-window--wide {
+    width: 780px;
+    max-height: 90%;
+}
+
+.menu-accent {
+    height: 4px;
+    width: 90px;
+    margin-bottom: 14px;
+    border-radius: 2px;
+    background-color: rgb(240, 130, 45);
+}
+
+.menu-title {
+    font-size: 58px;
+    color: rgb(250, 250, 250);
+    -unity-font-style: bold;
+}
+
+.menu-subtitle {
+    font-size: 20px;
+    margin-bottom: 26px;
+    color: rgb(240, 150, 60);
+}
+
+.menu-heading {
+    font-size: 34px;
+    margin-bottom: 12px;
+    color: rgb(250, 250, 250);
+    -unity-font-style: bold;
+}
+
+.menu-section {
+    font-size: 17px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    color: rgb(240, 150, 60);
+    -unity-font-style: bold;
+}
+
+.menu-button {
+    height: 50px;
+    margin: 5px 0;
+    padding-left: 18px;
+    font-size: 22px;
+    border-width: 0;
+    border-radius: 8px;
+    color: rgb(245, 245, 245);
+    -unity-text-align: middle-left;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.menu-button:hover {
+    background-color: rgba(240, 130, 45, 0.9);
+}
+
+.menu-button:active {
+    background-color: rgba(200, 100, 30, 1);
+}
+
+.menu-button:disabled {
+    opacity: 0.4;
+}
+
+.menu-button--small {
+    height: 42px;
+    min-width: 170px;
+    margin-left: 10px;
+    font-size: 19px;
+    -unity-text-align: middle-center;
+    padding-left: 0;
+}
+
+.menu-buttons-row {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.menu-footer {
+    font-size: 14px;
+    margin-top: 18px;
+    color: rgb(140, 146, 158);
+}
+
+.menu-text {
+    font-size: 19px;
+    white-space: normal;
+    color: rgb(225, 228, 234);
+}
+
+.settings-scroll {
+    max-height: 640px;
+}
+
+.settings-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 38px;
+    margin: 2px 0;
+}
+
+.settings-label {
+    width: 44%;
+    font-size: 18px;
+    color: rgb(225, 228, 234);
+}
+
+.settings-control {
+    width: 54%;
+    margin: 0;
+}

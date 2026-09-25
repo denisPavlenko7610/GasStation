@@ -44,6 +44,9 @@ namespace GasStation.Systems
                 return;
 
             _lastSavedDay = finishedDay;
+            if (!GameSettings.Autosave)
+                return;
+
             SaveService.Write(SaveService.Capture(EntityManager, station));
         }
     }
