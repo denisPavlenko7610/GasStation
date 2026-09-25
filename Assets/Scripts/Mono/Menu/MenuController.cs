@@ -26,8 +26,13 @@ namespace GasStation.Mono.Menu
             Pause,
             Settings,
             Controls,
-            Confirm
+            Confirm,
+            Welcome
         }
+
+        private const string TutorialSeenKey = "GasStation.TutorialSeen";
+        private const int TutorialPages = 4;
+        private int _tutorialPage;
 
         private VisualElement _root;
         private MenuScreen _screen = MenuScreen.None;
@@ -74,6 +79,9 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.Confirm:
                     Show(_returnTo);
                     break;
+                case MenuScreen.Welcome:
+                    FinishTutorial();
+                    break;
             }
         }
 
@@ -93,6 +101,7 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.Settings: BuildSettings(); break;
                 case MenuScreen.Controls: BuildControls(); break;
                 case MenuScreen.Confirm: BuildConfirm(); break;
+                case MenuScreen.Welcome: BuildWelcome(); break;
             }
         }
 
@@ -105,7 +114,7 @@ namespace GasStation.Mono.Menu
             window.Add(Text(Loc.T("menu.subtitle"), "menu-subtitle"));
 
             bool hasSave = SaveService.Exists;
-            window.Add(MenuButton(hasSave ? Loc.T("menu.continue") : Loc.T("menu.play"), () => Show(MenuScreen.None)));
+            window.Add(MenuButton(hasSave ? Loc.T("menu.continue") : Loc.T("menu.play"), StartPlaying));
             window.Add(MenuButton(Loc.T("menu.newGame"), () =>
             {
                 if (!hasSave)
@@ -264,6 +273,11 @@ namespace GasStation.Mono.Menu
 
             var buttons = new VisualElement();
             buttons.AddToClassList("menu-buttons-row");
+            buttons.Add(SmallButton(Loc.T("menu.tutorial"), () =>
+            {
+                _tutorialPage = 0;
+                Show(MenuScreen.Welcome);
+            }));
             buttons.Add(SmallButton(Loc.T("menu.back"), () => Show(_returnTo)));
             window.Add(buttons);
         }
@@ -293,6 +307,52 @@ namespace GasStation.Mono.Menu
         private void StartNewGame()
         {
             StationCommands.NewGame();
+            StartPlaying();
+        }
+
+        /// <summary>Closes the menu; the first time ever, shows the short introduction first.</summary>
+        private void StartPlaying()
+        {
+            if (PlayerPrefs.GetInt(TutorialSeenKey, 0) == 1)
+            {
+                Show(MenuScreen.None);
+                return;
+            }
+
+            _tutorialPage = 0;
+            Show(MenuScreen.Welcome);
+        }
+
+        private void BuildWelcome()
+        {
+            var window = Window(wide: true);
+            window.Add(Accent());
+            window.Add(Text(Loc.T($"tutorial.{_tutorialPage}.title"), "menu-heading"));
+            window.Add(Text(Loc.T($"tutorial.{_tutorialPage}.text"), "menu-text"));
+            window.Add(Text(Loc.F("tutorial.page", _tutorialPage + 1, TutorialPages), "menu-footer"));
+
+            var buttons = new VisualElement();
+            buttons.AddToClassList("menu-buttons-row");
+            buttons.Add(SmallButton(Loc.T("menu.skip"), FinishTutorial));
+            bool last = _tutorialPage >= TutorialPages - 1;
+            buttons.Add(SmallButton(last ? Loc.T("menu.start") : Loc.T("menu.next"), () =>
+            {
+                if (last)
+                {
+                    FinishTutorial();
+                    return;
+                }
+
+                _tutorialPage++;
+                Show(MenuScreen.Welcome);
+            }));
+            window.Add(buttons);
+        }
+
+        private void FinishTutorial()
+        {
+            PlayerPrefs.SetInt(TutorialSeenKey, 1);
+            PlayerPrefs.Save();
             Show(MenuScreen.None);
         }
 

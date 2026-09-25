@@ -20,5 +20,7 @@ namespace GasStation.Components
         public FuelType Type;
         public float Liters;
         public float TimeLeft;
+        /// <summary>The truck bringing it. While it drives and unloads, the timer does not run.</summary>
+        public Entity Truck;
     }
 }

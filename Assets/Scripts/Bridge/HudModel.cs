@@ -92,6 +92,10 @@ namespace GasStation.Bridge
 
         public static bool IsRenovated(int id) => id >= 0 && id < 64 && (RenovationsDone & (1UL << id)) != 0;
 
+        /// <summary>Where the current quest wants the player to go (shown as a marker).</summary>
+        public static bool HasQuestTarget;
+        public static UnityEngine.Vector3 QuestTarget;
+
         public static StationStats Stats;
         public static Achievements Achievements;
 

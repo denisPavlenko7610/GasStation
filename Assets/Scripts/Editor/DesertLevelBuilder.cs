@@ -110,7 +110,22 @@ namespace GasStation.Editor
                 Place("Conus", scene, parent, new Vector3(-42f + i * 2f, 0f, -14f), 0f);
 
             for (float x = -RoadHalfLength + 15f; x < RoadHalfLength; x += 30f)
-                Place("Streetlight", scene, parent, new Vector3(x, 0f, RoadZ + 7f), 180f);
+            {
+                var streetlight = Place("Streetlight", scene, parent, new Vector3(x, 0f, RoadZ + 7f), 180f);
+                AddNightLight(streetlight, TopOf(streetlight, new Vector3(x, 6f, RoadZ + 7f)), 16f, 2.5f, new Color(1f, 0.82f, 0.55f));
+            }
+
+            // Canopy lights (neon with the 80s scheme) and a warm light behind the shop windows once they are fixed.
+            var canopy = primary.Count > 0 ? primary[0] : null;
+            float canopyHeight = canopy != null ? StationEditorUtility.GetBounds(canopy).max.y - 0.6f : 5f;
+            foreach (float z in new[] { -4f, 4f })
+                AddNightLight(canopy, new Vector3(0f, canopyHeight, z), 18f, 3f, new Color(0.9f, 0.95f, 1f), neon: true);
+            if (shop != null)
+            {
+                var shopBounds = StationEditorUtility.GetBounds(shop);
+                AddNightLight(shop, new Vector3(shopBounds.center.x, 2f, shopBounds.min.z - 1.2f), 9f, 2f,
+                    new Color(1f, 0.8f, 0.5f), renovationId: (int)RenovationKind.Windows);
+            }
 
             BuildRenovations(scene, parent, shop, accent);
             BuildConstructionSites(scene, parent, primary, accent);
@@ -173,7 +188,9 @@ namespace GasStation.Editor
             {
                 var position = new Vector3(corner.x, 0f, corner.y);
                 Place("Old_Lamp", scene, lampsBroken.transform, position, 0f);
-                Place("Lamp", scene, lampsFixed.transform, position, 0f);
+                var lamp = Place("Lamp", scene, lampsFixed.transform, position, 0f);
+                AddNightLight(lamp, TopOf(lamp, position + Vector3.up * 4f), 14f, 2.5f, new Color(1f, 0.85f, 0.6f),
+                    renovationId: (int)RenovationKind.Lamps);
             }
 
             // 4: rusty vending machine becomes a new one.
@@ -186,7 +203,10 @@ namespace GasStation.Editor
             var oldSign = Place("Gas_Station_Sign_2", scene, signBroken.transform, new Vector3(-26f, 0f, -15f), 180f);
             if (oldSign != null)
                 oldSign.transform.rotation = Quaternion.Euler(0f, 180f, 9f);
-            accent.Add(Place("Gas_Station_Sign", scene, signFixed.transform, new Vector3(-26f, 0f, -15f), 180f));
+            var sign = Place("Gas_Station_Sign", scene, signFixed.transform, new Vector3(-26f, 0f, -15f), 180f);
+            accent.Add(sign);
+            AddNightLight(sign, new Vector3(-26f, 2f, -12.5f), 9f, 2.5f, new Color(1f, 0.9f, 0.7f),
+                renovationId: (int)RenovationKind.Sign, neon: true);
         }
 
         /// <summary>Buildings that appear when their upgrade is bought; until then a fenced-off site with cones.</summary>
@@ -219,6 +239,41 @@ namespace GasStation.Editor
                 accent.Add(Place("Petrol_pump_2", scene, pumpBuilding.transform, new Vector3(0f, 0f, z), 90f));
                 SiteMarkers(scene, pumpSite.transform, new Vector3(0f, 0f, z), new Vector2(1.5f, 1.5f));
             }
+        }
+
+        /// <summary>A realtime point light that NightLight switches on after dusk.</summary>
+        private static void AddNightLight(GameObject owner, Vector3 position, float range, float intensity, Color color,
+            int renovationId = -1, bool neon = false)
+        {
+            if (owner == null)
+                return;
+
+            var go = new GameObject("NightLight");
+            go.transform.SetParent(owner.transform, false);
+            go.transform.position = position;
+
+            var light = go.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.range = range;
+            light.intensity = intensity;
+            light.color = color;
+            light.shadows = LightShadows.None;
+            light.lightmapBakeType = LightmapBakeType.Realtime;
+            light.enabled = false;
+
+            var night = go.AddComponent<NightLight>();
+            night.renovationId = renovationId;
+            night.neon = neon;
+        }
+
+        /// <summary>A point just under the top of an object, or the fallback when it is missing.</summary>
+        private static Vector3 TopOf(GameObject go, Vector3 fallback)
+        {
+            if (go == null)
+                return fallback;
+
+            var bounds = StationEditorUtility.GetBounds(go);
+            return bounds.size == Vector3.zero ? fallback : new Vector3(bounds.center.x, bounds.max.y - 0.4f, bounds.center.z);
         }
 
         private static (GameObject broken, GameObject fixedState) RenovationPair(Scene scene, Transform parent, int id, string name)
@@ -438,6 +493,19 @@ namespace GasStation.Editor
             AddRenovation(renovations.transform, RenovationKind.Lamps, new Vector3(-31f, 0f, -11f));
             AddRenovation(renovations.transform, RenovationKind.VendingMachine, new Vector3(10f, 0f, 16.5f));
             AddRenovation(renovations.transform, RenovationKind.Sign, new Vector3(-26f, 0f, -12.5f));
+
+            // Visible deliveries: the tanker unloads by the pumps, the goods truck by the shop.
+            var trucks = StationEditorUtility.GetOrCreateTruckPrefabs();
+            var deliveries = Create("Deliveries", parent, Vector3.zero);
+            var deliveriesAuthoring = deliveries.AddComponent<DeliveryTrucksAuthoring>();
+            deliveriesAuthoring.fuelTruckPrefab = trucks.fuelTruck;
+            deliveriesAuthoring.cargoTruckPrefab = trucks.cargoTruck;
+            var fuelUnload = Create("FuelUnload", deliveries.transform, new Vector3(-18f, 0f, -8f));
+            fuelUnload.transform.rotation = Quaternion.LookRotation(Vector3.right);
+            deliveriesAuthoring.fuelUnloadPoint = fuelUnload.transform;
+            var cargoUnload = Create("CargoUnload", deliveries.transform, new Vector3(-10f, 0f, 12f));
+            cargoUnload.transform.rotation = Quaternion.LookRotation(Vector3.right);
+            deliveriesAuthoring.cargoUnloadPoint = cargoUnload.transform;
 
             var shop = Create("Shop_Door", parent, new Vector3(0f, 0f, 17.5f));
             shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();

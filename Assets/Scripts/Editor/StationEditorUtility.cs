@@ -169,6 +169,72 @@ namespace GasStation.Editor
             return prefab;
         }
 
+        /// <summary>Fuel tanker and box truck built from primitives (forward = +Z), saved once as prefabs.</summary>
+        public static (GameObject fuelTruck, GameObject cargoTruck) GetOrCreateTruckPrefabs()
+        {
+            const string folder = "Assets/Prefabs/Vehicles";
+            EnsureFolder(folder);
+
+            var fuel = AssetDatabase.LoadAssetAtPath<GameObject>(folder + "/FuelTanker.prefab");
+            if (fuel == null)
+            {
+                var root = TruckChassis("FuelTanker", new Color(0.8f, 0.12f, 0.1f));
+                var tank = TruckPart(root, "Tank", PrimitiveType.Cylinder, new Vector3(0f, 2.05f, -1.1f), new Vector3(2.1f, 2.6f, 2.1f),
+                    GetOrCreateMaterial("TankerSilver", new Color(0.82f, 0.84f, 0.86f)));
+                tank.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                TruckPart(root, "Stripe", PrimitiveType.Cube, new Vector3(0f, 2.05f, -1.1f), new Vector3(2.14f, 0.35f, 5f),
+                    GetOrCreateMaterial("TankerStripe", new Color(0.8f, 0.12f, 0.1f)));
+                fuel = PrefabUtility.SaveAsPrefabAsset(root, folder + "/FuelTanker.prefab");
+                Object.DestroyImmediate(root);
+            }
+
+            var cargo = AssetDatabase.LoadAssetAtPath<GameObject>(folder + "/CargoTruck.prefab");
+            if (cargo == null)
+            {
+                var root = TruckChassis("CargoTruck", new Color(0.15f, 0.35f, 0.8f));
+                TruckPart(root, "Box", PrimitiveType.Cube, new Vector3(0f, 2.2f, -1.1f), new Vector3(2.4f, 2.8f, 5.4f),
+                    GetOrCreateMaterial("CargoBox", new Color(0.95f, 0.85f, 0.35f)));
+                cargo = PrefabUtility.SaveAsPrefabAsset(root, folder + "/CargoTruck.prefab");
+                Object.DestroyImmediate(root);
+            }
+
+            return (fuel, cargo);
+        }
+
+        private static GameObject TruckChassis(string name, Color cabColor)
+        {
+            var root = new GameObject(name);
+            var dark = GetOrCreateMaterial("TruckChassis", new Color(0.12f, 0.12f, 0.13f));
+            var glass = GetOrCreateMaterial("TruckGlass", new Color(0.2f, 0.3f, 0.4f));
+            TruckPart(root, "Chassis", PrimitiveType.Cube, new Vector3(0f, 0.75f, 0f), new Vector3(2.2f, 0.4f, 8.4f), dark);
+            TruckPart(root, "Cab", PrimitiveType.Cube, new Vector3(0f, 1.9f, 3f), new Vector3(2.3f, 2f, 2.2f),
+                GetOrCreateMaterial($"{name}Cab", cabColor));
+            TruckPart(root, "Windshield", PrimitiveType.Cube, new Vector3(0f, 2.25f, 4.12f), new Vector3(2f, 0.9f, 0.05f), glass);
+
+            foreach (float z in new[] { 3f, -1.2f, -3f })
+            {
+                foreach (float x in new[] { -1.05f, 1.05f })
+                {
+                    var wheel = TruckPart(root, "Wheel", PrimitiveType.Cylinder, new Vector3(x, 0.5f, z), new Vector3(1f, 0.2f, 1f), dark);
+                    wheel.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+                }
+            }
+
+            return root;
+        }
+
+        private static GameObject TruckPart(GameObject root, string name, PrimitiveType type, Vector3 position, Vector3 scale, Material material)
+        {
+            var part = GameObject.CreatePrimitive(type);
+            part.name = name;
+            Object.DestroyImmediate(part.GetComponent<Collider>());
+            part.transform.SetParent(root.transform, false);
+            part.transform.localPosition = position;
+            part.transform.localScale = scale;
+            part.GetComponent<Renderer>().sharedMaterial = material;
+            return part;
+        }
+
         public static Material GetOrCreateMaterial(string name, Color color)
         {
             const string folder = "Assets/Materials/Level";

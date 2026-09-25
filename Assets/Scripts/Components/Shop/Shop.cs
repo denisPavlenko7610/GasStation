@@ -44,6 +44,8 @@ namespace GasStation.Components
         public ProductType Type;
         public int Count;
         public float TimeLeft;
+        /// <summary>The truck bringing it. While it drives and unloads, the timer does not run.</summary>
+        public Entity Truck;
     }
 
     public enum PedestrianState : byte

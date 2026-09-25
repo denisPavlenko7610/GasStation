@@ -29,6 +29,11 @@ namespace GasStation.Systems
 
             foreach (var (delivery, entity) in SystemAPI.Query<RefRW<ProductDelivery>>().WithEntityAccess())
             {
+                // A delivery truck on its way completes the delivery itself when it has unloaded.
+                var truck = delivery.ValueRO.Truck;
+                if (truck != Entity.Null && SystemAPI.Exists(truck))
+                    continue;
+
                 delivery.ValueRW.TimeLeft -= deltaTime;
                 if (delivery.ValueRO.TimeLeft > 0f)
                     continue;

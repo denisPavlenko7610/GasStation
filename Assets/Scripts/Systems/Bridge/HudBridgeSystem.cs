@@ -2,6 +2,8 @@ using GasStation.Bridge;
 using GasStation.Components;
 using GasStation.Localization;
 using GasStation.Logic;
+using Unity.Mathematics;
+using Unity.Transforms;
 using Unity.Entities;
 
 namespace GasStation.Systems
@@ -36,6 +38,7 @@ namespace GasStation.Systems
             CopyFacilities();
             CopyStaff();
             CopyRenovations();
+            CopyQuestTarget();
             HudModel.Stats = SystemAPI.HasSingleton<StationStats>() ? SystemAPI.GetSingleton<StationStats>() : default;
             HudModel.Achievements = SystemAPI.HasSingleton<Achievements>() ? SystemAPI.GetSingleton<Achievements>() : default;
             CopyFuel();
@@ -111,6 +114,9 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.AchievementUnlocked:
                         HudModel.Notify(Loc.F("msg.achievement", Loc.T($"achievement.{(AchievementId)(int)stationEvent.Value}.name")));
+                        break;
+                    case StationEventType.TruckArrived:
+                        HudModel.Notify(Loc.T(stationEvent.Value > 0.5f ? "msg.tankerArrived" : "msg.cargoArrived"));
                         break;
                     case StationEventType.RenovationDone:
                         HudModel.Notify(Loc.F("msg.renovated", Loc.T($"renovation.{(RenovationKind)(int)stationEvent.Value}")));
@@ -241,6 +247,92 @@ namespace GasStation.Systems
 
             HudModel.HasRestroom = SystemAPI.HasSingleton<Restroom>();
             HudModel.RestroomDirt = HudModel.HasRestroom ? SystemAPI.GetSingleton<Restroom>().Dirt : 0f;
+        }
+
+        /// <summary>Picks the place the current quest is about, nearest to the player.</summary>
+        private void CopyQuestTarget()
+        {
+            HudModel.HasQuestTarget = false;
+            float3 player = float3.zero;
+            bool hasPlayer = false;
+            foreach (var transform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<PlayerTag>())
+            {
+                player = transform.ValueRO.Position;
+                hasPlayer = true;
+            }
+
+            if (!hasPlayer)
+                return;
+
+            float best = float.MaxValue;
+            float3 target = float3.zero;
+
+            switch (HudModel.Quest.Goal)
+            {
+                case QuestGoal.CollectTrash:
+                    foreach (var transform in SystemAPI.Query<RefRO<LocalToWorld>>().WithAll<Trash>())
+                        Consider(ref best, ref target, player, transform.ValueRO.Position);
+                    break;
+
+                case QuestGoal.RepairPump:
+                    foreach (var pump in SystemAPI.Query<RefRO<Pump>>())
+                    {
+                        if (pump.ValueRO.Condition < ProgressMath.RepairThreshold &&
+                            pump.ValueRO.RequiredUpgradeLevel <= HudModel.Upgrades.ExtraPump)
+                            Consider(ref best, ref target, player, pump.ValueRO.InteractionPoint);
+                    }
+                    break;
+
+                case QuestGoal.ServeCustomers:
+                case QuestGoal.CatchThief:
+                    foreach (var pump in SystemAPI.Query<RefRO<Pump>>())
+                    {
+                        var occupant = pump.ValueRO.Occupant;
+                        if (occupant != Entity.Null && SystemAPI.Exists(occupant) && SystemAPI.HasComponent<Car>(occupant) &&
+                            SystemAPI.GetComponent<Car>(occupant).State == CarState.WaitingForService)
+                            Consider(ref best, ref target, player, pump.ValueRO.InteractionPoint);
+                    }
+                    break;
+
+                case QuestGoal.Renovate:
+                    foreach (var renovation in SystemAPI.Query<RefRO<Renovation>>())
+                    {
+                        if (!renovation.ValueRO.Done)
+                            Consider(ref best, ref target, player, renovation.ValueRO.Position);
+                    }
+                    break;
+
+                case QuestGoal.CleanRestroom:
+                    if (SystemAPI.HasSingleton<Restroom>() && SystemAPI.GetSingleton<Restroom>().Dirt > FacilityMath.RestroomCleanThreshold)
+                        Consider(ref best, ref target, player, SystemAPI.GetSingleton<Restroom>().Door);
+                    break;
+
+                case QuestGoal.ChangeTires:
+                    if (HudModel.TireCarWaiting)
+                        Consider(ref best, ref target, player, SystemAPI.GetSingleton<TireService>().Bay);
+                    break;
+
+                case QuestGoal.HostGuests:
+                    if (HudModel.MotelDirty > 0)
+                        Consider(ref best, ref target, player, SystemAPI.GetSingleton<Motel>().Door);
+                    break;
+            }
+
+            if (best == float.MaxValue)
+                return;
+
+            HudModel.HasQuestTarget = true;
+            HudModel.QuestTarget = target;
+        }
+
+        private static void Consider(ref float best, ref float3 target, float3 player, float3 position)
+        {
+            float distance = math.distancesq(position.xz, player.xz);
+            if (distance < best)
+            {
+                best = distance;
+                target = position;
+            }
         }
 
         private void CopyRenovations()

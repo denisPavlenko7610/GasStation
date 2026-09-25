@@ -373,6 +373,9 @@ namespace GasStation.Save
             using (var pedestrians = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Pedestrian>()))
                 entityManager.DestroyEntity(pedestrians);
 
+            using (var trucks = entityManager.CreateEntityQuery(ComponentType.ReadOnly<DeliveryTruck>()))
+                entityManager.DestroyEntity(trucks);
+
             using (var parkingQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<TruckParking>()))
             using (var parkings = parkingQuery.ToEntityArray(Allocator.Temp))
             {

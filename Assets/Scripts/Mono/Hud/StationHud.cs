@@ -65,6 +65,8 @@ namespace GasStation.Mono
                 : _achievementsOpen ? BuildAchievements()
                 : BuildQuest());
 
+            _view.SetMarker(HudModel.HasQuestTarget && !_upgradesOpen && !_storeOpen, HudModel.QuestTarget);
+
             var level = HudModel.Level;
             _view.SetMeters(new HudMeters
             {

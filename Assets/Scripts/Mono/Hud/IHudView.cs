@@ -27,5 +27,8 @@ namespace GasStation.Mono.Hud
         void SetText(HudBlock block, string text);
 
         void SetMeters(HudMeters meters);
+
+        /// <summary>A bouncing arrow above a world position (the current quest's target); hidden when not visible.</summary>
+        void SetMarker(bool visible, UnityEngine.Vector3 worldPosition);
     }
 }

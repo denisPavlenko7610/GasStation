@@ -18,6 +18,7 @@ namespace GasStation.Mono.Hud
         private readonly Label[] _meterLabels = new Label[3];
         private readonly VisualElement[] _meterFills = new VisualElement[3];
         private readonly VisualElement _meters;
+        private readonly Label _marker;
 
         public static IHudView TryCreate(GameObject host)
         {
@@ -42,6 +43,10 @@ namespace GasStation.Mono.Hud
             CreateCard(HudBlock.Help, "card--bottom-right", textClass: "hud-text--small");
             CreateCard(HudBlock.Panel, "card--top-center", accent: true);
             CreateCard(HudBlock.Center, "card--center", textClass: "hud-text--center");
+
+            _marker = new Label("▼") { pickingMode = PickingMode.Ignore };
+            _marker.AddToClassList("quest-marker");
+            _root.Add(_marker);
 
             _meters = new VisualElement();
             _cards[(int)HudBlock.Status].Add(_meters);
@@ -75,6 +80,21 @@ namespace GasStation.Mono.Hud
             SetMeter(0, Loc.T("meter.reputation"), meters.Reputation);
             SetMeter(1, Loc.T("meter.cleanliness"), meters.Cleanliness);
             SetMeter(2, Loc.T("meter.experience"), meters.Experience);
+        }
+
+        public void SetMarker(bool visible, Vector3 worldPosition)
+        {
+            var camera = Camera.main;
+            bool onScreen = visible && camera != null &&
+                            camera.WorldToViewportPoint(worldPosition).z > 0f && _root.panel != null;
+            _marker.style.display = onScreen ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!onScreen)
+                return;
+
+            var point = RuntimePanelUtils.CameraTransformWorldToPanel(_root.panel, worldPosition + Vector3.up * 3f, camera);
+            float bob = Mathf.Sin(Time.unscaledTime * 4f) * 8f;
+            _marker.style.left = point.x - 20f;
+            _marker.style.top = point.y - 56f + bob;
         }
 
         private void SetMeter(int index, string label, float value)

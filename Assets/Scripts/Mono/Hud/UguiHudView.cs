@@ -10,6 +10,7 @@ namespace GasStation.Mono.Hud
 
         private readonly Canvas _canvas;
         private readonly Text[] _blocks = new Text[6];
+        private readonly Text _marker;
 
         public UguiHudView(GameObject host)
         {
@@ -29,6 +30,18 @@ namespace GasStation.Mono.Hud
             _blocks[(int)HudBlock.Center] = CreateBlock(host.transform, "Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 32);
             _blocks[(int)HudBlock.Help] = CreateBlock(host.transform, "Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 18);
             _blocks[(int)HudBlock.Panel] = CreateBlock(host.transform, "Panel", font, new Vector2(0.5f, 1f), TextAnchor.UpperLeft, 24);
+
+            var markerObject = new GameObject("QuestMarker", typeof(RectTransform));
+            markerObject.transform.SetParent(host.transform, false);
+            _marker = markerObject.AddComponent<Text>();
+            _marker.font = font;
+            _marker.fontSize = 48;
+            _marker.alignment = TextAnchor.LowerCenter;
+            _marker.color = new Color(1f, 0.6f, 0.15f);
+            _marker.text = "▼";
+            _marker.raycastTarget = false;
+            ((RectTransform)markerObject.transform).sizeDelta = new Vector2(80f, 80f);
+            markerObject.AddComponent<Outline>().effectColor = new Color(0f, 0f, 0f, 0.8f);
         }
 
         public void SetVisible(bool visible) => _canvas.enabled = visible;
@@ -47,6 +60,16 @@ namespace GasStation.Mono.Hud
         public void SetMeters(HudMeters meters)
         {
             // The status text already shows these values as numbers.
+        }
+
+        public void SetMarker(bool visible, Vector3 worldPosition)
+        {
+            var camera = Camera.main;
+            Vector3 screen = camera != null ? camera.WorldToScreenPoint(worldPosition + Vector3.up * 3f) : Vector3.back;
+            bool onScreen = visible && screen.z > 0f;
+            _marker.enabled = onScreen;
+            if (onScreen)
+                _marker.transform.position = screen + Vector3.up * (Mathf.Sin(Time.unscaledTime * 4f) * 8f);
         }
 
         private static Text CreateBlock(Transform parent, string name, Font font, Vector2 anchor, TextAnchor alignment, int fontSize)

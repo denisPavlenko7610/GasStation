@@ -48,6 +48,14 @@ namespace GasStation.Editor
             CreatePump(root.transform, 3, new Vector3(0f, 0f, -12f), new Vector3(0f, 0f, -9.5f), 1);
             CreatePump(root.transform, 4, new Vector3(0f, 0f, 12f), new Vector3(0f, 0f, 9.5f), 2);
 
+            var trucks = StationEditorUtility.GetOrCreateTruckPrefabs();
+            var deliveries = Create("Deliveries", root.transform, Vector3.zero);
+            var deliveriesAuthoring = deliveries.AddComponent<DeliveryTrucksAuthoring>();
+            deliveriesAuthoring.fuelTruckPrefab = trucks.fuelTruck;
+            deliveriesAuthoring.cargoTruckPrefab = trucks.cargoTruck;
+            deliveriesAuthoring.fuelUnloadPoint = Create("FuelUnload", deliveries.transform, new Vector3(-15f, 0f, -8f)).transform;
+            deliveriesAuthoring.cargoUnloadPoint = Create("CargoUnload", deliveries.transform, new Vector3(-8f, 0f, 10f)).transform;
+
             var shop = Create("Shop_Door", root.transform, new Vector3(0f, 0f, 15f));
             shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
 
