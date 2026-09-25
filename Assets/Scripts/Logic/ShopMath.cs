@@ -48,7 +48,8 @@ namespace GasStation.Logic
             if (shelf.Stock <= 0)
                 return 0f;
             return Defaults(product).Demand * Preference(customer, product)
-                                            * StationMath.PriceAttractiveness(shelf.SellPrice, shelf.ReferencePrice);
+                                            * StationMath.PriceAttractiveness(shelf.SellPrice, shelf.ReferencePrice)
+                                            * (shelf.Promo ? PromoDemand : 1f);
         }
 
         /// <summary>Weighted random pick. Returns -1 when nothing can be bought.</summary>
@@ -71,6 +72,65 @@ namespace GasStation.Logic
             if ((roll -= w3) < 0f) return 3;
             return 4;
         }
+
+        // ---------------------------------------------------------------- shelf life and suppliers
+
+        public const float PromoDemand = 1.8f;
+        public const float SpoilShare = 0.5f;
+        public const float ShortDeliveryChance = 0.15f;
+        public const float ShortDeliveryShare = 0.7f;
+
+        /// <summary>Days before the stock goes bad; 0 = keeps forever.</summary>
+        public static float ShelfLife(ProductType type) => type switch
+        {
+            ProductType.Snacks => 3f,
+            ProductType.Coffee => 6f,
+            _ => 0f
+        };
+
+        public static bool Expired(ProductType type, float age) => ShelfLife(type) > 0f && age >= ShelfLife(type);
+
+        /// <summary>Fresh goods lower the average age of the shelf.</summary>
+        public static float AgeAfterDelivery(float age, int stock, int delivered) =>
+            stock + delivered > 0 ? age * stock / (stock + delivered) : 0f;
+
+        /// <summary>Units written off tonight: half of an expired shelf.</summary>
+        public static int Spoiled(ProductType type, int stock, float age) =>
+            Expired(type, age) ? (int)math.ceil(stock * SpoilShare) : 0;
+
+        public static float SupplierPriceFactor(SupplierKind supplier) => supplier == SupplierKind.Cheap ? 0.8f : 1.1f;
+
+        public static float SupplierTimeFactor(SupplierKind supplier) => supplier == SupplierKind.Cheap ? 1.5f : 0.8f;
+
+        /// <summary>Units taken by one purchase: two during a "2 for 1" promo.</summary>
+        public static int UnitsPerSale(ShopProduct shelf) => shelf.Promo && shelf.Stock >= 2 ? 2 : 1;
+
+        // ---------------------------------------------------------------- theft
+
+        /// <summary>Chance that a shop visitor tries to steal.</summary>
+        public static float ShopliftChance(CustomerType customer) => customer switch
+        {
+            CustomerType.Thief => 0.6f,
+            CustomerType.Biker => 0.06f,
+            CustomerType.Tourist => 0.02f,
+            _ => 0.03f
+        };
+
+        /// <summary>A cashier on shift, cameras by the door and the player standing there catch shoplifters.</summary>
+        public static float ShopliftCatchChance(float cashierPower, int camerasNearDoor, bool playerAtDoor) =>
+            playerAtDoor ? 1f : math.min(0.9f, 0.4f * cashierPower + 0.3f * camerasNearDoor);
+
+        public const int RobberyMinDay = 5;
+        public const int RobberyEveryDays = 7;
+        public const float RobberyChancePerNightHour = 0.04f;
+        public const float RobberyShare = 0.2f;
+        public const float RobberyMax = 1500f;
+
+        /// <summary>Lamps, cameras and people on the night shift make a robbery fail.</summary>
+        public static float RobberyPreventChance(int lamps, int cameras, int nightStaff) =>
+            math.min(0.9f, 0.12f * lamps + 0.2f * cameras + 0.3f * nightStaff);
+
+        public static float RobberyLoss(float money) => money <= 0f ? 0f : math.round(math.min(money * RobberyShare, RobberyMax));
 
         public static float WashDuration(float baseDuration, int level) => baseDuration / (1f + 0.5f * math.max(0, level - 1));
 

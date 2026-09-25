@@ -261,6 +261,8 @@ namespace GasStation.Mono
                 StationCommands.ChangeProductPrice(_selectedProduct, -ProductPriceStep);
             if (keyboard.oKey.wasPressedThisFrame)
                 StationCommands.OrderProducts(_selectedProduct, ShopMath.OrderSize);
+            if (keyboard.pKey.wasPressedThisFrame)
+                StationCommands.TogglePromo(_selectedProduct);
         }
 
         private void HandleUpgradeKeys(Keyboard keyboard)
@@ -429,8 +431,15 @@ namespace GasStation.Mono
                     product.Capacity, product.SellPrice, product.BuyPrice, product.ReferencePrice));
                 if (HudModel.PendingProducts[i] > 0)
                     _builder.Append(Loc.F("panel.store.pending", HudModel.PendingProducts[i]));
+                float life = ShopMath.ShelfLife((ProductType)i);
+                if (life > 0f && product.Stock > 0)
+                    _builder.Append(Loc.F(ShopMath.Expired((ProductType)i, product.Age) ? "panel.store.expired" : "panel.store.age", product.Age, life));
+                if (product.Promo)
+                    _builder.Append(Loc.T("panel.store.promo"));
                 _builder.AppendLine();
             }
+
+            _builder.Append(Loc.F("panel.store.supplier", Loc.T($"supplier.{HudModel.Supplier}")));
 
             return _builder.ToString();
         }

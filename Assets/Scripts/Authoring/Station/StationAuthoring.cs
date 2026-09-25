@@ -125,6 +125,7 @@ namespace GasStation.Authoring
             AddComponent(entity, new StationStyle { Scheme = Mathf.Clamp(authoring.startPaintScheme, 0, 3) });
             AddComponent(entity, new WorldEvents
             {
+                LastRobberyDay = -100,
                 Active = WorldEventKind.None,
                 LastRolledHour = (int)authoring.startHour,
                 Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed)

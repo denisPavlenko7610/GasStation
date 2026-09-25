@@ -21,6 +21,7 @@ namespace GasStation.Mono.Office
         {
             Mail,
             Staff,
+            Suppliers,
             Bank,
             Competitor,
             Regulars,
@@ -150,6 +151,7 @@ namespace GasStation.Mono.Office
             {
                 case App.Mail: BuildMail(content); break;
                 case App.Staff: BuildStaff(content); break;
+                case App.Suppliers: BuildSuppliers(content); break;
                 case App.Bank: BuildBank(content); break;
                 case App.Competitor: BuildCompetitor(content); break;
                 case App.Regulars: BuildRegulars(content); break;
@@ -271,6 +273,48 @@ namespace GasStation.Mono.Office
                 float fee = StaffMath.HiringFee(candidate.Wage);
                 var hire = Action(Actions(card), Loc.F("laptop.staff.hire", fee), () => StationCommands.HireCandidate(index));
                 hire.SetEnabled(!full && HudModel.Economy.Money >= fee);
+            }
+        }
+
+        private void BuildSuppliers(VisualElement content)
+        {
+            content.Add(Label(Loc.T("laptop.suppliers.heading"), "laptop-heading"));
+            if (!HudModel.HasShop)
+            {
+                content.Add(Label(Loc.T("msg.noShop"), "laptop-muted"));
+                return;
+            }
+
+            var supplierCard = Card(Loc.F("laptop.suppliers.current", Loc.T($"supplier.{HudModel.Supplier}")));
+            foreach (var supplier in new[] { SupplierKind.Cheap, SupplierKind.Reliable })
+                supplierCard.Add(Label($"{Loc.T($"supplier.{supplier}")}: {Loc.T($"supplier.{supplier}.desc")}", "laptop-line"));
+            var choose = Actions(supplierCard);
+            foreach (var supplier in new[] { SupplierKind.Cheap, SupplierKind.Reliable })
+            {
+                var kind = supplier;
+                var button = Action(choose, Loc.T($"supplier.{supplier}"), () => StationCommands.SetSupplier(kind));
+                button.SetEnabled(HudModel.Supplier != supplier);
+            }
+
+            float priceFactor = ShopMath.SupplierPriceFactor(HudModel.Supplier);
+            for (int i = 0; i < ProductTypes.Count; i++)
+            {
+                var type = (ProductType)i;
+                var shelf = HudModel.Products[i];
+                var card = Card(GameTexts.ProductName(type));
+                card.Add(Label(Loc.F("laptop.suppliers.stock", shelf.Stock, shelf.Capacity, shelf.SellPrice,
+                    shelf.BuyPrice * priceFactor, HudModel.PendingProducts[i]), "laptop-line"));
+                float life = ShopMath.ShelfLife(type);
+                if (life > 0f)
+                    card.Add(Label(Loc.F(ShopMath.Expired(type, shelf.Age) && shelf.Stock > 0 ? "laptop.suppliers.expired" : "laptop.suppliers.age",
+                        shelf.Age, life), "laptop-muted"));
+
+                var actions = Actions(card);
+                var product = type;
+                Action(actions, Loc.F("laptop.suppliers.order", ShopMath.OrderSize, ShopMath.OrderSize * shelf.BuyPrice * priceFactor),
+                    () => StationCommands.OrderProducts(product, ShopMath.OrderSize));
+                Action(actions, Loc.T(shelf.Promo ? "laptop.suppliers.promoOff" : "laptop.suppliers.promoOn"),
+                    () => StationCommands.TogglePromo(product));
             }
         }
 

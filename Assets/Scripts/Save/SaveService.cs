@@ -190,7 +190,10 @@ namespace GasStation.Save
             RestoreContracts(entityManager, station, data);
 
             if (data.products != null)
+            {
                 RestoreShop(entityManager, data.products);
+                RestoreSupplier(entityManager, data.supplier);
+            }
 
             if (data.restroomDirt >= 0f)
             {
@@ -310,9 +313,25 @@ namespace GasStation.Save
                 {
                     stock = Mathf.Min(shelves[i].Capacity, shelves[i].Stock + extra),
                     capacity = shelves[i].Capacity,
-                    sellPrice = shelves[i].SellPrice
+                    sellPrice = shelves[i].SellPrice,
+                    age = shelves[i].Age,
+                    promo = shelves[i].Promo
                 };
             }
+
+            data.supplier = (int)entityManager.GetComponentData<Shop>(shopQuery.GetSingletonEntity()).Supplier;
+        }
+
+        private static void RestoreSupplier(EntityManager entityManager, int supplier)
+        {
+            using var shopQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Shop>());
+            if (shopQuery.CalculateEntityCount() != 1)
+                return;
+
+            var entity = shopQuery.GetSingletonEntity();
+            var shop = entityManager.GetComponentData<Shop>(entity);
+            shop.Supplier = (SupplierKind)Mathf.Clamp(supplier, 0, 1);
+            entityManager.SetComponentData(entity, shop);
         }
 
         private static void RestoreShop(EntityManager entityManager, ProductSaveData[] saved)
@@ -331,6 +350,8 @@ namespace GasStation.Save
                 shelf.Capacity = saved[i].capacity > 0 ? saved[i].capacity : shelf.Capacity;
                 shelf.Stock = Mathf.Clamp(saved[i].stock, 0, shelf.Capacity);
                 shelf.SellPrice = saved[i].sellPrice > 0f ? saved[i].sellPrice : shelf.SellPrice;
+                shelf.Age = Mathf.Max(0f, saved[i].age);
+                shelf.Promo = saved[i].promo;
                 shelves[i] = shelf;
             }
         }

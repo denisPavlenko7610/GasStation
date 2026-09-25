@@ -176,6 +176,8 @@ namespace GasStation.Bridge
 
         public static readonly List<StaffBody> StaffBodies = new();
 
+        public static SupplierKind Supplier;
+
         public static int QueueLength;
         public static int CarsOnSite;
         public static InteractionHint Hint;

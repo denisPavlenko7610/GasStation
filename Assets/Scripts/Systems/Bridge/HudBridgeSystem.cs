@@ -277,6 +277,30 @@ namespace GasStation.Systems
                         HudModel.Notify(Loc.F("msg.workerQuit", GameTexts.RoleName((StaffRole)(int)stationEvent.Value),
                             GameTexts.StaffName(stationEvent.Subject)));
                         break;
+                    case StationEventType.ProductsSpoiled:
+                        HudModel.Notify(Loc.F("msg.spoiled", stationEvent.Value, GameTexts.ProductName((ProductType)stationEvent.Subject)));
+                        break;
+                    case StationEventType.ProductsShort:
+                        HudModel.Notify(Loc.F("msg.short", stationEvent.Value, GameTexts.ProductName((ProductType)stationEvent.Subject)));
+                        break;
+                    case StationEventType.SuspiciousCustomer:
+                        HudModel.Notify(Loc.T("msg.suspicious"));
+                        break;
+                    case StationEventType.ShoplifterCaught:
+                        HudModel.Notify(Loc.T("msg.shoplifterCaught"));
+                        break;
+                    case StationEventType.GoodsStolen:
+                        HudModel.Notify(Loc.F("msg.goodsStolen", stationEvent.Value));
+                        break;
+                    case StationEventType.Robbery:
+                        HudModel.Notify(Loc.F("msg.robbery", stationEvent.Value));
+                        break;
+                    case StationEventType.RobberyPrevented:
+                        HudModel.Notify(Loc.T("msg.robberyPrevented"));
+                        break;
+                    case StationEventType.InspectionExpiredGoods:
+                        HudModel.Notify(Loc.F("msg.inspectionExpired", stationEvent.Value));
+                        break;
                     case StationEventType.PropPlaced:
                         HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
                         break;
@@ -323,6 +347,7 @@ namespace GasStation.Systems
             var shelves = SystemAPI.GetBuffer<ShopProduct>(SystemAPI.GetSingletonEntity<Shop>());
             for (int i = 0; i < ProductTypes.Count; i++)
                 HudModel.Products[i] = i < shelves.Length ? shelves[i] : default;
+            HudModel.Supplier = SystemAPI.GetSingleton<Shop>().Supplier;
 
             foreach (var delivery in SystemAPI.Query<RefRO<ProductDelivery>>())
                 HudModel.PendingProducts[(int)delivery.ValueRO.Type] += delivery.ValueRO.Count;

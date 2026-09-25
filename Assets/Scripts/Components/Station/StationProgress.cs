@@ -24,6 +24,7 @@ namespace GasStation.Components
         public float HoursLeft;
         /// <summary>Whole game hour last checked for a new event.</summary>
         public int LastRolledHour;
+        public int LastRobberyDay;
         public Unity.Mathematics.Random Random;
     }
 }

@@ -22,6 +22,9 @@ namespace GasStation.Save
         public int stock;
         public int capacity;
         public float sellPrice;
+        // Version 18
+        public float age;
+        public bool promo;
     }
 
     [Serializable]
@@ -369,7 +372,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 17;
+        public const int CurrentVersion = 18;
 
         public int version = CurrentVersion;
         public int day;
@@ -447,6 +450,9 @@ namespace GasStation.Save
         public ContractSaveData[] contracts;
         public int nextContractId;
         public int daysToNextOffer;
+
+        // Version 18. 0 (cheap) in older saves.
+        public int supplier;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

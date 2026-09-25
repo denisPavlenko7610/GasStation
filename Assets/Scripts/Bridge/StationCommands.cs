@@ -24,6 +24,8 @@ namespace GasStation.Bridge
         PlaceProp,
         RemoveProp,
         AcceptContract,
+        TogglePromo,
+        SetSupplier,
         PraiseWorker,
         TrainWorker,
         RaiseWage,
@@ -96,6 +98,12 @@ namespace GasStation.Bridge
 
         public static void RemoveProp(Vector3 position) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.RemoveProp, Position = position });
+
+        public static void TogglePromo(ProductType product) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.TogglePromo, Product = product });
+
+        public static void SetSupplier(SupplierKind supplier) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.SetSupplier, Value = (int)supplier });
 
         public static void PraiseWorker(int workerId) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.PraiseWorker, Value = workerId });

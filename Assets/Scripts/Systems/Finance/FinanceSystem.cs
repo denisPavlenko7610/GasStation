@@ -56,6 +56,8 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.FuelStolen:
                     case StationEventType.WorkerStole:
+                    case StationEventType.GoodsStolen:
+                    case StationEventType.Robbery:
                         if (finance.Insured)
                             payout += e.Value * FinanceMath.InsuranceCoverage;
                         break;

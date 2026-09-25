@@ -75,6 +75,7 @@ namespace GasStation.Systems
 
             if (hour < 4)
             {
+                TryRobbery(ref state, ref world, events);
                 int lamps = SystemAPI.HasSingleton<PropEffects>() ? SystemAPI.GetSingleton<PropEffects>().Lamps : 0;
                 if (roll < 0.2f * PropMath.NightCrimeFactor(lamps))
                 {
@@ -115,6 +116,16 @@ namespace GasStation.Systems
                 : 1f;
             ref var economy = ref SystemAPI.GetSingletonRW<Economy>().ValueRW;
 
+            // Expired food on the shelves fails the inspection whatever else is clean.
+            if (HasExpiredGoods(ref state))
+            {
+                economy.Money -= ProgressMath.InspectionFine;
+                economy.DayExpenses += ProgressMath.InspectionFine;
+                economy.Reputation = StationMath.ClampReputation(economy.Reputation - 0.05f);
+                StationEvent.Push(events, StationEventType.InspectionExpiredGoods, default, ProgressMath.InspectionFine);
+                return;
+            }
+
             if (cleanliness >= ProgressMath.InspectionCleanlinessRequired)
             {
                 economy.Money += ProgressMath.InspectionReward;
@@ -129,6 +140,57 @@ namespace GasStation.Systems
                 economy.Reputation = StationMath.ClampReputation(economy.Reputation - 0.05f);
                 StationEvent.Push(events, StationEventType.InspectionFailed, default, ProgressMath.InspectionFine);
             }
+        }
+
+        private bool HasExpiredGoods(ref SystemState state)
+        {
+            if (!SystemAPI.HasSingleton<Shop>())
+                return false;
+
+            var shelves = SystemAPI.GetBuffer<ShopProduct>(SystemAPI.GetSingletonEntity<Shop>());
+            for (int i = 0; i < shelves.Length && i < ProductTypes.Count; i++)
+            {
+                if (shelves[i].Stock > 0 && ShopMath.Expired((ProductType)i, shelves[i].Age))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// A rare night robbery of the till. Lamps, cameras and people on the night shift may stop it;
+        /// insurance pays most of the loss back (FinanceSystem).
+        /// </summary>
+        private void TryRobbery(ref SystemState state, ref WorldEvents world, DynamicBuffer<StationEvent> events)
+        {
+            int day = SystemAPI.GetSingleton<GameTime>().Day;
+            if (day < ShopMath.RobberyMinDay || day - world.LastRobberyDay < ShopMath.RobberyEveryDays ||
+                world.Random.NextFloat() >= ShopMath.RobberyChancePerNightHour)
+                return;
+
+            world.LastRobberyDay = day;
+            var props = SystemAPI.HasSingleton<PropEffects>() ? SystemAPI.GetSingleton<PropEffects>() : default;
+            int nightStaff = 0;
+            foreach (var worker in SystemAPI.Query<RefRO<Worker>>())
+            {
+                if (worker.ValueRO.Shift == WorkShift.Night)
+                    nightStaff++;
+            }
+
+            if (world.Random.NextFloat() < ShopMath.RobberyPreventChance(props.Lamps, props.Cameras, nightStaff))
+            {
+                StationEvent.Push(events, StationEventType.RobberyPrevented);
+                return;
+            }
+
+            ref var economy = ref SystemAPI.GetSingletonRW<Economy>().ValueRW;
+            float loss = ShopMath.RobberyLoss(economy.Money);
+            if (loss <= 0f)
+                return;
+
+            economy.Money -= loss;
+            economy.DayExpenses += loss;
+            StationEvent.Push(events, StationEventType.Robbery, default, loss);
         }
 
         /// <summary>Drops litter at random places on the lot, centered on the pumps.</summary>

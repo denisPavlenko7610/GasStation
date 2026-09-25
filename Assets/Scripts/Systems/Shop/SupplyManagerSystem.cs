@@ -74,7 +74,9 @@ namespace GasStation.Systems
             if (SystemAPI.HasSingleton<Shop>())
             {
                 var shopEntity = SystemAPI.GetSingletonEntity<Shop>();
-                float productDelivery = SystemAPI.GetComponent<Shop>(shopEntity).DeliveryTime * FacilityMath.SupplyDeliveryFactor(level);
+                var supplier = SystemAPI.GetComponent<Shop>(shopEntity).Supplier;
+                float productDelivery = SystemAPI.GetComponent<Shop>(shopEntity).DeliveryTime * FacilityMath.SupplyDeliveryFactor(level)
+                                        * ShopMath.SupplierTimeFactor(supplier);
                 var pendingProducts = new NativeArray<int>(ProductTypes.Count, Allocator.Temp);
                 foreach (var delivery in SystemAPI.Query<RefRO<ProductDelivery>>())
                     pendingProducts[(int)delivery.ValueRO.Type] += delivery.ValueRO.Count;
@@ -88,14 +90,14 @@ namespace GasStation.Systems
                         continue;
 
                     int count = math.min(ShopMath.OrderSize, shelf.Capacity - available);
-                    float cost = count * shelf.BuyPrice * discount;
+                    float cost = count * shelf.BuyPrice * discount * ShopMath.SupplierPriceFactor(supplier);
                     if (count <= 0 || economy.Money - cost < FacilityMath.MoneyReserve)
                         continue;
 
                     economy.Money -= cost;
                     economy.DayExpenses += cost;
                     var order = ecb.CreateEntity();
-                    ecb.AddComponent(order, new ProductDelivery { Type = (ProductType)i, Count = count, TimeLeft = productDelivery });
+                    ecb.AddComponent(order, new ProductDelivery { Type = (ProductType)i, Count = count, TimeLeft = productDelivery, Supplier = supplier });
                     StationEvent.Push(events, StationEventType.ProductsOrdered, default, count);
                     StationEvent.Push(events, StationEventType.AutoOrder, default, cost);
                 }

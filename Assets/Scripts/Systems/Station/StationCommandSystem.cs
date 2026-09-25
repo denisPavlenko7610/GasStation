@@ -95,6 +95,12 @@ namespace GasStation.Systems
                     case StationCommandType.RemoveProp:
                         RemoveProp(station, command.Position);
                         break;
+                    case StationCommandType.TogglePromo:
+                        TogglePromo(command.Product);
+                        break;
+                    case StationCommandType.SetSupplier:
+                        SetSupplier((SupplierKind)(int)command.Value);
+                        break;
                     case StationCommandType.PraiseWorker:
                     case StationCommandType.TrainWorker:
                     case StationCommandType.RaiseWage:
@@ -112,6 +118,30 @@ namespace GasStation.Systems
                         break;
                 }
             }
+        }
+
+        private void TogglePromo(ProductType product)
+        {
+            if (!SystemAPI.HasSingleton<Shop>())
+                return;
+
+            var shelves = SystemAPI.GetBuffer<ShopProduct>(SystemAPI.GetSingletonEntity<Shop>());
+            var shelf = shelves[(int)product];
+            shelf.Promo = !shelf.Promo;
+            shelves[(int)product] = shelf;
+            HudModel.Notify(Loc.F(shelf.Promo ? "msg.promoOn" : "msg.promoOff", GameTexts.ProductName(product)));
+        }
+
+        private void SetSupplier(SupplierKind supplier)
+        {
+            if (!SystemAPI.HasSingleton<Shop>())
+                return;
+
+            var shopEntity = SystemAPI.GetSingletonEntity<Shop>();
+            var shop = SystemAPI.GetComponent<Shop>(shopEntity);
+            shop.Supplier = supplier;
+            SystemAPI.SetComponent(shopEntity, shop);
+            HudModel.Notify(Loc.F("msg.supplier", Loc.T($"supplier.{supplier}")));
         }
 
         private void ManageWorker(Entity station, StationCommandType action, int workerId)
@@ -532,7 +562,7 @@ namespace GasStation.Systems
             }
 
             var economy = SystemAPI.GetComponentRW<Economy>(station);
-            float cost = count * shelf.BuyPrice;
+            float cost = math.round(count * shelf.BuyPrice * ShopMath.SupplierPriceFactor(shop.Supplier) * 100f) / 100f;
             if (economy.ValueRO.Money < cost)
             {
                 HudModel.Notify(Loc.F("msg.noMoney", cost));
@@ -542,10 +572,11 @@ namespace GasStation.Systems
             economy.ValueRW.Money -= cost;
             economy.ValueRW.DayExpenses += cost;
 
+            float time = shop.DeliveryTime * ShopMath.SupplierTimeFactor(shop.Supplier);
             var order = EntityManager.CreateEntity();
-            EntityManager.AddComponentData(order, new ProductDelivery { Type = product, Count = count, TimeLeft = shop.DeliveryTime });
+            EntityManager.AddComponentData(order, new ProductDelivery { Type = product, Count = count, TimeLeft = time, Supplier = shop.Supplier });
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.ProductsOrdered, default, count);
-            HudModel.Notify(Loc.F("msg.productsOrdered", GameTexts.ProductName(product), count, shop.DeliveryTime));
+            HudModel.Notify(Loc.F("msg.productsOrdered", GameTexts.ProductName(product), count, time));
         }
 
         private void HireCandidate(Entity station, int index)

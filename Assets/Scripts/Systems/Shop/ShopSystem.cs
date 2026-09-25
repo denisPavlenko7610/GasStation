@@ -41,6 +41,12 @@ namespace GasStation.Systems
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             float cashiers = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Cashier : 0f;
             float shopTime = shop.ShopTime * StaffMath.ShopTimeFactor(cashiers);
+            var watch = new TheftWatch
+            {
+                Cashiers = cashiers,
+                Cameras = CamerasNear(ref state, shop.Door),
+                PlayerAtDoor = PlayerNear(ref state, shop.Door)
+            };
 
             foreach (var (car, transform, entity) in SystemAPI.Query<RefRW<Car>, RefRO<LocalTransform>>().WithEntityAccess())
             {
@@ -56,7 +62,13 @@ namespace GasStation.Systems
                         int people = 1 + car.ValueRO.Passengers;
                         car.ValueRW.PeopleAway = (byte)people;
                         for (int i = 0; i < people; i++)
-                            SpawnDriver(ecb, shop, entity, transform.ValueRO, i);
+                        {
+                            var who = i == 0 ? car.ValueRO.Customer : CustomerType.Tourist;
+                            bool shoplifter = shop.Random.NextFloat() < ShopMath.ShopliftChance(who);
+                            if (shoplifter)
+                                StationEvent.Push(events, StationEventType.SuspiciousCustomer);
+                            SpawnDriver(ecb, shop, entity, transform.ValueRO, i, shoplifter);
+                        }
                     }
                     else
                     {
@@ -76,7 +88,11 @@ namespace GasStation.Systems
 
                 for (int i = 0; i <= car.ValueRO.Passengers; i++)
                 {
-                    Purchase(ref shop, shelves, ref economy, events, car.ValueRO.Customer);
+                    var who = i == 0 ? car.ValueRO.Customer : CustomerType.Tourist;
+                    if (shop.Random.NextFloat() < ShopMath.ShopliftChance(who))
+                        Shoplift(ref shop, shelves, ref economy, events, who, watch);
+                    else
+                        Purchase(ref shop, shelves, ref economy, events, who);
                     UseRestroom(ref state, ref shop, ref economy, events);
                 }
 
@@ -108,7 +124,11 @@ namespace GasStation.Systems
                         if (pedestrian.ValueRO.Timer > 0f)
                             break;
 
-                        Purchase(ref shop, shelves, ref economy, events, SystemAPI.GetComponent<Car>(carEntity).Customer);
+                        var customer = SystemAPI.GetComponent<Car>(carEntity).Customer;
+                        if (pedestrian.ValueRO.Shoplifter)
+                            Shoplift(ref shop, shelves, ref economy, events, customer, watch);
+                        else
+                            Purchase(ref shop, shelves, ref economy, events, customer);
                         UseRestroom(ref state, ref shop, ref economy, events);
                         pedestrian.ValueRW.State = PedestrianState.ToCar;
                         path.Add(new PathPoint { Position = DoorOfCar(SystemAPI.GetComponent<LocalTransform>(carEntity)) });
@@ -138,6 +158,72 @@ namespace GasStation.Systems
             ecb.Dispose();
         }
 
+        private struct TheftWatch
+        {
+            public float Cashiers;
+            public int Cameras;
+            public bool PlayerAtDoor;
+        }
+
+        /// <summary>
+        /// A shoplifter at the till: caught (they pay after all) or gone with 1–3 items. Insurance covers most of
+        /// the loss (FinanceSystem).
+        /// </summary>
+        private static void Shoplift(ref Shop shop, DynamicBuffer<ShopProduct> shelves, ref Economy economy,
+            DynamicBuffer<StationEvent> events, CustomerType customer, in TheftWatch watch)
+        {
+            if (shop.Random.NextFloat() < ShopMath.ShopliftCatchChance(watch.Cashiers, watch.Cameras, watch.PlayerAtDoor))
+            {
+                StationEvent.Push(events, StationEventType.ShoplifterCaught);
+                Purchase(ref shop, shelves, ref economy, events, customer);
+                return;
+            }
+
+            if (shelves.Length < ProductTypes.Count)
+                return;
+
+            float worth = 0f;
+            int items = shop.Random.NextInt(1, 4);
+            for (int i = 0; i < items; i++)
+            {
+                int index = ShopMath.Pick(shop.Random.NextFloat(), customer, shelves[0], shelves[1], shelves[2], shelves[3], shelves[4]);
+                if (index < 0)
+                    break;
+                var shelf = shelves[index];
+                shelf.Stock--;
+                shelves[index] = shelf;
+                worth += shelf.SellPrice;
+            }
+
+            if (worth > 0f)
+                StationEvent.Push(events, StationEventType.GoodsStolen, default, worth);
+        }
+
+        private int CamerasNear(ref SystemState state, float3 point)
+        {
+            float radius = PropMath.Get(PropType.SecurityCamera).Radius;
+            int count = 0;
+            foreach (var prop in SystemAPI.Query<RefRO<PlacedProp>>())
+            {
+                if (prop.ValueRO.Type == PropType.SecurityCamera && math.distancesq(prop.ValueRO.Position.xz, point.xz) <= radius * radius)
+                    count++;
+            }
+
+            return count;
+        }
+
+        private bool PlayerNear(ref SystemState state, float3 point)
+        {
+            const float radius = 4f;
+            foreach (var transform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<PlayerTag>())
+            {
+                if (math.distancesq(transform.ValueRO.Position.xz, point.xz) <= radius * radius)
+                    return true;
+            }
+
+            return false;
+        }
+
         /// <summary>Some shop visitors also use the restroom; a disgusting one costs reputation.</summary>
         private void UseRestroom(ref SystemState state, ref Shop shop, ref Economy economy, DynamicBuffer<StationEvent> events)
         {
@@ -157,14 +243,15 @@ namespace GasStation.Systems
             }
         }
 
-        private static void SpawnDriver(EntityCommandBuffer ecb, Shop shop, Entity car, LocalTransform carTransform, int index)
+        private static void SpawnDriver(EntityCommandBuffer ecb, Shop shop, Entity car, LocalTransform carTransform, int index,
+            bool shoplifter)
         {
             // Passengers step out one behind the other along the car.
             float3 back = math.mul(carTransform.Rotation, new float3(0f, 0f, -1f));
             float3 start = DoorOfCar(carTransform) + back * (0.7f * index);
             var driver = ecb.Instantiate(shop.PedestrianPrefab);
             ecb.AddComponent(driver, LocalTransform.FromPosition(start));
-            ecb.AddComponent(driver, new Pedestrian { State = PedestrianState.ToShop, Car = car });
+            ecb.AddComponent(driver, new Pedestrian { State = PedestrianState.ToShop, Car = car, Shoplifter = shoplifter });
             ecb.AddComponent(driver, new CarMovement { Speed = WalkSpeed, TurnSpeed = 8f });
             var path = ecb.AddBuffer<PathPoint>(driver);
             path.Add(new PathPoint { Position = shop.Door });
@@ -192,7 +279,7 @@ namespace GasStation.Systems
                     break;
 
                 var shelf = shelves[index];
-                shelf.Stock--;
+                shelf.Stock -= ShopMath.UnitsPerSale(shelf);
                 shelves[index] = shelf;
                 economy.Money += shelf.SellPrice;
                 economy.DayIncome += shelf.SellPrice;

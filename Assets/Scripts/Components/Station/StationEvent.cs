@@ -100,7 +100,22 @@ namespace GasStation.Components
         /// <summary>Subject = name index; Value = StaffRole.</summary>
         WorkerQuit,
         /// <summary>Subject = worker id.</summary>
-        WorkerPraised
+        WorkerPraised,
+        /// <summary>Subject = ProductType; Value = units written off.</summary>
+        ProductsSpoiled,
+        /// <summary>Subject = ProductType; Value = units the cheap supplier did not bring.</summary>
+        ProductsShort,
+        /// <summary>A shoplifter walked into the shop.</summary>
+        SuspiciousCustomer,
+        /// <summary>Value = worth of the goods they tried to take.</summary>
+        ShoplifterCaught,
+        /// <summary>Value = worth of the stolen goods.</summary>
+        GoodsStolen,
+        /// <summary>Value = money taken from the till.</summary>
+        Robbery,
+        RobberyPrevented,
+        /// <summary>Value = fine; the inspector found expired food.</summary>
+        InspectionExpiredGoods
     }
 
     /// <summary>
