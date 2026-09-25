@@ -1,4 +1,5 @@
 /* HUD of GasStation (UI Toolkit). Loaded at runtime from Resources/UI/Hud. */
+/* Style: warm retro-highway glass cards with an orange accent edge. */
 
 .hud-root {
     flex-grow: 1;
@@ -6,92 +7,105 @@
 
 .card {
     position: absolute;
-    background-color: rgba(12, 14, 20, 0.74);
-    border-radius: 10px;
+    background-color: rgba(12, 14, 22, 0.82);
+    border-radius: 14px;
     border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.08);
-    padding: 10px 14px 12px 14px;
+    border-color: rgba(255, 255, 255, 0.10);
+    border-left-width: 4px;
+    border-left-color: rgb(245, 158, 66);
+    padding: 12px 16px 14px 16px;
 }
 
-.card--top-left { left: 16px; top: 16px; max-width: 34%; }
-.card--top-right { right: 16px; top: 16px; max-width: 40%; }
-.card--bottom-left { left: 16px; bottom: 16px; max-width: 48%; }
-.card--bottom-right { right: 16px; bottom: 16px; max-width: 46%; }
-.card--top-center { top: 16px; left: 30%; right: 30%; }
+.card--top-left { left: 18px; top: 18px; max-width: 34%; }
+.card--top-right { right: 18px; top: 18px; max-width: 40%; border-left-color: rgb(96, 165, 250); }
+.card--bottom-left { left: 18px; bottom: 18px; max-width: 48%; border-left-color: rgb(52, 211, 153); }
+.card--bottom-right { right: 18px; bottom: 18px; max-width: 46%; border-left-color: rgba(255, 255, 255, 0.28); }
+.card--top-center { top: 18px; left: 30%; right: 30%; border-left-width: 1px; border-left-color: rgba(255, 255, 255, 0.10); }
 .card--top-center.card--wide { left: 18%; right: 18%; }
 .card--center {
     top: 42%;
-    left: 24%;
-    right: 24%;
+    left: 35%;
+    right: 35%;
     align-items: center;
-    background-color: rgba(20, 22, 30, 0.86);
-    border-color: rgba(240, 150, 60, 0.6);
+    background-color: rgba(16, 18, 28, 0.9);
+    border-color: rgba(245, 158, 66, 0.65);
+    border-left-width: 1px;
+    border-left-color: rgba(245, 158, 66, 0.65);
 }
 
 .accent-line {
     height: 3px;
-    margin-bottom: 8px;
+    width: 64px;
+    margin-bottom: 10px;
     border-radius: 2px;
-    background-color: rgb(240, 130, 45);
+    background-color: rgb(245, 158, 66);
 }
 
 .hud-text {
     color: rgb(238, 240, 244);
-    font-size: 21px;
+    font-size: 20px;
     white-space: normal;
     -unity-text-align: upper-left;
 }
 
 .hud-text--right { -unity-text-align: upper-right; }
-.hud-text--small { font-size: 15px; color: rgb(185, 192, 204); }
+.hud-text--small { font-size: 15px; color: rgb(178, 186, 200); }
 .hud-text--center { font-size: 27px; -unity-text-align: middle-center; -unity-font-style: bold; }
 
 .meter {
     flex-direction: row;
     align-items: center;
-    margin-top: 5px;
+    margin-top: 7px;
 }
 
 .meter__label {
-    width: 130px;
-    font-size: 15px;
-    color: rgb(185, 192, 204);
+    width: 132px;
+    font-size: 14px;
+    color: rgb(178, 186, 200);
+    -unity-font-style: bold;
+    letter-spacing: 1px;
 }
 
 .meter__track {
-    width: 220px;
-    height: 10px;
-    border-radius: 5px;
+    width: 224px;
+    height: 12px;
+    border-radius: 6px;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.10);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.07);
 }
 
 .meter__fill {
     height: 100%;
     width: 50%;
-    border-radius: 5px;
-    background-color: rgb(80, 190, 120);
+    border-radius: 6px;
+    background-color: rgb(52, 211, 153);
 }
 
-.meter__fill--reputation { background-color: rgb(240, 180, 60); }
-.meter__fill--xp { background-color: rgb(90, 150, 240); }
+.meter__fill--reputation { background-color: rgb(245, 158, 66); }
+.meter__fill--xp { background-color: rgb(96, 165, 250); }
 
 .quest-marker {
     position: absolute;
     width: 40px;
-    font-size: 44px;
-    color: rgb(255, 150, 40);
+    font-size: 46px;
+    color: rgb(255, 158, 44);
     -unity-text-align: lower-center;
     -unity-font-style: bold;
-    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.85);
 }
 
 .car-card {
     position: absolute;
-    width: 140px;
-    padding: 4px 8px 6px 8px;
-    border-radius: 7px;
-    background-color: rgba(12, 14, 20, 0.78);
+    width: 150px;
+    padding: 6px 9px 7px 9px;
+    border-radius: 9px;
+    background-color: rgba(12, 14, 22, 0.84);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.09);
+    border-left-width: 3px;
+    border-left-color: rgb(245, 158, 66);
 }
 
 .car-card__text {
@@ -103,27 +117,27 @@
 
 .car-card__track {
     height: 6px;
-    margin-top: 3px;
+    margin-top: 4px;
     border-radius: 3px;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.14);
 }
 
 .car-card__fill {
     height: 100%;
     width: 100%;
     border-radius: 3px;
-    background-color: rgb(80, 200, 110);
+    background-color: rgb(52, 211, 153);
 }
 
 .chart {
     flex-direction: row;
     align-items: flex-end;
     height: 170px;
-    margin-top: 10px;
-    padding-top: 6px;
+    margin-top: 12px;
+    padding-top: 8px;
     border-top-width: 1px;
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.10);
 }
 
 .chart__column {
@@ -144,31 +158,32 @@
 .chart__bar {
     width: 40%;
     margin: 0 1px;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
-.chart__bar--income { background-color: rgb(80, 200, 110); }
-.chart__bar--expense { background-color: rgb(230, 90, 70); }
+.chart__bar--income { background-color: rgb(52, 211, 153); }
+.chart__bar--expense { background-color: rgb(248, 113, 93); }
 
 .chart__day {
     font-size: 12px;
-    color: rgb(170, 176, 188);
+    color: rgb(160, 168, 182);
 }
 
 /* Floating "+$12" lines by the money panel. */
 .money-pop__layer {
     position: absolute;
-    left: 18px;
+    left: 20px;
     top: 14px;
 }
 
 .money-pop {
-    color: rgb(125, 205, 130);
-    font-size: 26px;
+    color: rgb(110, 231, 148);
+    font-size: 27px;
     -unity-font-style: bold;
     -unity-text-align: middle-left;
+    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.8);
 }
 
 .money-pop--expense {
-    color: rgb(235, 120, 110);
+    color: rgb(248, 113, 93);
 }
