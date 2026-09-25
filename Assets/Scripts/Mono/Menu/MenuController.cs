@@ -75,6 +75,9 @@ namespace GasStation.Mono.Menu
 
             switch (_screen)
             {
+                case MenuScreen.None when BuildMode.Active:
+                    BuildMode.Exit();
+                    break;
                 case MenuScreen.None:
                     Show(MenuScreen.Pause);
                     break;

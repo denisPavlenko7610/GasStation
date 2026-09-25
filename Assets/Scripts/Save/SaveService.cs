@@ -65,6 +65,7 @@ namespace GasStation.Save
                 data.competitor = CompetitorSaveData.From(entityManager.GetComponentData<Competitor>(station));
 
             CaptureShop(entityManager, data);
+            CaptureProps(entityManager, data);
             data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
             if (entityManager.HasBuffer<DayHistoryEntry>(station))
@@ -180,6 +181,8 @@ namespace GasStation.Save
 
             if (data.pumps != null)
                 RestorePumps(entityManager, data.pumps);
+
+            RestoreProps(entityManager, data.props);
 
             if (data.products != null)
                 RestoreShop(entityManager, data.products);
@@ -325,6 +328,42 @@ namespace GasStation.Save
                 shelf.SellPrice = saved[i].sellPrice > 0f ? saved[i].sellPrice : shelf.SellPrice;
                 shelves[i] = shelf;
             }
+        }
+
+        private static void CaptureProps(EntityManager entityManager, SaveData data)
+        {
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<PlacedProp>());
+            using var props = query.ToComponentDataArray<PlacedProp>(Allocator.Temp);
+            data.props = new PropSaveData[props.Length];
+            for (int i = 0; i < props.Length; i++)
+                data.props[i] = PropSaveData.From(props[i]);
+        }
+
+        /// <summary>Replaces every placed prop with the saved ones (none for older saves).</summary>
+        private static void RestoreProps(EntityManager entityManager, PropSaveData[] saved)
+        {
+            using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<PlacedProp>()))
+                entityManager.DestroyEntity(query);
+
+            int nextId = 1;
+            if (saved != null)
+            {
+                foreach (var entry in saved)
+                {
+                    if (entry == null)
+                        continue;
+                    var entity = entityManager.CreateEntity();
+                    entityManager.AddComponentData(entity, entry.ToProp(nextId++));
+                }
+            }
+
+            using var areaQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<BuildArea>());
+            if (areaQuery.CalculateEntityCount() != 1)
+                return;
+            var areaEntity = areaQuery.GetSingletonEntity();
+            var area = entityManager.GetComponentData<BuildArea>(areaEntity);
+            area.NextPropId = nextId;
+            entityManager.SetComponentData(areaEntity, area);
         }
 
         private static void RestorePumps(EntityManager entityManager, PumpSaveData[] saved)

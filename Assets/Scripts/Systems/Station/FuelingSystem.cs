@@ -92,7 +92,8 @@ namespace GasStation.Systems
                     eco.Reputation = StationMath.ClampReputation(eco.Reputation - StationMath.LostCustomerPenalty);
                 }
                 else if (car.ValueRO.Customer == CustomerType.Thief &&
-                         !(hasPlayer && math.distancesq(playerPosition.xz, transform.ValueRO.Position.xz) <= catchRadius * catchRadius))
+                         !(hasPlayer && math.distancesq(playerPosition.xz, transform.ValueRO.Position.xz) <= catchRadius * catchRadius) &&
+                         !CaughtOnCamera(ref state, transform.ValueRO.Position))
                 {
                     StationEvent.Push(events, StationEventType.FuelStolen, car.ValueRO.FuelType, bill);
                 }
@@ -127,6 +128,28 @@ namespace GasStation.Systems
                 pump.ValueRW.Occupant = Entity.Null;
                 CarRoutes.SendToExit(ref car.ValueRW, path, exitRoute);
             }
+        }
+
+        /// <summary>Security cameras near the pump may catch a thief the player did not stop.</summary>
+        private bool CaughtOnCamera(ref SystemState state, float3 position)
+        {
+            if (!SystemAPI.HasSingleton<PropEffects>())
+                return false;
+
+            float radius = PropMath.Get(PropType.SecurityCamera).Radius;
+            int near = 0;
+            foreach (var prop in SystemAPI.Query<RefRO<PlacedProp>>())
+            {
+                if (prop.ValueRO.Type == PropType.SecurityCamera &&
+                    math.distancesq(prop.ValueRO.Position.xz, position.xz) <= radius * radius)
+                    near++;
+            }
+
+            if (near == 0)
+                return false;
+
+            ref var effects = ref SystemAPI.GetSingletonRW<PropEffects>().ValueRW;
+            return effects.Random.NextFloat() < PropMath.CameraCatchChance(near);
         }
 
         private float3 PlayerPosition(ref SystemState state, out bool found)

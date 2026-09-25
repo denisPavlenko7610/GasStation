@@ -20,7 +20,9 @@ namespace GasStation.Bridge
         TakeLoan,
         RepayLoan,
         ToggleInsurance,
-        BuyOutCompetitor
+        BuyOutCompetitor,
+        PlaceProp,
+        RemoveProp
     }
 
     public struct StationCommand
@@ -29,7 +31,10 @@ namespace GasStation.Bridge
         public FuelType Fuel;
         public UpgradeType Upgrade;
         public ProductType Product;
+        public PropType Prop;
         public float Value;
+        /// <summary>World position for build mode commands.</summary>
+        public UnityEngine.Vector3 Position;
     }
 
     /// <summary>Commands from the UI layer, applied to ECS by StationCommandSystem.</summary>
@@ -78,6 +83,12 @@ namespace GasStation.Bridge
 
         public static void FireWorker(int workerId) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.FireWorker, Value = workerId });
+
+        public static void PlaceProp(PropType prop, Vector3 position, float yaw) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.PlaceProp, Prop = prop, Position = position, Value = yaw });
+
+        public static void RemoveProp(Vector3 position) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.RemoveProp, Position = position });
 
         public static bool TryDequeue(out StationCommand command) => Queue.TryDequeue(out command);
 

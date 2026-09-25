@@ -41,6 +41,7 @@ namespace GasStation.Systems
             HudModel.GameOver = HudModel.Finance.Bankrupt;
 
             DrainEvents();
+            CopyProps();
             CopyShop();
             CopyWash();
             CopyFacilities();
@@ -191,6 +192,9 @@ namespace GasStation.Systems
                     case StationEventType.CompetitorPromoStarted:
                         HudModel.Notify(Loc.T($"msg.competitorPromo.{(CompetitorPromo)(int)stationEvent.Value}"));
                         break;
+                    case StationEventType.PropPlaced:
+                        HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
+                        break;
                     case StationEventType.CompetitorBoughtOut:
                         HudModel.Notify(Loc.T("msg.competitorBoughtOut"));
                         break;
@@ -201,6 +205,25 @@ namespace GasStation.Systems
                 HudModel.Notify(Loc.F("msg.weeklyBills", weeklyBills));
 
             events.Clear();
+        }
+
+        private void CopyProps()
+        {
+            HudModel.Props.Clear();
+            foreach (var prop in SystemAPI.Query<RefRO<PlacedProp>>())
+                HudModel.Props.Add(prop.ValueRO);
+
+            HudModel.HasBuildArea = SystemAPI.HasSingleton<BuildArea>();
+            HudModel.NoBuildZones.Clear();
+            if (!HudModel.HasBuildArea)
+                return;
+
+            var areaEntity = SystemAPI.GetSingletonEntity<BuildArea>();
+            HudModel.BuildArea = SystemAPI.GetComponent<BuildArea>(areaEntity);
+            foreach (var zone in SystemAPI.GetBuffer<NoBuildZone>(areaEntity, true))
+                HudModel.NoBuildZones.Add(zone);
+            if (SystemAPI.HasSingleton<PropEffects>())
+                HudModel.PropEffects = SystemAPI.GetSingleton<PropEffects>();
         }
 
         private void CopyShop()

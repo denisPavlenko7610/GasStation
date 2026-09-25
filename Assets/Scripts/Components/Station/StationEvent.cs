@@ -65,7 +65,9 @@ namespace GasStation.Components
         CompetitorPriceCut,
         CompetitorPriceRise,
         CompetitorPromoStarted,
-        CompetitorBoughtOut
+        CompetitorBoughtOut,
+        /// <summary>Value = PropType.</summary>
+        PropPlaced
     }
 
     /// <summary>

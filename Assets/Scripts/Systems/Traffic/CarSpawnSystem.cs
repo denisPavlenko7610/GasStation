@@ -57,7 +57,8 @@ namespace GasStation.Systems
                               * EventFactor(worldEvent)
                               * (SystemAPI.HasSingleton<StationStyle>() ? StyleMath.TrafficFactor(SystemAPI.GetSingleton<StationStyle>().Scheme) : 1f)
                               * RenovationFactor(ref state)
-                              * CompetitionFactor(ref state);
+                              * CompetitionFactor(ref state)
+                              * (SystemAPI.HasSingleton<PropEffects>() ? PropMath.TrafficFactor(SystemAPI.GetSingleton<PropEffects>()) : 1f);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;
@@ -69,6 +70,11 @@ namespace GasStation.Systems
                 return;
 
             var customer = CustomerProfiles.Pick(spawner.Random.NextFloat(), stationLevel, hour, worldEvent == WorldEventKind.RushHour);
+            var props = SystemAPI.HasSingleton<PropEffects>() ? SystemAPI.GetSingleton<PropEffects>() : default;
+            // Lamps scare thieves off at night: some of them become ordinary customers.
+            if (customer == CustomerType.Thief && LightingMath.NightFactor(hour) > 0.5f &&
+                spawner.Random.NextFloat() > PropMath.NightCrimeFactor(props.Lamps))
+                customer = CustomerType.Regular;
             var profile = CustomerProfiles.Get(customer);
 
             var prefab = prefabs[spawner.Random.NextInt(prefabs.Length)].Prefab;
@@ -77,7 +83,8 @@ namespace GasStation.Systems
                 : 1f;
             float patience = spawner.Random.NextFloat(spawner.PatienceRange.x, spawner.PatienceRange.y)
                              * profile.PatienceMultiplier
-                             * UpgradeMath.PatienceMultiplier(upgrades.Comfort);
+                             * UpgradeMath.PatienceMultiplier(upgrades.Comfort)
+                             * PropMath.PatienceFactor(props.Benches);
             float liters = spawner.Random.NextFloat(spawner.LitersRange.x, spawner.LitersRange.y) * profile.LitersMultiplier;
             var fuel = profile.DieselOnly ? FuelType.Diesel : StationMath.PickFuelType(spawner.Random.NextFloat());
 

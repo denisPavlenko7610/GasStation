@@ -36,6 +36,15 @@ namespace GasStation.Systems
             float chance = spawner.LitterChancePerSecond * SystemAPI.Time.DeltaTime;
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
+            var bins = new NativeList<float2>(Allocator.Temp);
+            foreach (var prop in SystemAPI.Query<RefRO<PlacedProp>>())
+            {
+                if (prop.ValueRO.Type == PropType.TrashBin)
+                    bins.Add(prop.ValueRO.Position.xz);
+            }
+
+            float binRadius = PropMath.Get(PropType.TrashBin).Radius;
+
             foreach (var (car, transform) in SystemAPI.Query<RefRO<Car>, RefRO<LocalTransform>>())
             {
                 var carState = car.ValueRO.State;
@@ -54,6 +63,11 @@ namespace GasStation.Systems
                 float3 position = transform.ValueRO.Position + new float3(math.cos(angle), 0f, math.sin(angle)) * distance;
                 position.y = transform.ValueRO.Position.y;
 
+                // A trash bin nearby: most customers use it instead of the ground.
+                if (NearAny(bins, position.xz, binRadius) &&
+                    spawner.Random.NextFloat() >= PropMath.LitterFactor(true))
+                    continue;
+
                 var trash = ecb.Instantiate(prefab);
                 ecb.AddComponent(trash, LocalTransform.FromPositionRotationScale(
                     position, quaternion.RotateY(spawner.Random.NextFloat(0f, 2f * math.PI)), scale));
@@ -63,6 +77,18 @@ namespace GasStation.Systems
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
+            bins.Dispose();
+        }
+
+        private static bool NearAny(NativeList<float2> points, float2 position, float radius)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (math.distancesq(points[i], position) <= radius * radius)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

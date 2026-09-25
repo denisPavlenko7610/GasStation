@@ -246,11 +246,36 @@ namespace GasStation.Save
         }
     }
 
+    [Serializable]
+    public class PropSaveData
+    {
+        public int type;
+        public float x;
+        public float z;
+        public float yaw;
+
+        public static PropSaveData From(PlacedProp prop) => new()
+        {
+            type = (int)prop.Type,
+            x = prop.Position.x,
+            z = prop.Position.z,
+            yaw = prop.Yaw
+        };
+
+        public PlacedProp ToProp(int id) => new()
+        {
+            Id = id,
+            Type = (PropType)Mathf.Clamp(type, 0, PropTypes.Count - 1),
+            Position = new Unity.Mathematics.float3(x, 0f, z),
+            Yaw = Mathf.Repeat(yaw, 360f)
+        };
+    }
+
     /// <summary>Persistent part of the game state. Cars on the road are not saved.</summary>
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 13;
+        public const int CurrentVersion = 14;
 
         public int version = CurrentVersion;
         public int day;
@@ -312,6 +337,9 @@ namespace GasStation.Save
         // Version 13. Null in older saves: normal difficulty, no loan, the competitor keeps its scene state.
         public FinanceSaveData finance;
         public CompetitorSaveData competitor;
+
+        // Version 14. Null or empty in older saves: no props.
+        public PropSaveData[] props;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

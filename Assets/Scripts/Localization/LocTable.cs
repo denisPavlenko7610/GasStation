@@ -141,8 +141,8 @@ namespace GasStation.Localization
 
             // HUD: status
             { "hud.help", new[] {
-                "WASD — ходить   E / ЛКМ — действие   1/2/3 — топливо   +/- — цена   O — заказать 500 л\nTab — улучшения   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы\nT — скорость   R — радио   L — язык   F1 — подсказки   F5 — сохранить   F9 — загрузить   Esc — меню",
-                "WASD — walk   E / LMB — action   1/2/3 — fuel   +/- — price   O — order 500 L\nTab — upgrades   M — shop   C — paint   H — staff   J — achievements   F — finances\nT — speed   R — radio   L — language   F1 — hints   F5 — save   F9 — load   Esc — menu" } },
+                "WASD — ходить   E / ЛКМ — действие   1/2/3 — топливо   +/- — цена   O — заказать 500 л\nTab — улучшения   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы   B — стройка\nT — скорость   R — радио   L — язык   F1 — подсказки   F5 — сохранить   F9 — загрузить   Esc — меню",
+                "WASD — walk   E / LMB — action   1/2/3 — fuel   +/- — price   O — order 500 L\nTab — upgrades   M — shop   C — paint   H — staff   J — achievements   F — finances   B — build\nT — speed   R — radio   L — language   F1 — hints   F5 — save   F9 — load   Esc — menu" } },
             { "hud.day", new[] { "День {0}   {1:00}:{2:00}", "Day {0}   {1:00}:{2:00}" } },
             { "hud.money", new[] { "Деньги: ${0:0}", "Money: ${0:0}" } },
             { "hud.reputation", new[] { "Репутация: {0:0}%", "Reputation: {0:0}%" } },
@@ -437,8 +437,8 @@ namespace GasStation.Localization
             { "settings.gameSpeed", new[] { "Скорость игры", "Game speed" } },
             { "settings.autosave", new[] { "Автосохранение в конце дня", "Autosave at the end of each day" } },
             { "controls.text", new[] {
-                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (две страницы)   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы, банк, конкурент\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
-                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (two pages)   M — shop   C — paint   H — staff   J — achievements   F — finances, bank, competitor\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
+                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (две страницы)   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы, банк, конкурент\nB — режим строительства: WASD — камера, колесо — масштаб, 1–8 — объект, Q / E — поворот, ЛКМ — поставить, ПКМ — убрать\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
+                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (two pages)   M — shop   C — paint   H — staff   J — achievements   F — finances, bank, competitor\nB — build mode: WASD — camera, wheel — zoom, 1–8 — object, Q / E — rotate, LMB — place, RMB — remove\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
 
             // Bank, bills and the competitor
             { "msg.loanAlready", new[] { "Сначала погаси текущий кредит", "Repay the current loan first" } },
@@ -490,6 +490,35 @@ namespace GasStation.Localization
             { "menu.difficulty", new[] { "Выбери сложность", "Choose difficulty" } },
             { "menu.gameOver", new[] { "Банкротство", "Bankrupt" } },
             { "menu.gameOver.text", new[] { "Банк забрал «{0}» за долги на {1}-й день.\nОбслужено клиентов: {2}. Уровень станции: {3}.", "The bank took \"{0}\" for its debts on day {1}.\nCustomers served: {2}. Station level: {3}." } },
+
+            // Build mode
+            { "prop.name.TrashBin", new[] { "Урна", "Trash bin" } },
+            { "prop.name.Bench", new[] { "Скамейка", "Bench" } },
+            { "prop.name.Planter", new[] { "Клумба", "Planter" } },
+            { "prop.name.Lamp", new[] { "Фонарь", "Lamp" } },
+            { "prop.name.RoadSign", new[] { "Указатель", "Road sign" } },
+            { "prop.name.AirPump", new[] { "Подкачка шин", "Air pump" } },
+            { "prop.name.WaterMachine", new[] { "Автомат с водой", "Water machine" } },
+            { "prop.name.SecurityCamera", new[] { "Камера", "Security camera" } },
+            { "prop.desc.TrashBin", new[] { "Клиенты рядом (6 м) мусорят на 70% меньше.", "Customers nearby (6 m) litter 70% less." } },
+            { "prop.desc.Bench", new[] { "Ждать приятнее: +4% терпения клиентов (до 5 скамеек).", "Waiting is easier: +4% customer patience (up to 5 benches)." } },
+            { "prop.desc.Planter", new[] { "Станция красивее: +2% трафика (до 10 клумб).", "A nicer station: +2% traffic (up to 10 planters)." } },
+            { "prop.desc.Lamp", new[] { "Светит ночью, отпугивает вандалов и воров.", "Lights up the night, scares off vandals and thieves." } },
+            { "prop.desc.RoadSign", new[] { "Водители замечают станцию: +6% трафика (до 3 указателей).", "Drivers notice the station: +6% traffic (up to 3 signs)." } },
+            { "prop.desc.AirPump", new[] { "Клиенты подкачивают шины: немного денег и репутации.", "Customers pump up their tires: a little money and reputation." } },
+            { "prop.desc.WaterMachine", new[] { "Клиенты покупают воду: $3 то тут, то там.", "Customers buy water: $3 every now and then." } },
+            { "prop.desc.SecurityCamera", new[] { "Воры у колонок в радиусе 12 м попадаются чаще.", "Thieves at pumps within 12 m get caught more often." } },
+            { "build.error.OutsideLot", new[] { "Здесь уже не наш участок", "This is outside our lot" } },
+            { "build.error.Blocked", new[] { "Здесь ездят машины или стоит здание", "Cars drive here or a building stands here" } },
+            { "build.error.TooClose", new[] { "Слишком близко к другому объекту", "Too close to another object" } },
+            { "build.error.TooMany", new[] { "Больше объектов не поместится", "No room for more objects" } },
+            { "msg.propPlaced", new[] { "Поставлено: {0}", "Placed: {0}" } },
+            { "msg.propRemoved", new[] { "Убрано: {0}, возврат ${1:0}", "Removed: {0}, refund ${1:0}" } },
+            { "msg.propNeedsLevel", new[] { "{0} откроется на уровне {1}", "{0} unlocks at level {1}" } },
+            { "panel.build", new[] { "СТРОЙКА — объектов {0} из {1} (B — выйти)", "BUILD — {0} of {1} objects (B — exit)" } },
+            { "panel.build.item", new[] { "{0}. {1} — ${2:0} (стоит: {3})", "{0}. {1} — ${2:0} (placed: {3})" } },
+            { "panel.build.locked", new[] { "{0}. {1} — с уровня {2}", "{0}. {1} — from level {2}" } },
+            { "panel.build.help", new[] { "ЛКМ — поставить   ПКМ — убрать (половина цены назад)   Q / E — поворот   колесо — масштаб", "LMB — place   RMB — remove (half the price back)   Q / E — rotate   wheel — zoom" } },
         };
     }
 }

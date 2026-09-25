@@ -27,6 +27,8 @@ namespace GasStation.Mono
                 root.AddComponent<MenuController>();
                 root.AddComponent<Scenery.WeatherEffects>();
                 root.AddComponent<Audio.RadioPlayer>();
+                root.AddComponent<Build.BuildModeController>();
+                root.AddComponent<Build.PropPresenter>();
                 Object.DontDestroyOnLoad(root);
             }
 

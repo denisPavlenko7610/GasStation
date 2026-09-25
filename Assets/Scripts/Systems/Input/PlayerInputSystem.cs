@@ -28,7 +28,8 @@ namespace GasStation.Systems
         protected override void OnUpdate()
         {
             // Menus pause the game; their clicks must not reach the station.
-            bool menuOpen = GamePause.MenuOpen;
+            // Build mode uses WASD for the camera and clicks for placing props.
+            bool menuOpen = GamePause.MenuOpen || BuildMode.Active;
             Vector2 move = menuOpen ? Vector2.zero : _inputAction.Player.Move.ReadValue<Vector2>();
             bool interact = !menuOpen && (_inputAction.Player.Fire.WasPressedThisFrame()
                                           || (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame));

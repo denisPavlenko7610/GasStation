@@ -630,6 +630,7 @@ namespace GasStation.Editor
             stationAuthoring.startReputation = 0.3f;
             stationAuthoring.startPaintScheme = 0;
             station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
+            CreateBuildArea(parent);
 
             var spawnerGo = Create("CarSpawner", parent, new Vector3(-RoadHalfLength + 20f, 0f, RoadZ));
             spawnerGo.transform.rotation = Quaternion.LookRotation(Vector3.right);
@@ -751,6 +752,31 @@ namespace GasStation.Editor
             };
             StationEditorUtility.ScatterTrash(scene, trash.transform, new Vector3(Lot.center.x, 0f, Lot.center.y),
                 new Vector2(Lot.width / 2f - 2f, Lot.height / 2f - 2f), 45, 1234, keepOut);
+        }
+
+        /// <summary>
+        /// Build mode area: the lot minus car lanes, pump islands and buildings. Free spots are the strips
+        /// between the lanes, the front along the road and the corners of the lot.
+        /// </summary>
+        private static void CreateBuildArea(Transform parent)
+        {
+            var area = Create("BuildArea", parent, Vector3.zero).AddComponent<BuildAreaAuthoring>();
+            area.lotMin = new Vector2(Lot.xMin, Lot.yMin);
+            area.lotMax = new Vector2(Lot.xMax, Lot.yMax);
+            area.noBuildZones = new[]
+            {
+                new BuildAreaAuthoring.Zone(-40f, -4f, 24f, 4f),     // queue and inner lanes
+                new BuildAreaAuthoring.Zone(-40f, -11f, 24f, -8f),   // outer lane, pumps 1 and 3
+                new BuildAreaAuthoring.Zone(-40f, 8f, 24f, 11f),     // outer lane, pumps 2 and 4
+                new BuildAreaAuthoring.Zone(-2f, -13f, 2f, 13f),     // pump islands
+                new BuildAreaAuthoring.Zone(-44f, -15f, -26f, 2f),   // entry from the highway
+                new BuildAreaAuthoring.Zone(12f, -15f, 44f, -2f),    // exit and tire service
+                new BuildAreaAuthoring.Zone(10f, 4f, 46f, 14f),      // car wash lane
+                new BuildAreaAuthoring.Zone(-12f, 15f, 14f, 27f),    // shop and restroom
+                new BuildAreaAuthoring.Zone(-36f, 11f, -16f, 19f),   // motel
+                new BuildAreaAuthoring.Zone(14f, 16f, 36f, 27f),     // truck parking
+                new BuildAreaAuthoring.Zone(-14f, 10f, -6f, 14f),    // cargo unloading
+            };
         }
 
         private static void AddRenovation(Transform parent, RenovationKind kind, Vector3 position)

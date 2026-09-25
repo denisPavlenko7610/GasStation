@@ -13,6 +13,10 @@ namespace GasStation.Bridge
 
         public static string UpgradeName(UpgradeType type) => Loc.T($"upgrade.name.{type}");
 
+        public static string PropName(PropType type) => Loc.T($"prop.name.{type}");
+
+        public static string PropDescription(PropType type) => Loc.T($"prop.desc.{type}");
+
         public static string UpgradeDescription(UpgradeType type) => Loc.T($"upgrade.desc.{type}");
 
         public static string StaffName(int index)

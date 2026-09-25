@@ -1,3 +1,4 @@
+using GasStation.Bridge;
 using GasStation.Components;
 using GasStation.Mono;
 using Unity.Entities;
@@ -19,6 +20,12 @@ namespace GasStation.Systems
             var camera = CameraSingleton.Instance;
             if (camera == null)
                 return;
+
+            if (BuildMode.Active)
+            {
+                camera.transform.position = BuildMode.Focus + CameraSingleton.Offset * BuildMode.Zoom;
+                return;
+            }
 
             var player = SystemAPI.GetSingletonEntity<PlayerTag>();
             Vector3 position = SystemAPI.GetComponent<LocalToWorld>(player).Position;

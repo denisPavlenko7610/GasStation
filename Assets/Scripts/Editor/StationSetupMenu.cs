@@ -24,6 +24,10 @@ namespace GasStation.Editor
             var station = Create("Station", root.transform, Vector3.zero);
             station.AddComponent<StationAuthoring>();
             station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
+            // Build mode works on the whole lot around the station; add no-build zones over the lanes by hand.
+            var buildArea = station.AddComponent<BuildAreaAuthoring>();
+            buildArea.lotMin = new Vector2(center.x - 30f, center.z - 20f);
+            buildArea.lotMax = new Vector2(center.x + 30f, center.z + 20f);
 
             var spawnerGo = Create("CarSpawner", root.transform, new Vector3(-40f, 0f, 0f));
             spawnerGo.transform.rotation = Quaternion.LookRotation(Vector3.right);

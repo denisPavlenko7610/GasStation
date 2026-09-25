@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GasStation.Bridge;
 using GasStation.Components;
 using GasStation.Localization;
@@ -88,8 +89,85 @@ namespace GasStation.Systems
                     case StationCommandType.BuyOutCompetitor:
                         BuyOutCompetitor(station);
                         break;
+                    case StationCommandType.PlaceProp:
+                        PlaceProp(station, command.Prop, command.Position, command.Value);
+                        break;
+                    case StationCommandType.RemoveProp:
+                        RemoveProp(station, command.Position);
+                        break;
                 }
             }
+        }
+
+        private void PlaceProp(Entity station, PropType type, float3 position, float yaw)
+        {
+            if (!SystemAPI.HasSingleton<BuildArea>())
+                return;
+
+            var areaEntity = SystemAPI.GetSingletonEntity<BuildArea>();
+            var area = SystemAPI.GetComponent<BuildArea>(areaEntity);
+            position = PropMath.Snap(position);
+
+            var zones = new List<NoBuildZone>();
+            foreach (var zone in SystemAPI.GetBuffer<NoBuildZone>(areaEntity))
+                zones.Add(zone);
+            var others = new List<float2>();
+            foreach (var prop in SystemAPI.Query<RefRO<PlacedProp>>())
+                others.Add(prop.ValueRO.Position.xz);
+
+            int stationLevel = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            var info = PropMath.Get(type);
+            var error = PropMath.Check(type, position.xz, area, zones, others, stationLevel, economy.ValueRO.Money);
+            if (error != PlacementError.None)
+            {
+                HudModel.Notify(error switch
+                {
+                    PlacementError.NeedsLevel => Loc.F("msg.propNeedsLevel", GameTexts.PropName(type), info.RequiredLevel),
+                    PlacementError.NoMoney => Loc.F("msg.noMoney", info.Cost),
+                    _ => Loc.T($"build.error.{error}")
+                });
+                return;
+            }
+
+            economy.ValueRW.Money -= info.Cost;
+            economy.ValueRW.DayExpenses += info.Cost;
+
+            var entity = EntityManager.CreateEntity();
+            EntityManager.AddComponentData(entity, new PlacedProp
+            {
+                Id = area.NextPropId++,
+                Type = type,
+                Position = position,
+                Yaw = yaw
+            });
+            SystemAPI.SetComponent(areaEntity, area);
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.PropPlaced, default, (int)type);
+        }
+
+        private void RemoveProp(Entity station, float3 position)
+        {
+            var nearest = Entity.Null;
+            var nearestType = PropType.TrashBin;
+            float best = PropMath.PickRadius * PropMath.PickRadius;
+            foreach (var (prop, entity) in SystemAPI.Query<RefRO<PlacedProp>>().WithEntityAccess())
+            {
+                float distance = math.distancesq(prop.ValueRO.Position.xz, position.xz);
+                if (distance > best)
+                    continue;
+                best = distance;
+                nearest = entity;
+                nearestType = prop.ValueRO.Type;
+            }
+
+            if (nearest == Entity.Null)
+                return;
+
+            float refund = PropMath.Refund(nearestType);
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            economy.ValueRW.Money += refund;
+            EntityManager.DestroyEntity(nearest);
+            HudModel.Notify(Loc.F("msg.propRemoved", GameTexts.PropName(nearestType), refund));
         }
 
         private void TakeLoan(Entity station, LoanKind kind)

@@ -75,7 +75,8 @@ namespace GasStation.Systems
 
             if (hour < 4)
             {
-                if (roll < 0.2f)
+                int lamps = SystemAPI.HasSingleton<PropEffects>() ? SystemAPI.GetSingleton<PropEffects>().Lamps : 0;
+                if (roll < 0.2f * PropMath.NightCrimeFactor(lamps))
                 {
                     SpawnLitter(ref state, ref world, ecb, VandalTrash);
                     StationEvent.Push(events, StationEventType.Vandals, default, VandalTrash);

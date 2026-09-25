@@ -57,21 +57,22 @@ namespace GasStation.Mono
             if (!HudModel.HasStation)
                 return;
 
-            if (!GamePause.MenuOpen)
+            if (!GamePause.MenuOpen && !BuildMode.Active)
                 HandleKeys();
             _view.SetText(HudBlock.Status, BuildStatus());
             _view.SetText(HudBlock.Fuel, BuildFuel());
             _view.SetText(HudBlock.Pumps, BuildPumps());
             _view.SetText(HudBlock.Center, BuildCenter());
             _view.SetText(HudBlock.Help, GameSettings.ShowControls ? Loc.T("hud.help") : string.Empty);
-            _view.SetText(HudBlock.Panel, _upgradesOpen ? BuildUpgrades()
+            _view.SetText(HudBlock.Panel, BuildMode.Active ? BuildBuildMode()
+                : _upgradesOpen ? BuildUpgrades()
                 : _storeOpen ? BuildStore()
                 : _paintOpen ? BuildPaint()
                 : _staffOpen ? BuildStaff()
                 : _achievementsOpen ? BuildAchievements()
                 : _financeOpen ? _financePage switch { 1 => BuildBank(), 2 => BuildCompetitor(), _ => BuildFinance() }
                 : BuildQuest());
-            _view.SetChart(_financeOpen && _financePage == 0 ? HudModel.History : null);
+            _view.SetChart(_financeOpen && _financePage == 0 && !BuildMode.Active ? HudModel.History : null);
             UpdateCards();
 
             _view.SetMarker(HudModel.HasQuestTarget && !_upgradesOpen && !_storeOpen, HudModel.QuestTarget);
@@ -512,6 +513,36 @@ namespace GasStation.Mono
             }
 
             _builder.Append(HudModel.History.Count > 0 ? Loc.T("panel.finance.chart") : Loc.T("panel.finance.noHistory"));
+            return _builder.ToString();
+        }
+
+        private string BuildBuildMode()
+        {
+            _builder.Clear();
+            _builder.AppendLine(Loc.F("panel.build", HudModel.Props.Count, PropMath.MaxProps));
+            int level = HudModel.Level.Level;
+            for (int i = 0; i < PropTypes.Count; i++)
+            {
+                var type = (PropType)i;
+                var info = PropMath.Get(type);
+                string marker = type == BuildMode.Selected ? "▶" : "  ";
+                string line = level >= info.RequiredLevel
+                    ? Loc.F("panel.build.item", i + 1, GameTexts.PropName(type), info.Cost, HudModel.PropEffects.Get(type))
+                    : Loc.F("panel.build.locked", i + 1, GameTexts.PropName(type), info.RequiredLevel);
+                _builder.Append(marker).AppendLine(line);
+            }
+
+            _builder.AppendLine(GameTexts.PropDescription(BuildMode.Selected));
+            var error = Build.BuildModeController.CurrentError;
+            if (error != PlacementError.None)
+                _builder.AppendLine(error switch
+                {
+                    PlacementError.NeedsLevel => Loc.F("msg.propNeedsLevel", GameTexts.PropName(BuildMode.Selected),
+                        PropMath.Get(BuildMode.Selected).RequiredLevel),
+                    PlacementError.NoMoney => Loc.F("msg.noMoney", PropMath.Get(BuildMode.Selected).Cost),
+                    _ => Loc.T($"build.error.{error}")
+                });
+            _builder.Append(Loc.T("panel.build.help"));
             return _builder.ToString();
         }
 

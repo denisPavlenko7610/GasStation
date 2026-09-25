@@ -139,6 +139,13 @@ namespace GasStation.Bridge
         /// <summary>The station went bankrupt; the menu shows the game over screen.</summary>
         public static bool GameOver;
 
+        /// <summary>Placed props, in no particular order. PropPresenter draws them.</summary>
+        public static readonly List<PlacedProp> Props = new();
+        public static bool HasBuildArea;
+        public static BuildArea BuildArea;
+        public static readonly List<NoBuildZone> NoBuildZones = new();
+        public static PropEffects PropEffects;
+
         public static int QueueLength;
         public static int CarsOnSite;
         public static InteractionHint Hint;
@@ -165,6 +172,9 @@ namespace GasStation.Bridge
             Upgrades = default;
             LastReport = default;
             Finance = default;
+            Props.Clear();
+            NoBuildZones.Clear();
+            HasBuildArea = false;
             Competitor = default;
             Difficulty = Difficulty.Normal;
             LastUtilities = 0f;
