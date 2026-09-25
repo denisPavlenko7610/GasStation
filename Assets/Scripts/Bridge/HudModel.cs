@@ -131,6 +131,14 @@ namespace GasStation.Bridge
         public static float RestroomDirt;
         public static WorldEvents World;
 
+        public static Finance Finance;
+        public static Difficulty Difficulty = Difficulty.Normal;
+        public static Competitor Competitor;
+        /// <summary>Utility bill of the last night.</summary>
+        public static float LastUtilities;
+        /// <summary>The station went bankrupt; the menu shows the game over screen.</summary>
+        public static bool GameOver;
+
         public static int QueueLength;
         public static int CarsOnSite;
         public static InteractionHint Hint;
@@ -156,6 +164,11 @@ namespace GasStation.Bridge
             AnyFueling = false;
             Upgrades = default;
             LastReport = default;
+            Finance = default;
+            Competitor = default;
+            Difficulty = Difficulty.Normal;
+            LastUtilities = 0f;
+            GameOver = false;
             Message = null;
             MessageTime = float.NegativeInfinity;
         }

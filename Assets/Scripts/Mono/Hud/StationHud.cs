@@ -33,6 +33,10 @@ namespace GasStation.Mono
         private bool _staffOpen;
         private bool _achievementsOpen;
         private bool _financeOpen;
+        /// <summary>0 = overview, 1 = bank, 2 = competitor.</summary>
+        private int _financePage;
+        private const int FinancePages = 3;
+        private float _buyoutRequestedAt = float.NegativeInfinity;
         private readonly System.Collections.Generic.List<string> _cardTexts = new();
         private int _fireRequestedId = -1;
         private float _fireRequestedAt = float.NegativeInfinity;
@@ -65,9 +69,9 @@ namespace GasStation.Mono
                 : _paintOpen ? BuildPaint()
                 : _staffOpen ? BuildStaff()
                 : _achievementsOpen ? BuildAchievements()
-                : _financeOpen ? BuildFinance()
+                : _financeOpen ? _financePage switch { 1 => BuildBank(), 2 => BuildCompetitor(), _ => BuildFinance() }
                 : BuildQuest());
-            _view.SetChart(_financeOpen ? HudModel.History : null);
+            _view.SetChart(_financeOpen && _financePage == 0 ? HudModel.History : null);
             UpdateCards();
 
             _view.SetMarker(HudModel.HasQuestTarget && !_upgradesOpen && !_storeOpen, HudModel.QuestTarget);
@@ -108,7 +112,18 @@ namespace GasStation.Mono
             if (keyboard.jKey.wasPressedThisFrame)
                 Toggle(ref _achievementsOpen);
             if (keyboard.fKey.wasPressedThisFrame)
-                Toggle(ref _financeOpen);
+            {
+                // F: overview → bank → competitor → closed.
+                if (!_financeOpen)
+                {
+                    OpenOnly(ref _financeOpen);
+                    _financePage = 0;
+                }
+                else if (++_financePage >= FinancePages)
+                {
+                    _financeOpen = false;
+                }
+            }
 
             if (keyboard.tKey.wasPressedThisFrame)
             {
@@ -136,7 +151,7 @@ namespace GasStation.Mono
             {
                 if (Time.unscaledTime - _newGameRequestedAt < ConfirmTime)
                 {
-                    StationCommands.NewGame();
+                    StationCommands.NewGame(HudModel.Difficulty);
                     _newGameRequestedAt = float.NegativeInfinity;
                 }
                 else
@@ -154,6 +169,10 @@ namespace GasStation.Mono
                 HandleUpgradeKeys(keyboard);
             else if (_storeOpen)
                 HandleStoreKeys(keyboard);
+            else if (_financeOpen && _financePage == 1)
+                HandleBankKeys(keyboard);
+            else if (_financeOpen && _financePage == 2)
+                HandleCompetitorKeys(keyboard);
             else
                 HandleFuelKeys(keyboard);
         }
@@ -194,6 +213,32 @@ namespace GasStation.Mono
                 StationCommands.ChangePrice(_selectedFuel, -PriceStep);
             if (keyboard.oKey.wasPressedThisFrame)
                 StationCommands.OrderFuel(_selectedFuel, OrderLiters);
+        }
+
+        private void HandleBankKeys(Keyboard keyboard)
+        {
+            if (keyboard.digit1Key.wasPressedThisFrame) StationCommands.TakeLoan(LoanKind.Small);
+            if (keyboard.digit2Key.wasPressedThisFrame) StationCommands.TakeLoan(LoanKind.Large);
+            if (keyboard.digit3Key.wasPressedThisFrame) StationCommands.RepayLoan();
+            if (keyboard.digit4Key.wasPressedThisFrame) StationCommands.ToggleInsurance();
+        }
+
+        private void HandleCompetitorKeys(Keyboard keyboard)
+        {
+            if (!keyboard.digit1Key.wasPressedThisFrame || !HudModel.Competitor.Active || HudModel.Competitor.BoughtOut)
+                return;
+
+            // Buying out costs a fortune, so it needs a second press within two seconds.
+            if (Time.unscaledTime - _buyoutRequestedAt < ConfirmTime)
+            {
+                StationCommands.BuyOutCompetitor();
+                _buyoutRequestedAt = float.NegativeInfinity;
+            }
+            else
+            {
+                _buyoutRequestedAt = Time.unscaledTime;
+                HudModel.Notify(Loc.F("panel.rival.confirmBuyout", CompetitionMath.BuyoutPrice));
+            }
         }
 
         private void HandleStoreKeys(Keyboard keyboard)
@@ -467,6 +512,89 @@ namespace GasStation.Mono
             }
 
             _builder.Append(HudModel.History.Count > 0 ? Loc.T("panel.finance.chart") : Loc.T("panel.finance.noHistory"));
+            return _builder.ToString();
+        }
+
+        private string BuildBank()
+        {
+            var finance = HudModel.Finance;
+            _builder.Clear();
+            _builder.AppendLine(Loc.F("panel.bank", Loc.T($"difficulty.{HudModel.Difficulty}")));
+
+            if (finance.Loan == LoanKind.None)
+            {
+                _builder.AppendLine(Loc.T("panel.bank.noLoan"));
+                AppendLoanOffer(1, LoanKind.Small);
+                AppendLoanOffer(2, LoanKind.Large);
+            }
+            else
+            {
+                _builder.AppendLine(Loc.F("panel.bank.loan", finance.LoanBalance, finance.WeeklyPayment));
+                _builder.AppendLine(Loc.F("panel.bank.repay",
+                    FinanceMath.EarlyRepayment(finance.LoanBalance, finance.Loan)));
+            }
+
+            _builder.AppendLine(finance.Insured
+                ? Loc.F("panel.bank.insured", FinanceMath.InsurancePremium * FinanceMath.BillMultiplier(HudModel.Difficulty), FinanceMath.InsuranceCoverage * 100f)
+                : Loc.F("panel.bank.notInsured", FinanceMath.InsurancePremium * FinanceMath.BillMultiplier(HudModel.Difficulty), FinanceMath.InsuranceCoverage * 100f));
+
+            _builder.AppendLine(Loc.F("panel.bank.utilities", HudModel.LastUtilities));
+            int daysToTax = FinanceMath.DaysPerWeek - (HudModel.Day - 1) % FinanceMath.DaysPerWeek;
+            _builder.AppendLine(Loc.F("panel.bank.tax", FinanceMath.TaxRate * 100f, finance.WeekRevenue,
+                FinanceMath.WeeklyTax(finance.WeekRevenue), daysToTax));
+
+            if (finance.DaysInDebt > 0)
+            {
+                int limit = FinanceMath.BankruptcyDays(HudModel.Difficulty);
+                _builder.AppendLine(limit > 0
+                    ? Loc.F("panel.bank.debt", finance.DaysInDebt, limit)
+                    : Loc.F("panel.bank.debtRelaxed", finance.DaysInDebt));
+            }
+
+            _builder.Append(Loc.T("panel.bank.help"));
+            return _builder.ToString();
+        }
+
+        private void AppendLoanOffer(int key, LoanKind kind) =>
+            _builder.AppendLine(Loc.F("panel.bank.offer", key, FinanceMath.LoanAmount(kind), FinanceMath.LoanInterest(kind) * 100f,
+                FinanceMath.LoanWeeks(kind), FinanceMath.LoanWeeklyPayment(kind)));
+
+        private string BuildCompetitor()
+        {
+            var rival = HudModel.Competitor;
+            _builder.Clear();
+            _builder.AppendLine(Loc.T("panel.rival"));
+
+            if (rival.BoughtOut)
+            {
+                _builder.Append(Loc.F("panel.rival.boughtOut", StationProfile.DisplayName));
+                return _builder.ToString();
+            }
+
+            if (!rival.Active)
+            {
+                _builder.Append(Loc.F("panel.rival.notOpen", rival.OpensOnDay));
+                return _builder.ToString();
+            }
+
+            _builder.AppendLine(Loc.T("panel.rival.header"));
+            for (int i = 0; i < FuelTypes.Count; i++)
+            {
+                var fuel = (FuelType)i;
+                float ours = HudModel.Fuel[i].SellPrice;
+                float theirs = rival.Price(fuel);
+                string mark = ours < theirs - 0.005f ? "▲" : ours > theirs + 0.005f ? "▼" : "=";
+                _builder.AppendLine($"{GameTexts.FuelName(fuel),-10} ${ours:0.00}   ${theirs:0.00}  {mark}");
+            }
+
+            _builder.AppendLine(Loc.F("panel.rival.reputation", HudModel.Economy.Reputation * 100f, rival.Reputation * 100f));
+            if (rival.Promo != CompetitorPromo.None)
+                _builder.AppendLine(Loc.F($"panel.rival.promo.{rival.Promo}", rival.PromoDaysLeft));
+            _builder.AppendLine(Loc.F("panel.rival.share", rival.OurShare * 100f));
+
+            _builder.Append(HudModel.Level.Level >= CompetitionMath.BuyoutLevel
+                ? Loc.F("panel.rival.buyout", CompetitionMath.BuyoutPrice)
+                : Loc.F("panel.rival.buyoutLocked", CompetitionMath.BuyoutPrice, CompetitionMath.BuyoutLevel));
             return _builder.ToString();
         }
 

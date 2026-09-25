@@ -51,7 +51,21 @@ namespace GasStation.Components
         RenovationNeedsLevel,
         TruckArrived,
         /// <summary>Value = stars 1..5.</summary>
-        CustomerReview
+        CustomerReview,
+        LoanTaken,
+        LoanRepaid,
+        LoanPayment,
+        UtilitiesPaid,
+        TaxPaid,
+        InsurancePremiumPaid,
+        InsurancePayout,
+        BankruptcyWarning,
+        GameOver,
+        CompetitorOpened,
+        CompetitorPriceCut,
+        CompetitorPriceRise,
+        CompetitorPromoStarted,
+        CompetitorBoughtOut
     }
 
     /// <summary>

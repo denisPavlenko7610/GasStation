@@ -154,11 +154,103 @@ namespace GasStation.Save
         public float yaw;
     }
 
+    [Serializable]
+    public class FinanceSaveData
+    {
+        public int difficulty = (int)Difficulty.Normal;
+        public int loan;
+        public float loanBalance;
+        public float weeklyPayment;
+        public bool insured;
+        public float electricityToday;
+        public float waterToday;
+        public float weekRevenue;
+        public int daysInDebt;
+        public bool bankrupt;
+
+        public static FinanceSaveData From(Finance finance, Difficulty difficulty) => new()
+        {
+            difficulty = (int)difficulty,
+            loan = (int)finance.Loan,
+            loanBalance = finance.LoanBalance,
+            weeklyPayment = finance.WeeklyPayment,
+            insured = finance.Insured,
+            electricityToday = finance.ElectricityToday,
+            waterToday = finance.WaterToday,
+            weekRevenue = finance.WeekRevenue,
+            daysInDebt = finance.DaysInDebt,
+            bankrupt = finance.Bankrupt
+        };
+
+        public Difficulty Difficulty => (Difficulty)Mathf.Clamp(difficulty, 0, 2);
+
+        public Finance ToFinance() => new()
+        {
+            Loan = (LoanKind)Mathf.Clamp(loan, 0, 2),
+            LoanBalance = Mathf.Max(0f, loanBalance),
+            WeeklyPayment = Mathf.Max(0f, weeklyPayment),
+            Insured = insured,
+            ElectricityToday = electricityToday,
+            WaterToday = waterToday,
+            WeekRevenue = weekRevenue,
+            DaysInDebt = Mathf.Max(0, daysInDebt),
+            Bankrupt = bankrupt
+        };
+    }
+
+    [Serializable]
+    public class CompetitorSaveData
+    {
+        public bool active;
+        public bool boughtOut;
+        public int opensOnDay;
+        public float[] prices;
+        public float reputation;
+        public int promo;
+        public int promoDaysLeft;
+        public float ourShare;
+
+        public static CompetitorSaveData From(Competitor rival) => new()
+        {
+            active = rival.Active,
+            boughtOut = rival.BoughtOut,
+            opensOnDay = rival.OpensOnDay,
+            prices = new[] { rival.Petrol92, rival.Petrol95, rival.Diesel },
+            reputation = rival.Reputation,
+            promo = (int)rival.Promo,
+            promoDaysLeft = rival.PromoDaysLeft,
+            ourShare = rival.OurShare
+        };
+
+        /// <summary>Keeps the random state of the scene competitor.</summary>
+        public void ApplyTo(ref Competitor rival)
+        {
+            // An empty object (JsonUtility never gives null) means an older save: keep the scene competitor.
+            if (opensOnDay <= 0)
+                return;
+
+            rival.Active = active;
+            rival.BoughtOut = boughtOut;
+            rival.OpensOnDay = opensOnDay;
+            if (prices != null && prices.Length >= FuelTypes.Count)
+            {
+                rival.Petrol92 = prices[0];
+                rival.Petrol95 = prices[1];
+                rival.Diesel = prices[2];
+            }
+
+            rival.Reputation = Mathf.Clamp01(reputation);
+            rival.Promo = (CompetitorPromo)Mathf.Clamp(promo, 0, 2);
+            rival.PromoDaysLeft = Mathf.Max(0, promoDaysLeft);
+            rival.OurShare = Mathf.Clamp01(ourShare);
+        }
+    }
+
     /// <summary>Persistent part of the game state. Cars on the road are not saved.</summary>
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 12;
+        public const int CurrentVersion = 13;
 
         public int version = CurrentVersion;
         public int day;
@@ -216,6 +308,10 @@ namespace GasStation.Save
 
         // Version 12. Empty = the default name.
         public string stationName;
+
+        // Version 13. Null in older saves: normal difficulty, no loan, the competitor keeps its scene state.
+        public FinanceSaveData finance;
+        public CompetitorSaveData competitor;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

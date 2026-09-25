@@ -130,6 +130,8 @@ namespace GasStation.Editor
             BuildRenovations(scene, parent, shop, accent);
             BuildConstructionSites(scene, parent, primary, accent);
             BuildDecor(scene, parent, shop);
+            BuildPriceBoard(scene, parent);
+            BuildCompetitor(scene, parent);
             ScatterNature(scene, parent);
 
             var painter = root.AddComponent<StationPainter>();
@@ -374,6 +376,75 @@ namespace GasStation.Editor
         }
 
         /// <summary>A point just under the top of an object, or the fallback when it is missing.</summary>
+        /// <summary>Our price board by the entrance, facing the highway.</summary>
+        private static void BuildPriceBoard(Scene scene, Transform parent)
+        {
+            var pole = GetOrCreateMaterial("SignPole", new Color(0.35f, 0.35f, 0.38f));
+            var panel = GetOrCreateMaterial("PriceBoardPanel", new Color(0.08f, 0.08f, 0.1f));
+            var root = Create("PriceBoard", parent, Vector3.zero);
+            var position = new Vector3(-28f, 0f, -16f);
+            Primitive(scene, root.transform, "Pole", pole, position + new Vector3(0f, 2f, 0f), new Vector3(0.25f, 4f, 0.25f));
+            Primitive(scene, root.transform, "Panel", panel, position + new Vector3(0f, 4.6f, 0f), new Vector3(2.6f, 2f, 0.2f));
+
+            var text = Create("Text", root.transform, position + new Vector3(0f, 4.6f, -0.12f));
+            text.AddComponent<PriceBoard>();
+        }
+
+        /// <summary>
+        /// PetroMax across the highway: an empty fenced lot that turns into a station on day 3 (CompetitorStation).
+        /// </summary>
+        private static void BuildCompetitor(Scene scene, Transform parent)
+        {
+            var center = new Vector3(25f, 0f, RoadZ - 26f);
+            var root = Create("Competitor_PetroMax", parent, Vector3.zero);
+            var emptyLot = Create("EmptyLot", root.transform, Vector3.zero);
+            var station = Create("Station", root.transform, Vector3.zero);
+
+            SiteMarkers(scene, emptyLot.transform, center, new Vector2(10f, 7f));
+
+            var red = GetOrCreateMaterial("PetroMaxRed", new Color(0.8f, 0.1f, 0.1f));
+            var white = GetOrCreateMaterial("PetroMaxWhite", new Color(0.92f, 0.92f, 0.9f));
+            var dark = GetOrCreateMaterial("PriceBoardPanel", new Color(0.08f, 0.08f, 0.1f));
+            var asphalt = GetOrCreateMaterial("OldAsphalt", new Color(0.28f, 0.27f, 0.26f));
+            var brand = new List<GameObject>();
+
+            Primitive(scene, station.transform, "Forecourt", asphalt, center + new Vector3(0f, 0.02f, 0f), new Vector3(30f, 0.04f, 18f));
+            Place("Station_Canopy", scene, station.transform, center, 180f);
+            Place("Petrol_pump", scene, station.transform, center + new Vector3(0f, 0f, -3f), 90f);
+            Place("Petrol_pump", scene, station.transform, center + new Vector3(0f, 0f, 3f), 90f);
+
+            // Shop: a white box with a red stripe, behind the canopy (away from the road).
+            var shopCenter = center + new Vector3(0f, 0f, -12f);
+            Primitive(scene, station.transform, "Shop", white, shopCenter + new Vector3(0f, 2f, 0f), new Vector3(12f, 4f, 6f));
+            brand.Add(Primitive(scene, station.transform, "ShopStripe", red, shopCenter + new Vector3(0f, 3.4f, 3.05f), new Vector3(12.1f, 0.8f, 0.1f)));
+
+            // Tall brand sign by the road with their price board.
+            var signPosition = center + new Vector3(-13f, 0f, 8f);
+            Primitive(scene, station.transform, "SignPole", white, signPosition + new Vector3(0f, 3.5f, 0f), new Vector3(0.35f, 7f, 0.35f));
+            brand.Add(Primitive(scene, station.transform, "SignTop", red, signPosition + new Vector3(0f, 7.6f, 0f), new Vector3(3.2f, 1.2f, 0.3f)));
+            Primitive(scene, station.transform, "SignPrices", dark, signPosition + new Vector3(0f, 5.6f, 0f), new Vector3(2.8f, 2.4f, 0.25f));
+            // Faces the highway, i.e. +Z: the text is turned around.
+            var prices = Create("Prices", station.transform, signPosition + new Vector3(0f, 5.6f, 0.15f));
+            prices.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            prices.AddComponent<PriceBoard>().competitor = true;
+
+            // Promo banner on the fence posts by the road.
+            var banner = Create("PromoBanner", station.transform, Vector3.zero);
+            var bannerPosition = center + new Vector3(8f, 0f, 9f);
+            Primitive(scene, banner.transform, "PostL", white, bannerPosition + new Vector3(-2.2f, 1f, 0f), new Vector3(0.15f, 2f, 0.15f));
+            Primitive(scene, banner.transform, "PostR", white, bannerPosition + new Vector3(2.2f, 1f, 0f), new Vector3(0.15f, 2f, 0.15f));
+            Primitive(scene, banner.transform, "Cloth", GetOrCreateMaterial("PromoYellow", new Color(1f, 0.85f, 0.1f)),
+                bannerPosition + new Vector3(0f, 1.6f, 0f), new Vector3(4.4f, 0.9f, 0.05f));
+
+            var competitor = root.AddComponent<CompetitorStation>();
+            competitor.emptyLot = emptyLot;
+            competitor.station = station;
+            competitor.promoBanner = banner;
+            competitor.brandPanels = RenderersOf(brand);
+            station.SetActive(false);
+            banner.SetActive(false);
+        }
+
         private static Vector3 TopOf(GameObject go, Vector3 fallback)
         {
             if (go == null)

@@ -1,5 +1,6 @@
 using System;
 using GasStation.Components;
+using GasStation.Logic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -39,6 +40,10 @@ namespace GasStation.Authoring
         [Header("Look")]
         [Tooltip("0 = peeling paint (abandoned), 1 = classic, 2 = desert sunset, 3 = neon")]
         [Range(0, 3)] public int startPaintScheme = 1;
+
+        [Header("Competition")]
+        [Tooltip("A rival station opens across the road on day 3")]
+        public bool competitor = true;
 
         public FuelSettings[] fuels =
         {
@@ -82,6 +87,15 @@ namespace GasStation.Authoring
             AddComponent(entity, new StaffPower());
             AddComponent(entity, new StationStats());
             AddBuffer<DayHistoryEntry>(entity);
+            AddComponent(entity, new StationRules { Difficulty = Difficulty.Normal });
+            AddComponent(entity, new Finance());
+            AddComponent(entity, new Competitor
+            {
+                OpensOnDay = authoring.competitor ? CompetitionMath.OpensOnDay : int.MaxValue,
+                Reputation = 0.55f,
+                OurShare = 1f,
+                Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 211)
+            });
             AddComponent(entity, new Achievements());
             AddComponent(entity, new StaffRoster
             {

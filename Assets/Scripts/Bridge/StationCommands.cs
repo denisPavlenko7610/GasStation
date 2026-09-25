@@ -16,7 +16,11 @@ namespace GasStation.Bridge
         OrderProducts,
         PaintStation,
         HireCandidate,
-        FireWorker
+        FireWorker,
+        TakeLoan,
+        RepayLoan,
+        ToggleInsurance,
+        BuyOutCompetitor
     }
 
     public struct StationCommand
@@ -48,7 +52,17 @@ namespace GasStation.Bridge
 
         public static void LoadGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.LoadGame });
 
-        public static void NewGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.NewGame });
+        public static void NewGame(Difficulty difficulty = Difficulty.Normal) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.NewGame, Value = (int)difficulty });
+
+        public static void TakeLoan(LoanKind kind) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.TakeLoan, Value = (int)kind });
+
+        public static void RepayLoan() => Queue.Enqueue(new StationCommand { Type = StationCommandType.RepayLoan });
+
+        public static void ToggleInsurance() => Queue.Enqueue(new StationCommand { Type = StationCommandType.ToggleInsurance });
+
+        public static void BuyOutCompetitor() => Queue.Enqueue(new StationCommand { Type = StationCommandType.BuyOutCompetitor });
 
         public static void ChangeProductPrice(ProductType product, float delta) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.ChangeProductPrice, Product = product, Value = delta });

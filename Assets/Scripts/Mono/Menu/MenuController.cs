@@ -28,7 +28,9 @@ namespace GasStation.Mono.Menu
             Controls,
             Confirm,
             Welcome,
-            StationName
+            StationName,
+            Difficulty,
+            GameOver
         }
 
         private const string TutorialSeenKey = "GasStation.TutorialSeen";
@@ -60,6 +62,13 @@ namespace GasStation.Mono.Menu
 
         private void Update()
         {
+            if (HudModel.GameOver && _screen is not (MenuScreen.GameOver or MenuScreen.Difficulty or MenuScreen.Confirm
+                    or MenuScreen.Settings or MenuScreen.Controls))
+            {
+                Show(MenuScreen.GameOver);
+                return;
+            }
+
             var keyboard = Keyboard.current;
             if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame)
                 return;
@@ -79,6 +88,7 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.Controls:
                 case MenuScreen.Confirm:
                 case MenuScreen.StationName:
+                case MenuScreen.Difficulty:
                     Show(_returnTo);
                     break;
                 case MenuScreen.Welcome:
@@ -89,7 +99,7 @@ namespace GasStation.Mono.Menu
 
         private void Show(MenuScreen screen)
         {
-            if (screen is MenuScreen.Main or MenuScreen.Pause)
+            if (screen is MenuScreen.Main or MenuScreen.Pause or MenuScreen.GameOver)
                 _returnTo = screen;
 
             _screen = screen;
@@ -105,6 +115,8 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.Confirm: BuildConfirm(); break;
                 case MenuScreen.Welcome: BuildWelcome(); break;
                 case MenuScreen.StationName: BuildStationName(); break;
+                case MenuScreen.Difficulty: BuildDifficulty(); break;
+                case MenuScreen.GameOver: BuildGameOver(); break;
             }
         }
 
@@ -122,11 +134,11 @@ namespace GasStation.Mono.Menu
             {
                 if (!hasSave)
                 {
-                    StartNewGame();
+                    Show(MenuScreen.Difficulty);
                     return;
                 }
 
-                AskConfirm(Loc.T("menu.confirm.newGame"), StartNewGame);
+                AskConfirm(Loc.T("menu.confirm.newGame"), () => Show(MenuScreen.Difficulty));
             }));
             window.Add(MenuButton(Loc.T("menu.settings"), () => Show(MenuScreen.Settings)));
             window.Add(MenuButton(Loc.T("menu.controls"), () => Show(MenuScreen.Controls)));
@@ -313,9 +325,11 @@ namespace GasStation.Mono.Menu
             Show(MenuScreen.Confirm);
         }
 
-        private void StartNewGame()
+        private void StartNewGame(Components.Difficulty difficulty)
         {
-            StationCommands.NewGame();
+            StationCommands.NewGame(difficulty);
+            // The simulation clears the flag on its next update; until then the menu must not reopen it.
+            HudModel.GameOver = false;
             StartPlaying();
         }
 
@@ -330,6 +344,35 @@ namespace GasStation.Mono.Menu
 
             _tutorialPage = 0;
             Show(MenuScreen.Welcome);
+        }
+
+        private void BuildDifficulty()
+        {
+            var window = Window(wide: true);
+            window.Add(Accent());
+            window.Add(Text(Loc.T("menu.difficulty"), "menu-heading"));
+
+            foreach (var difficulty in new[] { Components.Difficulty.Relaxed, Components.Difficulty.Normal, Components.Difficulty.Survival })
+            {
+                window.Add(MenuButton(Loc.T($"difficulty.{difficulty}"), () => StartNewGame(difficulty)));
+                window.Add(Text(Loc.T($"difficulty.{difficulty}.text"), "menu-text"));
+            }
+
+            var buttons = new VisualElement();
+            buttons.AddToClassList("menu-buttons-row");
+            buttons.Add(SmallButton(Loc.T("menu.back"), () => Show(_returnTo)));
+            window.Add(buttons);
+        }
+
+        private void BuildGameOver()
+        {
+            var window = Window();
+            window.Add(Accent());
+            window.Add(Text(Loc.T("menu.gameOver"), "menu-heading"));
+            window.Add(Text(Loc.F("menu.gameOver.text", StationProfile.DisplayName, HudModel.Day,
+                HudModel.Stats.Served, HudModel.Level.Level), "menu-text"));
+            window.Add(MenuButton(Loc.T("menu.newGame"), () => Show(MenuScreen.Difficulty)));
+            window.Add(MenuButton(Loc.T("menu.quit"), Quit));
         }
 
         private void BuildStationName()

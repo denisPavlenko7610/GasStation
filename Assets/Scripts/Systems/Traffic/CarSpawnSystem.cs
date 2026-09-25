@@ -56,7 +56,8 @@ namespace GasStation.Systems
                               * ProgressMath.LevelTrafficFactor(stationLevel)
                               * EventFactor(worldEvent)
                               * (SystemAPI.HasSingleton<StationStyle>() ? StyleMath.TrafficFactor(SystemAPI.GetSingleton<StationStyle>().Scheme) : 1f)
-                              * RenovationFactor(ref state);
+                              * RenovationFactor(ref state)
+                              * CompetitionFactor(ref state);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;
@@ -129,6 +130,15 @@ namespace GasStation.Systems
             SystemAPI.HasSingleton<StationCleanliness>()
                 ? StationMath.CleanlinessTrafficFactor(SystemAPI.GetSingleton<StationCleanliness>().Value)
                 : 1f;
+
+        /// <summary>Drivers split between us and the station across the road.</summary>
+        private float CompetitionFactor(ref SystemState state)
+        {
+            if (!SystemAPI.HasSingleton<Competitor>())
+                return 1f;
+            var rival = SystemAPI.GetSingleton<Competitor>();
+            return rival.Active && !rival.BoughtOut ? CompetitionMath.TrafficFactor(rival.OurShare) : 1f;
+        }
 
         private float RenovationFactor(ref SystemState state)
         {

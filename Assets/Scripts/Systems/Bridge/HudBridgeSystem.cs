@@ -32,6 +32,14 @@ namespace GasStation.Systems
             if (SystemAPI.HasSingleton<StationCleanliness>())
                 HudModel.Cleanliness = SystemAPI.GetSingleton<StationCleanliness>();
 
+            if (SystemAPI.HasSingleton<Finance>())
+                HudModel.Finance = SystemAPI.GetSingleton<Finance>();
+            if (SystemAPI.HasSingleton<StationRules>())
+                HudModel.Difficulty = SystemAPI.GetSingleton<StationRules>().Difficulty;
+            if (SystemAPI.HasSingleton<Competitor>())
+                HudModel.Competitor = SystemAPI.GetSingleton<Competitor>();
+            HudModel.GameOver = HudModel.Finance.Bankrupt;
+
             DrainEvents();
             CopyShop();
             CopyWash();
@@ -52,6 +60,7 @@ namespace GasStation.Systems
         private void DrainEvents()
         {
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
+            float weeklyBills = 0f;
             for (int i = 0; i < events.Length; i++)
             {
                 var stationEvent = events[i];
@@ -152,8 +161,44 @@ namespace GasStation.Systems
                     case StationEventType.InspectionFailed:
                         HudModel.Notify(Loc.F("msg.inspectionFailed", stationEvent.Value));
                         break;
+                    case StationEventType.UtilitiesPaid:
+                        HudModel.LastUtilities = stationEvent.Value;
+                        break;
+                    case StationEventType.TaxPaid:
+                    case StationEventType.LoanPayment:
+                    case StationEventType.InsurancePremiumPaid:
+                        weeklyBills += stationEvent.Value;
+                        break;
+                    case StationEventType.LoanRepaid:
+                        if (stationEvent.Value <= 0f)
+                            HudModel.Notify(Loc.T("msg.loanPaidOff"));
+                        break;
+                    case StationEventType.InsurancePayout:
+                        HudModel.Notify(Loc.F("msg.insurancePayout", stationEvent.Value));
+                        break;
+                    case StationEventType.BankruptcyWarning:
+                        HudModel.Notify(Loc.F("msg.bankruptcyWarning", stationEvent.Value));
+                        break;
+                    case StationEventType.CompetitorOpened:
+                        HudModel.Notify(Loc.T("msg.competitorOpened"));
+                        break;
+                    case StationEventType.CompetitorPriceCut:
+                        HudModel.Notify(Loc.T("msg.competitorPriceCut"));
+                        break;
+                    case StationEventType.CompetitorPriceRise:
+                        HudModel.Notify(Loc.T("msg.competitorPriceRise"));
+                        break;
+                    case StationEventType.CompetitorPromoStarted:
+                        HudModel.Notify(Loc.T($"msg.competitorPromo.{(CompetitorPromo)(int)stationEvent.Value}"));
+                        break;
+                    case StationEventType.CompetitorBoughtOut:
+                        HudModel.Notify(Loc.T("msg.competitorBoughtOut"));
+                        break;
                 }
             }
+
+            if (weeklyBills > 0f)
+                HudModel.Notify(Loc.F("msg.weeklyBills", weeklyBills));
 
             events.Clear();
         }

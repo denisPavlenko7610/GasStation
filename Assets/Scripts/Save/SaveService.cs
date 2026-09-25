@@ -54,6 +54,16 @@ namespace GasStation.Save
             if (entityManager.HasComponent<Achievements>(station))
                 data.achievements = (long)entityManager.GetComponentData<Achievements>(station).Unlocked;
 
+            if (entityManager.HasComponent<Finance>(station))
+            {
+                var difficulty = entityManager.HasComponent<StationRules>(station)
+                    ? entityManager.GetComponentData<StationRules>(station).Difficulty
+                    : Difficulty.Normal;
+                data.finance = FinanceSaveData.From(entityManager.GetComponentData<Finance>(station), difficulty);
+            }
+            if (entityManager.HasComponent<Competitor>(station))
+                data.competitor = CompetitorSaveData.From(entityManager.GetComponentData<Competitor>(station));
+
             CaptureShop(entityManager, data);
             data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
@@ -201,6 +211,20 @@ namespace GasStation.Save
             }
 
             GasStation.Bridge.StationProfile.SetName(data.stationName);
+
+            if (entityManager.HasComponent<Finance>(station))
+                entityManager.SetComponentData(station, data.finance != null ? data.finance.ToFinance() : default);
+            if (entityManager.HasComponent<StationRules>(station))
+                entityManager.SetComponentData(station, new StationRules
+                {
+                    Difficulty = data.finance != null ? data.finance.Difficulty : Difficulty.Normal
+                });
+            if (data.competitor != null && entityManager.HasComponent<Competitor>(station))
+            {
+                var rival = entityManager.GetComponentData<Competitor>(station);
+                data.competitor.ApplyTo(ref rival);
+                entityManager.SetComponentData(station, rival);
+            }
 
             if (data.renovationsDone != null)
             {
