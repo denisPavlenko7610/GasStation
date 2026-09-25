@@ -24,6 +24,7 @@ namespace GasStation.Mono
 
         private AudioSource _oneShots;
         private AudioSource _pumpLoop;
+        private AudioSource _wind;
 
         private void Awake()
         {
@@ -43,6 +44,18 @@ namespace GasStation.Mono
             _pumpLoop.playOnAwake = false;
             _pumpLoop.loop = true;
             _pumpLoop.clip = pumpLoopClip;
+
+            // Wind: smoothed noise, loops during sandstorms.
+            float smooth = 0f;
+            var windClip = Tones("Wind", 3f, (t, p) =>
+            {
+                smooth = Mathf.Lerp(smooth, Noise(), 0.03f);
+                return smooth * (0.8f + 0.2f * Mathf.Sin(2f * Mathf.PI * 0.33f * t)) * 2f;
+            });
+            _wind = gameObject.AddComponent<AudioSource>();
+            _wind.playOnAwake = false;
+            _wind.loop = true;
+            _wind.clip = windClip;
         }
 
         private void Update()
@@ -53,6 +66,13 @@ namespace GasStation.Mono
                 if (clip != null)
                     _oneShots.PlayOneShot(clip, volume * GameSettings.EffectsVolume);
             }
+
+            float storm = GamePause.MenuOpen ? 0f : Scenery.WeatherEffects.Storm;
+            _wind.volume = volume * storm * GameSettings.EffectsVolume;
+            if (storm > 0.01f && !_wind.isPlaying)
+                _wind.Play();
+            else if (storm <= 0.01f && _wind.isPlaying)
+                _wind.Stop();
 
             bool fueling = HudModel.HasStation && HudModel.AnyFueling && !GamePause.MenuOpen;
             _pumpLoop.volume = volume * 0.5f * GameSettings.EffectsVolume;

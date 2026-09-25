@@ -90,6 +90,10 @@ namespace GasStation.Logic
 
             switch (type)
             {
+                case StationEventType.CustomerReview:
+                    stats.RatingSum += value;
+                    stats.RatingCount++;
+                    break;
                 case StationEventType.CustomerPaid: stats.Served++; break;
                 case StationEventType.TrashCollected: stats.TrashCollected++; break;
                 case StationEventType.ThiefCaught: stats.ThievesCaught++; break;

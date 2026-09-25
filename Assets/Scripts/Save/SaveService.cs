@@ -56,6 +56,14 @@ namespace GasStation.Save
 
             CaptureShop(entityManager, data);
 
+            if (entityManager.HasBuffer<DayHistoryEntry>(station))
+            {
+                var history = entityManager.GetBuffer<DayHistoryEntry>(station, true);
+                data.history = new DayHistorySaveData[history.Length];
+                for (int i = 0; i < history.Length; i++)
+                    data.history[i] = DayHistorySaveData.From(history[i]);
+            }
+
             using (var renovationQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Renovation>()))
             using (var renovations = renovationQuery.ToComponentDataArray<Renovation>(Allocator.Temp))
             {
@@ -174,6 +182,20 @@ namespace GasStation.Save
                     var restroom = entityManager.GetComponentData<Restroom>(restroomEntity);
                     restroom.Dirt = Mathf.Clamp01(data.restroomDirt);
                     entityManager.SetComponentData(restroomEntity, restroom);
+                }
+            }
+
+            if (entityManager.HasBuffer<DayHistoryEntry>(station))
+            {
+                var history = entityManager.GetBuffer<DayHistoryEntry>(station);
+                history.Clear();
+                if (data.history != null)
+                {
+                    foreach (var entry in data.history)
+                    {
+                        if (entry != null)
+                            history.Add(entry.ToEntry());
+                    }
                 }
             }
 

@@ -49,7 +49,9 @@ namespace GasStation.Components
         AchievementUnlocked,
         RenovationDone,
         RenovationNeedsLevel,
-        TruckArrived
+        TruckArrived,
+        /// <summary>Value = stars 1..5.</summary>
+        CustomerReview
     }
 
     /// <summary>

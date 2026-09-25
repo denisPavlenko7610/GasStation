@@ -32,6 +32,8 @@ namespace GasStation.Mono
         private bool _paintOpen;
         private bool _staffOpen;
         private bool _achievementsOpen;
+        private bool _financeOpen;
+        private readonly System.Collections.Generic.List<string> _cardTexts = new();
         private int _fireRequestedId = -1;
         private float _fireRequestedAt = float.NegativeInfinity;
         private float _newGameRequestedAt = float.NegativeInfinity;
@@ -63,7 +65,10 @@ namespace GasStation.Mono
                 : _paintOpen ? BuildPaint()
                 : _staffOpen ? BuildStaff()
                 : _achievementsOpen ? BuildAchievements()
+                : _financeOpen ? BuildFinance()
                 : BuildQuest());
+            _view.SetChart(_financeOpen ? HudModel.History : null);
+            UpdateCards();
 
             _view.SetMarker(HudModel.HasQuestTarget && !_upgradesOpen && !_storeOpen, HudModel.QuestTarget);
 
@@ -102,6 +107,8 @@ namespace GasStation.Mono
                 Toggle(ref _staffOpen);
             if (keyboard.jKey.wasPressedThisFrame)
                 Toggle(ref _achievementsOpen);
+            if (keyboard.fKey.wasPressedThisFrame)
+                Toggle(ref _financeOpen);
 
             if (keyboard.tKey.wasPressedThisFrame)
             {
@@ -172,6 +179,7 @@ namespace GasStation.Mono
             _paintOpen = false;
             _staffOpen = false;
             _achievementsOpen = false;
+            _financeOpen = false;
         }
 
         private void HandleFuelKeys(Keyboard keyboard)
@@ -403,6 +411,67 @@ namespace GasStation.Mono
             _builder.Append(Loc.F("panel.achievements.stats", HudModel.Stats.DaysPlayed, HudModel.Stats.Served, HudModel.Stats.Income));
             return _builder.ToString();
         }
+
+        private void UpdateCards()
+        {
+            _cardTexts.Clear();
+            foreach (var card in HudModel.Cards)
+            {
+                string who = card.Customer == CustomerType.Regular ? string.Empty : GameTexts.CustomerName(card.Customer) + "\n";
+                _cardTexts.Add(card.State == CarState.Fueling
+                    ? Loc.F("card.fueling", who, GameTexts.FuelName(card.Fuel), card.ReceivedLiters, card.RequestedLiters)
+                    : card.State == CarState.WaitingForTires
+                        ? Loc.F("card.tires", who)
+                        : Loc.F("card.wants", who, GameTexts.FuelName(card.Fuel), card.RequestedLiters));
+            }
+
+            _view.SetCards(HudModel.Cards, _cardTexts);
+        }
+
+        private string BuildFinance()
+        {
+            var economy = HudModel.Economy;
+            _builder.Clear();
+            _builder.AppendLine(Loc.T("panel.finance"));
+            _builder.AppendLine(Loc.F("panel.finance.today", economy.DayIncome, economy.DayExpenses, economy.DayIncome - economy.DayExpenses));
+
+            float weekIncome = 0f, weekExpenses = 0f;
+            int from = System.Math.Max(0, HudModel.History.Count - 7);
+            for (int i = from; i < HudModel.History.Count; i++)
+            {
+                weekIncome += HudModel.History[i].Income;
+                weekExpenses += HudModel.History[i].Expenses;
+            }
+
+            if (HudModel.History.Count > 0)
+            {
+                var yesterday = HudModel.History[HudModel.History.Count - 1];
+                _builder.AppendLine(Loc.F("panel.finance.yesterday", yesterday.Income, yesterday.Expenses, yesterday.Income - yesterday.Expenses));
+                _builder.AppendLine(Loc.F("panel.finance.week", HudModel.History.Count - from, weekIncome, weekExpenses, weekIncome - weekExpenses));
+            }
+
+            var stats = HudModel.Stats;
+            float rating = stats.RatingCount > 0 ? stats.RatingSum / stats.RatingCount : 0f;
+            _builder.AppendLine(stats.RatingCount > 0
+                ? Loc.F("panel.finance.rating", Stars(Mathf.RoundToInt(rating)), rating, stats.RatingCount)
+                : Loc.T("panel.finance.noRating"));
+
+            if (HudModel.Reviews.Count > 0)
+            {
+                _builder.AppendLine(Loc.T("panel.finance.reviews"));
+                for (int i = 0; i < HudModel.Reviews.Count && i < 4; i++)
+                {
+                    var review = HudModel.Reviews[i];
+                    _builder.AppendLine($"{Stars(review.Stars)}  {Loc.T($"review.{review.Stars}.{review.Variant}")}");
+                }
+            }
+
+            _builder.Append(HudModel.History.Count > 0 ? Loc.T("panel.finance.chart") : Loc.T("panel.finance.noHistory"));
+            return _builder.ToString();
+        }
+
+        private static string Stars(int stars) =>
+            new string('★', Mathf.Clamp(stars, 0, 5)) + new string('☆', 5 - Mathf.Clamp(stars, 0, 5));
 
         private static int CountBits(ulong mask)
         {

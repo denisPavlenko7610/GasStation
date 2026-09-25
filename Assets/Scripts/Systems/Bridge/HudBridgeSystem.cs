@@ -39,6 +39,8 @@ namespace GasStation.Systems
             CopyStaff();
             CopyRenovations();
             CopyQuestTarget();
+            CopyCards();
+            CopyHistory();
             HudModel.Stats = SystemAPI.HasSingleton<StationStats>() ? SystemAPI.GetSingleton<StationStats>() : default;
             HudModel.Achievements = SystemAPI.HasSingleton<Achievements>() ? SystemAPI.GetSingleton<Achievements>() : default;
             CopyFuel();
@@ -114,6 +116,17 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.AchievementUnlocked:
                         HudModel.Notify(Loc.F("msg.achievement", Loc.T($"achievement.{(AchievementId)(int)stationEvent.Value}.name")));
+                        break;
+                    case StationEventType.CustomerReview:
+                        HudModel.Reviews.Insert(0, new Review
+                        {
+                            Stars = (int)stationEvent.Value,
+                            Variant = UnityEngine.Random.Range(0, ReviewMath.VariantsPerStar),
+                            Day = HudModel.Day,
+                            Hour = HudModel.Hour
+                        });
+                        if (HudModel.Reviews.Count > HudModel.MaxReviews)
+                            HudModel.Reviews.RemoveAt(HudModel.Reviews.Count - 1);
                         break;
                     case StationEventType.TruckArrived:
                         HudModel.Notify(Loc.T(stationEvent.Value > 0.5f ? "msg.tankerArrived" : "msg.cargoArrived"));
@@ -333,6 +346,44 @@ namespace GasStation.Systems
                 best = distance;
                 target = position;
             }
+        }
+
+        private const int MaxCards = 12;
+
+        /// <summary>Cards for customers who are waiting or being served, nearest to the pumps first.</summary>
+        private void CopyCards()
+        {
+            HudModel.Cards.Clear();
+            foreach (var (car, patience, transform) in SystemAPI.Query<RefRO<Car>, RefRO<Patience>, RefRO<LocalTransform>>())
+            {
+                var state = car.ValueRO.State;
+                bool show = state is CarState.Queued or CarState.DrivingToPump or CarState.WaitingForService
+                    or CarState.Fueling or CarState.WaitingForTires;
+                if (!show || HudModel.Cards.Count >= MaxCards)
+                    continue;
+
+                HudModel.Cards.Add(new CarCard
+                {
+                    Position = transform.ValueRO.Position,
+                    Customer = car.ValueRO.Customer,
+                    State = state,
+                    Fuel = car.ValueRO.FuelType,
+                    RequestedLiters = car.ValueRO.RequestedLiters,
+                    ReceivedLiters = car.ValueRO.ReceivedLiters,
+                    PatienceRatio = patience.ValueRO.Max > 0f ? patience.ValueRO.Current / patience.ValueRO.Max : 0f
+                });
+            }
+        }
+
+        private void CopyHistory()
+        {
+            HudModel.History.Clear();
+            if (!SystemAPI.HasSingleton<DayHistoryEntry>())
+                return;
+
+            var history = SystemAPI.GetSingletonBuffer<DayHistoryEntry>(true);
+            for (int i = 0; i < history.Length; i++)
+                HudModel.History.Add(history[i]);
         }
 
         private void CopyRenovations()

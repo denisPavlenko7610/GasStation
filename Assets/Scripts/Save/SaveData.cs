@@ -71,6 +71,8 @@ namespace GasStation.Save
         public int carsWashed;
         public int perfectDays;
         public int daysPlayed;
+        public float ratingSum;
+        public int ratingCount;
 
         public static StatsSaveData From(StationStats stats) => new()
         {
@@ -83,7 +85,9 @@ namespace GasStation.Save
             tiresChanged = stats.TiresChanged,
             carsWashed = stats.CarsWashed,
             perfectDays = stats.PerfectDays,
-            daysPlayed = stats.DaysPlayed
+            daysPlayed = stats.DaysPlayed,
+            ratingSum = stats.RatingSum,
+            ratingCount = stats.RatingCount
         };
 
         public StationStats ToStats() => new()
@@ -97,7 +101,40 @@ namespace GasStation.Save
             TiresChanged = tiresChanged,
             CarsWashed = carsWashed,
             PerfectDays = perfectDays,
-            DaysPlayed = daysPlayed
+            DaysPlayed = daysPlayed,
+            RatingSum = ratingSum,
+            RatingCount = ratingCount
+        };
+    }
+
+    [Serializable]
+    public class DayHistorySaveData
+    {
+        public int day;
+        public float income;
+        public float expenses;
+        public int served;
+        public int lost;
+        public float rating;
+
+        public static DayHistorySaveData From(DayHistoryEntry entry) => new()
+        {
+            day = entry.Day,
+            income = entry.Income,
+            expenses = entry.Expenses,
+            served = entry.Served,
+            lost = entry.Lost,
+            rating = entry.Rating
+        };
+
+        public DayHistoryEntry ToEntry() => new()
+        {
+            Day = day,
+            Income = income,
+            Expenses = expenses,
+            Served = served,
+            Lost = lost,
+            Rating = rating
         };
     }
 
@@ -121,7 +158,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 10;
+        public const int CurrentVersion = 11;
 
         public int version = CurrentVersion;
         public int day;
@@ -172,6 +209,11 @@ namespace GasStation.Save
         // Version 10. Null in older saves: renovations stay as in the scene.
         public int[] renovationsDone;
 
+        // Version 11
+        public DayHistorySaveData[] history;
+        public float dayRatingSum;
+        public int dayRatingCount;
+
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 
         /// <param name="pendingDeliveries">Liters already paid for but not delivered, per fuel type. Saved as delivered.</param>
@@ -188,7 +230,9 @@ namespace GasStation.Save
                 dayIncome = economy.DayIncome,
                 dayExpenses = economy.DayExpenses,
                 dayServed = economy.DayServed,
-                dayLost = economy.DayLost
+                dayLost = economy.DayLost,
+                dayRatingSum = economy.DayRatingSum,
+                dayRatingCount = economy.DayRatingCount
             };
 
             for (int i = 0; i < UpgradeTypes.Count; i++)
@@ -295,6 +339,8 @@ namespace GasStation.Save
             economy.DayExpenses = dayExpenses;
             economy.DayServed = dayServed;
             economy.DayLost = dayLost;
+            economy.DayRatingSum = dayRatingSum;
+            economy.DayRatingCount = dayRatingCount;
 
             for (int i = 0; i < UpgradeTypes.Count; i++)
                 stationUpgrades.Set((UpgradeType)i, upgrades != null && i < upgrades.Length ? upgrades[i] : 0);

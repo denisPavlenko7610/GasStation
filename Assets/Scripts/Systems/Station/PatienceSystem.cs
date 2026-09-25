@@ -44,6 +44,7 @@ namespace GasStation.Systems
 
                 economy.ValueRW.DayLost++;
                 StationEvent.Push(events, StationEventType.CustomerLeftAngry, car.ValueRO.FuelType);
+                StationEvent.Push(events, StationEventType.CustomerReview, default, ReviewMath.AngryStars);
                 economy.ValueRW.Reputation = StationMath.ClampReputation(
                     economy.ValueRO.Reputation - StationMath.LostCustomerPenalty);
 

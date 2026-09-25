@@ -15,6 +15,8 @@ namespace GasStation.Components
         public int CarsWashed;
         public int PerfectDays;
         public int DaysPlayed;
+        public float RatingSum;
+        public int RatingCount;
     }
 
     /// <summary>Bit i set = achievement i unlocked.</summary>

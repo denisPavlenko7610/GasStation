@@ -111,6 +111,7 @@ namespace GasStation.Systems
                         economy.DayLost++;
                         economy.Reputation = StationMath.ClampReputation(economy.Reputation - StationMath.LostCustomerPenalty);
                         StationEvent.Push(events, StationEventType.CustomerLeftAngry);
+                        StationEvent.Push(events, StationEventType.CustomerReview, default, ReviewMath.AngryStars);
                         CarRoutes.SendToExit(ref car.ValueRW, path, exitRoute);
                         break;
                     }

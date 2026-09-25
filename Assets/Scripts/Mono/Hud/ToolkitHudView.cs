@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using GasStation.Bridge;
+using GasStation.Components;
 using GasStation.Localization;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,6 +22,9 @@ namespace GasStation.Mono.Hud
         private readonly VisualElement[] _meterFills = new VisualElement[3];
         private readonly VisualElement _meters;
         private readonly Label _marker;
+        private readonly List<VisualElement> _cardPool = new();
+        private readonly VisualElement _chart;
+        private readonly List<VisualElement> _chartColumns = new();
 
         public static IHudView TryCreate(GameObject host)
         {
@@ -47,6 +53,10 @@ namespace GasStation.Mono.Hud
             _marker = new Label("▼") { pickingMode = PickingMode.Ignore };
             _marker.AddToClassList("quest-marker");
             _root.Add(_marker);
+
+            _chart = new VisualElement { pickingMode = PickingMode.Ignore };
+            _chart.AddToClassList("chart");
+            _cards[(int)HudBlock.Panel].Add(_chart);
 
             _meters = new VisualElement();
             _cards[(int)HudBlock.Status].Add(_meters);
@@ -95,6 +105,123 @@ namespace GasStation.Mono.Hud
             float bob = Mathf.Sin(Time.unscaledTime * 4f) * 8f;
             _marker.style.left = point.x - 20f;
             _marker.style.top = point.y - 56f + bob;
+        }
+
+        public void SetCards(IReadOnlyList<CarCard> cards, IReadOnlyList<string> texts)
+        {
+            var camera = Camera.main;
+            int shown = 0;
+            if (camera != null && _root.panel != null)
+            {
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    var card = cards[i];
+                    if (camera.WorldToViewportPoint(card.Position).z <= 0f)
+                        continue;
+
+                    var element = CardAt(shown++);
+                    element.style.display = DisplayStyle.Flex;
+                    var point = RuntimePanelUtils.CameraTransformWorldToPanel(_root.panel, card.Position + Vector3.up * 2.4f, camera);
+                    element.style.left = point.x - 70f;
+                    element.style.top = point.y - 44f;
+
+                    var label = (Label)element[0];
+                    if (label.text != texts[i])
+                        label.text = texts[i];
+
+                    var fill = element[1][0];
+                    float patience = Mathf.Clamp01(card.PatienceRatio);
+                    fill.style.width = Length.Percent(patience * 100f);
+                    fill.style.backgroundColor = Color.Lerp(new Color(0.9f, 0.25f, 0.2f), new Color(0.3f, 0.85f, 0.4f), patience);
+                }
+            }
+
+            for (int i = shown; i < _cardPool.Count; i++)
+                _cardPool[i].style.display = DisplayStyle.None;
+        }
+
+        public void SetChart(IReadOnlyList<DayHistoryEntry> history)
+        {
+            bool visible = history != null && history.Count > 0;
+            _chart.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!visible)
+                return;
+
+            const int days = 14;
+            int first = Mathf.Max(0, history.Count - days);
+            float max = 1f;
+            for (int i = first; i < history.Count; i++)
+                max = Mathf.Max(max, Mathf.Max(history[i].Income, history[i].Expenses));
+
+            int count = history.Count - first;
+            while (_chartColumns.Count < count)
+                _chartColumns.Add(CreateColumn());
+
+            for (int i = 0; i < _chartColumns.Count; i++)
+            {
+                var column = _chartColumns[i];
+                if (i >= count)
+                {
+                    column.style.display = DisplayStyle.None;
+                    continue;
+                }
+
+                var entry = history[first + i];
+                column.style.display = DisplayStyle.Flex;
+                column[0][0].style.height = Length.Percent(entry.Income / max * 100f);
+                column[0][1].style.height = Length.Percent(entry.Expenses / max * 100f);
+                ((Label)column[1]).text = entry.Day.ToString();
+            }
+        }
+
+        private VisualElement CreateColumn()
+        {
+            var column = new VisualElement { pickingMode = PickingMode.Ignore };
+            column.AddToClassList("chart__column");
+
+            var bars = new VisualElement { pickingMode = PickingMode.Ignore };
+            bars.AddToClassList("chart__bars");
+            var income = new VisualElement { pickingMode = PickingMode.Ignore };
+            income.AddToClassList("chart__bar");
+            income.AddToClassList("chart__bar--income");
+            var expense = new VisualElement { pickingMode = PickingMode.Ignore };
+            expense.AddToClassList("chart__bar");
+            expense.AddToClassList("chart__bar--expense");
+            bars.Add(income);
+            bars.Add(expense);
+            column.Add(bars);
+
+            var day = new Label { pickingMode = PickingMode.Ignore };
+            day.AddToClassList("chart__day");
+            column.Add(day);
+
+            _chart.Add(column);
+            return column;
+        }
+
+        private VisualElement CardAt(int index)
+        {
+            while (_cardPool.Count <= index)
+            {
+                var card = new VisualElement { pickingMode = PickingMode.Ignore };
+                card.AddToClassList("car-card");
+                var label = new Label { pickingMode = PickingMode.Ignore };
+                label.AddToClassList("car-card__text");
+                card.Add(label);
+
+                var track = new VisualElement { pickingMode = PickingMode.Ignore };
+                track.AddToClassList("car-card__track");
+                var fill = new VisualElement { pickingMode = PickingMode.Ignore };
+                fill.AddToClassList("car-card__fill");
+                track.Add(fill);
+                card.Add(track);
+
+                // Cards sit under the HUD cards so panels stay readable.
+                _root.Insert(0, card);
+                _cardPool.Add(card);
+            }
+
+            return _cardPool[index];
         }
 
         private void SetMeter(int index, string label, float value)

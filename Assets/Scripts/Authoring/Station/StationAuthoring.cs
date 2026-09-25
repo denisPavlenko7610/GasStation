@@ -81,6 +81,7 @@ namespace GasStation.Authoring
             AddComponent(entity, new SupplyManagerState());
             AddComponent(entity, new StaffPower());
             AddComponent(entity, new StationStats());
+            AddBuffer<DayHistoryEntry>(entity);
             AddComponent(entity, new Achievements());
             AddComponent(entity, new StaffRoster
             {

@@ -34,6 +34,22 @@ namespace GasStation.Systems
             economy.Money -= economy.DailyFixedCosts + wages;
             economy.DayExpenses += economy.DailyFixedCosts + wages;
 
+            if (SystemAPI.HasSingleton<DayHistoryEntry>())
+            {
+                var history = SystemAPI.GetSingletonBuffer<DayHistoryEntry>();
+                if (history.Length >= DayHistoryEntry.MaxLength)
+                    history.RemoveAt(0);
+                history.Add(new DayHistoryEntry
+                {
+                    Day = time.ValueRO.Day - 1,
+                    Income = economy.DayIncome,
+                    Expenses = economy.DayExpenses,
+                    Served = economy.DayServed,
+                    Lost = economy.DayLost,
+                    Rating = economy.DayRatingCount > 0 ? economy.DayRatingSum / economy.DayRatingCount : 0f
+                });
+            }
+
             SystemAPI.SetSingleton(new DayReport
             {
                 Day = time.ValueRO.Day - 1,
@@ -49,6 +65,8 @@ namespace GasStation.Systems
             economy.DayExpenses = 0f;
             economy.DayServed = 0;
             economy.DayLost = 0;
+            economy.DayRatingSum = 0f;
+            economy.DayRatingCount = 0;
         }
     }
 }

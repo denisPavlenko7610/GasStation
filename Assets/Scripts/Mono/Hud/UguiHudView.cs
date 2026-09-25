@@ -62,6 +62,17 @@ namespace GasStation.Mono.Hud
             // The status text already shows these values as numbers.
         }
 
+        public void SetCards(System.Collections.Generic.IReadOnlyList<GasStation.Bridge.CarCard> cards,
+            System.Collections.Generic.IReadOnlyList<string> texts)
+        {
+            // The fallback HUD lists the pumps as text instead.
+        }
+
+        public void SetChart(System.Collections.Generic.IReadOnlyList<GasStation.Components.DayHistoryEntry> history)
+        {
+            // The fallback HUD shows the finance table as text only.
+        }
+
         public void SetMarker(bool visible, Vector3 worldPosition)
         {
             var camera = Camera.main;

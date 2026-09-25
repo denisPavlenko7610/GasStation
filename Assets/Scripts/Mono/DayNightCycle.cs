@@ -29,7 +29,7 @@ namespace GasStation.Mono
             transform.rotation = Quaternion.Euler(elevation, _yaw, 0f);
 
             float daylight = Mathf.Clamp01(Mathf.Sin(elevation * Mathf.Deg2Rad));
-            _light.intensity = Mathf.Lerp(nightIntensity, maxIntensity, daylight);
+            _light.intensity = Mathf.Lerp(nightIntensity, maxIntensity, daylight) * Scenery.WeatherEffects.SunMultiplier;
         }
     }
 }

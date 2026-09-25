@@ -39,6 +39,7 @@ namespace GasStation.Systems
             float catchRadius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
             float3 playerPosition = PlayerPosition(ref state, out bool hasPlayer);
             bool hasShop = SystemAPI.HasSingleton<Shop>();
+            float cleanliness = SystemAPI.HasSingleton<StationCleanliness>() ? SystemAPI.GetSingleton<StationCleanliness>().Value : 1f;
 
             foreach (var (car, patience, path, transform) in SystemAPI
                          .Query<RefRW<Car>, RefRO<Patience>, DynamicBuffer<PathPoint>, RefRO<LocalTransform>>())
@@ -87,6 +88,7 @@ namespace GasStation.Systems
                 {
                     eco.DayLost++;
                     StationEvent.Push(events, StationEventType.CustomerLeftAngry, car.ValueRO.FuelType);
+                    StationEvent.Push(events, StationEventType.CustomerReview, default, ReviewMath.AngryStars);
                     eco.Reputation = StationMath.ClampReputation(eco.Reputation - StationMath.LostCustomerPenalty);
                 }
                 else if (car.ValueRO.Customer == CustomerType.Thief &&
@@ -105,6 +107,9 @@ namespace GasStation.Systems
                         eco.Reputation + StationMath.ServiceReputationDelta(patienceRatio, fuel.SellPrice, fuel.MarketPrice));
 
                     StationEvent.Push(events, StationEventType.CustomerPaid, car.ValueRO.FuelType, bill);
+                    if (car.ValueRO.Customer != CustomerType.Thief)
+                        StationEvent.Push(events, StationEventType.CustomerReview, default,
+                            ReviewMath.Stars(patienceRatio, fuel.SellPrice, fuel.MarketPrice, cleanliness));
                     if (tip >= 0.5f)
                         StationEvent.Push(events, StationEventType.TipReceived, default, tip);
                     if (car.ValueRO.Customer == CustomerType.Thief)

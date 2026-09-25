@@ -34,6 +34,27 @@ namespace GasStation.Bridge
         public float PatienceRatio;
     }
 
+    /// <summary>A card above a customer's car: what they want and how patient they still are.</summary>
+    public struct CarCard
+    {
+        public UnityEngine.Vector3 Position;
+        public CustomerType Customer;
+        public CarState State;
+        public FuelType Fuel;
+        public float RequestedLiters;
+        public float ReceivedLiters;
+        public float PatienceRatio;
+    }
+
+    public struct Review
+    {
+        public int Stars;
+        /// <summary>Which of the texts for this star count.</summary>
+        public int Variant;
+        public int Day;
+        public float Hour;
+    }
+
     /// <summary>Snapshot of the simulation for the UI, filled by HudBridgeSystem every frame.</summary>
     public static class HudModel
     {
@@ -96,6 +117,13 @@ namespace GasStation.Bridge
         public static bool HasQuestTarget;
         public static UnityEngine.Vector3 QuestTarget;
 
+        public static readonly List<CarCard> Cards = new();
+        public static readonly List<DayHistoryEntry> History = new();
+
+        /// <summary>Newest first; the last MaxReviews reviews.</summary>
+        public static readonly List<Review> Reviews = new();
+        public const int MaxReviews = 8;
+
         public static StationStats Stats;
         public static Achievements Achievements;
 
@@ -122,6 +150,9 @@ namespace GasStation.Bridge
             HasStation = false;
             Pumps.Clear();
             Events.Clear();
+            Cards.Clear();
+            History.Clear();
+            Reviews.Clear();
             AnyFueling = false;
             Upgrades = default;
             LastReport = default;
