@@ -31,8 +31,8 @@ namespace GasStation.Systems
             var progress = SystemAPI.GetComponent<QuestProgress>(station);
             var quest = QuestCatalog.Get(progress.Index);
 
-            // Scenes without renovation points (e.g. set up with the station menu) skip renovation quests.
-            while (quest.Goal == QuestGoal.Renovate && _renovations.IsEmpty)
+            // Scenes without renovation points, a build area, a laptop or hosted events skip those quests.
+            while (!Available(quest.Goal))
             {
                 progress.Index++;
                 progress.Counter = 0f;
@@ -42,7 +42,7 @@ namespace GasStation.Systems
             var events = SystemAPI.GetBuffer<StationEvent>(station);
             for (int i = 0; i < events.Length; i++)
             {
-                if (Counts(quest.Goal, events[i].Type))
+                if (Counts(quest.Goal, events[i]))
                     progress.Counter += 1f;
             }
 
@@ -78,13 +78,27 @@ namespace GasStation.Systems
             HudModel.QuestProgress = current;
         }
 
-        private static bool Counts(QuestGoal goal, StationEventType type) => goal switch
+        private bool Available(QuestGoal goal) => goal switch
         {
+            QuestGoal.Renovate => !_renovations.IsEmpty,
+            QuestGoal.PlaceProps => SystemAPI.HasSingleton<BuildArea>(),
+            QuestGoal.SignContract => SystemAPI.HasSingleton<ContractBoard>() && SystemAPI.HasSingleton<Laptop>(),
+            QuestGoal.MeetRegulars => SystemAPI.HasSingleton<RegularState>(),
+            QuestGoal.HostEvent => SystemAPI.HasSingleton<HostedEvents>() && SystemAPI.HasSingleton<Laptop>(),
+            _ => true
+        };
+
+        private static bool Counts(QuestGoal goal, StationEvent e)
+        {
+            var type = e.Type;
+            return goal switch
+            {
             QuestGoal.CollectTrash => type == StationEventType.TrashCollected,
             QuestGoal.ServeCustomers => type == StationEventType.CustomerPaid,
             QuestGoal.OrderFuel => type == StationEventType.FuelOrdered,
             QuestGoal.BuyUpgrade => type == StationEventType.UpgradeBought,
-            QuestGoal.RepairPump => type == StationEventType.PumpRepaired,
+            // Only the player's own repairs (staff repairs carry Subject 1).
+            QuestGoal.RepairPump => type == StationEventType.PumpRepaired && e.Subject == 0,
             QuestGoal.CatchThief => type == StationEventType.ThiefCaught,
             QuestGoal.SellProducts => type == StationEventType.ShopSale,
             QuestGoal.CleanRestroom => type == StationEventType.RestroomCleaned,
@@ -93,7 +107,15 @@ namespace GasStation.Systems
             QuestGoal.HireWorker => type == StationEventType.WorkerHired,
             QuestGoal.HostGuests => type == StationEventType.MotelPaid,
             QuestGoal.Renovate => type == StationEventType.RenovationDone,
+            QuestGoal.PlaceProps => type == StationEventType.PropPlaced,
+            // Only the first visit of each regular (Value 1).
+            QuestGoal.MeetRegulars => type == StationEventType.RegularArrived && e.Value > 0.5f,
+            QuestGoal.SignContract => type == StationEventType.ContractAccepted,
+            QuestGoal.LearnSkill => type == StationEventType.SkillLearned,
+            QuestGoal.CollectPlates => type == StationEventType.NewPlate,
+            QuestGoal.HostEvent => type == StationEventType.HostedEventEnded,
             _ => false
-        };
+            };
+        }
     }
 }

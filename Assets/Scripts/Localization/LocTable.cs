@@ -357,8 +357,12 @@ namespace GasStation.Localization
                 "Watch the fuel stock (top right) and order a fuel tanker with O — it will drive in and unload. Change prices with +/−.\n\nTab — upgrades, M — shop goods, H — hire staff, C — paint. New buildings are built once you buy their upgrade." } },
             { "tutorial.3.title", new[] { "Задания", "Tasks" } },
             { "tutorial.3.text", new[] {
-                "Вверху экрана — текущее задание, а оранжевая стрелка ▼ показывает, куда идти. Задания ведут от уборки мусора к собственному мотелю.\n\nEsc — пауза и настройки, T — ускорить время, J — достижения. Удачи!",
-                "The current task is at the top of the screen, and the orange arrow ▼ shows where to go. Tasks lead you from picking up litter to running your own motel.\n\nEsc — pause and settings, T — speed up time, J — achievements. Good luck!" } },
+                "Вверху экрана — текущее задание, а оранжевая стрелка ▼ показывает, куда идти. Задания ведут от уборки мусора к собственному мотелю.\n\nEsc — пауза и настройки, T — ускорить время, J — достижения.",
+                "The current task is at the top of the screen, and the orange arrow ▼ shows where to go. Tasks lead you from picking up litter to running your own motel.\n\nEsc — pause and settings, T — speed up time, J — achievements." } },
+            { "tutorial.4.title", new[] { "Ноутбук и стройка", "The laptop and building" } },
+            { "tutorial.4.text", new[] {
+                "На столе у двери магазина стоит ноутбук (E рядом или N откуда угодно). Там почта с контрактами, банк, персонал, поставщики, навыки владельца, мероприятия и коллекция — всё мышью.\n\nB — режим строительства: урны, скамейки, фонари, камеры и другие объекты, у каждого своя польза.\n\nK — постоянные клиенты, F — финансы, F12 — фоторежим. Удачи!",
+                "A laptop stands on the desk by the shop door (E next to it, or N anywhere). It has contract mail, the bank, staff, suppliers, owner skills, events and your collection — all with the mouse.\n\nB — build mode: trash bins, benches, lamps, cameras and more, each one useful.\n\nK — regulars, F — finances, F12 — photo mode. Good luck!" } },
             { "review.5.0", new[] { "Лучшая заправка на трассе!", "Best gas station on the highway!" } },
             { "review.5.1", new[] { "Быстро, чисто, вежливо. Вернусь.", "Fast, clean, friendly. I'll be back." } },
             { "review.5.2", new[] { "Пять звёзд, кофе тоже отличный.", "Five stars, great coffee too." } },
@@ -442,8 +446,8 @@ namespace GasStation.Localization
             { "settings.gameSpeed", new[] { "Скорость игры", "Game speed" } },
             { "settings.autosave", new[] { "Автосохранение в конце дня", "Autosave at the end of each day" } },
             { "controls.text", new[] {
-                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (две страницы)   M — магазин   C — покраска   H — персонал   J — достижения   K — постоянные клиенты   F — финансы, банк, конкурент\nНоутбук у двери магазина (E рядом или N откуда угодно): почта с контрактами, банк, конкурент, клиенты, статистика — всё мышью\nB — режим строительства: WASD — камера, колесо — масштаб, 1–8 — объект, Q / E — поворот, ЛКМ — поставить, ПКМ — убрать\nF12 — фоторежим: камера свободна, пробел — снимок\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
-                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (two pages)   M — shop   C — paint   H — staff   J — achievements   K — regulars   F — finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics — all with the mouse\nB — build mode: WASD — camera, wheel — zoom, 1–8 — object, Q / E — rotate, LMB — place, RMB — remove\nF12 — photo mode: free camera, Space — screenshot\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
+                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (листаются по страницам)   M — магазин   C — покраска   H — персонал   J — достижения   K — постоянные клиенты   F — финансы, банк, конкурент\nНоутбук у двери магазина (E рядом или N откуда угодно): почта с контрактами, банк, конкурент, клиенты, статистика — всё мышью\nB — режим строительства: WASD — камера, колесо — масштаб, 1–8 — объект, Q / E — поворот, ЛКМ — поставить, ПКМ — убрать\nF12 — фоторежим: камера свободна, пробел — снимок\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
+                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (flip through the pages)   M — shop   C — paint   H — staff   J — achievements   K — regulars   F — finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics — all with the mouse\nB — build mode: WASD — camera, wheel — zoom, 1–8 — object, Q / E — rotate, LMB — place, RMB — remove\nF12 — photo mode: free camera, Space — screenshot\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
 
             // Bank, bills and the competitor
             { "msg.loanAlready", new[] { "Сначала погаси текущий кредит", "Repay the current loan first" } },
@@ -978,6 +982,20 @@ namespace GasStation.Localization
             { "menu.victory", new[] { "Наследство спасено!", "The inheritance is saved!" } },
             { "menu.victory.text", new[] { "«{0}» расплатилась с банком на {1}-й день.\nОбслужено клиентов: {2}. Звёзд у станции: {3}.\nДядя бы гордился. Станция твоя — играй дальше сколько захочешь.", "\"{0}\" paid off the bank on day {1}.\nCustomers served: {2}. Station stars: {3}.\nYour uncle would be proud. The station is yours — keep playing as long as you like." } },
             { "menu.victory.continue", new[] { "Играть дальше", "Keep playing" } },
+
+            // Story quests for the newer systems
+            { "quest.title.24", new[] { "Уют своими руками", "A cosy place" } },
+            { "quest.title.25", new[] { "Знакомые лица", "Familiar faces" } },
+            { "quest.title.26", new[] { "Первый контракт", "The first contract" } },
+            { "quest.title.27", new[] { "Учиться никогда не поздно", "Never too late to learn" } },
+            { "quest.title.28", new[] { "Коллекционер", "Collector" } },
+            { "quest.title.29", new[] { "Праздник на трассе", "A party by the road" } },
+            { "quest.goal.PlaceProps", new[] { "Поставь урну или скамейку в режиме стройки (B): {0}/{1:0}", "Place a trash bin or a bench in build mode (B): {0}/{1:0}" } },
+            { "quest.goal.MeetRegulars", new[] { "Познакомься с постоянными клиентами (K — список): {0}/{1:0}", "Meet your regulars (K — the list): {0}/{1:0}" } },
+            { "quest.goal.SignContract", new[] { "Подпиши контракт в почте ноутбука (N или E у стола): {0}/{1:0}", "Sign a contract in the laptop mail (N, or E at the desk): {0}/{1:0}" } },
+            { "quest.goal.LearnSkill", new[] { "Изучи навык владельца на ноутбуке (Навыки): {0}/{1:0}", "Learn an owner skill on the laptop (Skills): {0}/{1:0}" } },
+            { "quest.goal.CollectPlates", new[] { "Собери номера разных штатов: {0}/{1:0}", "Collect plates from different states: {0}/{1:0}" } },
+            { "quest.goal.HostEvent", new[] { "Проведи мероприятие (ноутбук → События): {0}/{1:0}", "Host an event (laptop → Events): {0}/{1:0}" } },
         };
     }
 }

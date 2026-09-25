@@ -35,7 +35,7 @@ namespace GasStation.Mono.Menu
         }
 
         private const string TutorialSeenKey = "GasStation.TutorialSeen";
-        private const int TutorialPages = 4;
+        private const int TutorialPages = 5;
         private int _tutorialPage;
 
         private VisualElement _root;

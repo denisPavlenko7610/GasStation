@@ -43,7 +43,19 @@ namespace GasStation.Logic
         /// <summary>Counter: motel guests who paid.</summary>
         HostGuests,
         /// <summary>Counter: renovations finished.</summary>
-        Renovate
+        Renovate,
+        /// <summary>Counter: objects placed in build mode.</summary>
+        PlaceProps,
+        /// <summary>Counter: regulars met for the first time.</summary>
+        MeetRegulars,
+        /// <summary>Counter: contracts signed on the laptop.</summary>
+        SignContract,
+        /// <summary>Counter: owner skills learned.</summary>
+        LearnSkill,
+        /// <summary>Counter: new license plates collected.</summary>
+        CollectPlates,
+        /// <summary>Counter: events hosted to the end.</summary>
+        HostEvent
     }
 
     public struct QuestDefinition
@@ -59,7 +71,8 @@ namespace GasStation.Logic
             or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief
             or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers
             or QuestGoal.ChangeTires or QuestGoal.HireWorker
-            or QuestGoal.HostGuests or QuestGoal.Renovate;
+            or QuestGoal.HostGuests or QuestGoal.Renovate or QuestGoal.PlaceProps or QuestGoal.MeetRegulars
+            or QuestGoal.SignContract or QuestGoal.LearnSkill or QuestGoal.CollectPlates or QuestGoal.HostEvent;
     }
 
     /// <summary>
@@ -83,17 +96,23 @@ namespace GasStation.Logic
             Quest(4, QuestGoal.BuyUpgrade, 1f, 250f),
             Quest(18, QuestGoal.PaintStation, 1f, 200f, 0.05f),
             Quest(20, QuestGoal.HireWorker, 1f, 200f),
+            Quest(24, QuestGoal.PlaceProps, 2f, 150f),
             Quest(5, QuestGoal.ServeCustomers, 15f, 400f),
+            Quest(25, QuestGoal.MeetRegulars, 2f, 300f, 0.03f),
             Quest(6, QuestGoal.CollectTrash, 40f, 400f),
             Quest(7, QuestGoal.Reputation, 70f, 500f),
             Quest(23, QuestGoal.Renovate, 3f, 400f, 0.05f),
             Quest(8, QuestGoal.DayIncome, 1000f, 800f),
+            Quest(26, QuestGoal.SignContract, 1f, 400f),
             Quest(12, QuestGoal.StationLevel, 4f, 600f),
+            Quest(27, QuestGoal.LearnSkill, 1f, 300f),
             Quest(9, QuestGoal.OpenPumps, 1f, 1000f),
             Quest(15, QuestGoal.OpenCarWash, 1f, 800f),
             Quest(17, QuestGoal.HostTruckers, 3f, 600f),
             Quest(21, QuestGoal.HostGuests, 5f, 1200f, 0.05f),
             Quest(19, QuestGoal.ChangeTires, 3f, 500f),
+            Quest(28, QuestGoal.CollectPlates, 6f, 400f),
+            Quest(29, QuestGoal.HostEvent, 1f, 800f, 0.05f),
             Quest(13, QuestGoal.CatchThief, 1f, 500f, 0.05f),
             Quest(10, QuestGoal.Cleanliness, 100f, 500f, 0.05f),
         };

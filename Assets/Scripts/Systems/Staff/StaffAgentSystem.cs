@@ -359,7 +359,8 @@ namespace GasStation.Systems
                     pump.Condition = math.min(1f, pump.Condition + StaffMath.MechanicRepairRate * rate);
                     if (pump.Condition < 1f)
                         return;
-                    StationEvent.Push(events, StationEventType.PumpRepaired, default, pump.Number);
+                    // Subject 1: repaired by staff, which does not count for the player's repair quests.
+                    StationEvent.Push(events, StationEventType.PumpRepaired, default, pump.Number, 1);
                     Drop(ref agent, path);
                     return;
                 }
