@@ -35,6 +35,16 @@ namespace GasStation.Save
         public int daysWorked;
         public int nameIndex;
 
+        // Version 17: living staff. "living" is false in older saves: fresh energy and a neutral mood.
+        public bool living;
+        public int shift;
+        public int trait;
+        public float energy;
+        public float mood;
+        public int training;
+        public int unhappyDays;
+        public int praisedDay;
+
         public Worker ToWorker() => new()
         {
             Id = id,
@@ -43,7 +53,14 @@ namespace GasStation.Save
             Wage = wage,
             Honesty = Mathf.Clamp01(honesty),
             DaysWorked = daysWorked,
-            NameIndex = nameIndex
+            NameIndex = nameIndex,
+            Shift = (WorkShift)Mathf.Clamp(shift, 0, 1),
+            Trait = (StaffTrait)Mathf.Clamp(trait, 0, StaffTraits.Count - 1),
+            Energy = living ? Mathf.Clamp01(energy) : 1f,
+            Mood = living ? Mathf.Clamp01(mood) : GasStation.Logic.StaffMath.StartMood,
+            Training = Mathf.Max(0, training),
+            UnhappyDays = Mathf.Max(0, unhappyDays),
+            PraisedDay = living ? praisedDay : -1
         };
 
         public static WorkerSaveData From(Worker worker) => new()
@@ -54,7 +71,15 @@ namespace GasStation.Save
             wage = worker.Wage,
             honesty = worker.Honesty,
             daysWorked = worker.DaysWorked,
-            nameIndex = worker.NameIndex
+            nameIndex = worker.NameIndex,
+            living = true,
+            shift = (int)worker.Shift,
+            trait = (int)worker.Trait,
+            energy = worker.Energy,
+            mood = worker.Mood,
+            training = worker.Training,
+            unhappyDays = worker.UnhappyDays,
+            praisedDay = worker.PraisedDay
         };
     }
 
@@ -344,7 +369,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 16;
+        public const int CurrentVersion = 17;
 
         public int version = CurrentVersion;
         public int day;
@@ -508,7 +533,10 @@ namespace GasStation.Save
                     Skill = 1f,
                     Wage = oldSalary,
                     Honesty = 1f,
-                    NameIndex = nextId * 5
+                    NameIndex = nextId * 5,
+                    Energy = 1f,
+                    Mood = GasStation.Logic.StaffMath.StartMood,
+                    PraisedDay = -1
                 });
             }
 

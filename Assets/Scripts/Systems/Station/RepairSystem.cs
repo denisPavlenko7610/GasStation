@@ -8,7 +8,7 @@ namespace GasStation.Systems
 {
     /// <summary>
     /// Each interact press next to a worn pump repairs a quarter of it for a fee; the press that lifts it over
-    /// the threshold finishes the job. Hired mechanics service idle pumps over time.
+    /// the threshold finishes the job. Hired mechanics walk over and service worn pumps (StaffAgentSystem).
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
@@ -56,17 +56,7 @@ namespace GasStation.Systems
                 Repair(ref pump.ValueRW, step, events);
             }
 
-            float mechanics = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Mechanic : 0f;
-            if (mechanics <= 0f)
-                return;
-
-            float amount = StaffMath.MechanicRepairPerSecond(mechanics) * SystemAPI.Time.DeltaTime;
-            foreach (var pump in SystemAPI.Query<RefRW<Pump>>())
-            {
-                // Mechanics service pumps that are not in use.
-                if (pump.ValueRO.Condition < 1f && pump.ValueRO.Occupant == Entity.Null)
-                    Repair(ref pump.ValueRW, amount, events);
-            }
+            // Mechanics walk to worn pumps and service them (StaffAgentSystem).
         }
 
         private static void Repair(ref Pump pump, float amount, DynamicBuffer<StationEvent> events)

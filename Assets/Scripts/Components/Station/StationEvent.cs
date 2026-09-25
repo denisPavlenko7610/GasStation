@@ -96,7 +96,11 @@ namespace GasStation.Components
         /// <summary>Subject = contract id; Value = bonus paid.</summary>
         ContractCompleted,
         /// <summary>Subject = contract id; Value = ContractType.</summary>
-        ContractCancelled
+        ContractCancelled,
+        /// <summary>Subject = name index; Value = StaffRole.</summary>
+        WorkerQuit,
+        /// <summary>Subject = worker id.</summary>
+        WorkerPraised
     }
 
     /// <summary>

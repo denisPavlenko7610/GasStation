@@ -6,7 +6,7 @@ using Unity.Entities;
 
 namespace GasStation.Systems
 {
-    /// <summary>Measures how clean the station is, lets janitors pick up litter and drifts reputation.</summary>
+    /// <summary>Measures how clean the station is and drifts reputation.</summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
     [UpdateAfter(typeof(LitterSystem))]
@@ -29,21 +29,8 @@ namespace GasStation.Systems
         public void OnUpdate(ref SystemState state)
         {
             float deltaTime = SystemAPI.Time.DeltaTime;
+            // Janitors pick litter up themselves now (StaffAgentSystem).
             var cleanliness = SystemAPI.GetSingletonRW<StationCleanliness>();
-            float janitors = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Janitor : 0f;
-
-            if (janitors > 0f && !_trash.IsEmpty)
-            {
-                cleanliness.ValueRW.JanitorTimer += deltaTime;
-                if (cleanliness.ValueRO.JanitorTimer >= StaffMath.JanitorInterval(janitors))
-                {
-                    cleanliness.ValueRW.JanitorTimer = 0f;
-                    using var trash = _trash.ToEntityArray(Allocator.Temp);
-                    // Janitor work counts for cleanliness only, not for the player's cleanup quests.
-                    state.EntityManager.DestroyEntity(trash[0]);
-                    cleanliness = SystemAPI.GetSingletonRW<StationCleanliness>();
-                }
-            }
 
             int count = _trash.CalculateEntityCount();
             int threshold = SystemAPI.GetSingleton<StationSettings>().DirtyThreshold;

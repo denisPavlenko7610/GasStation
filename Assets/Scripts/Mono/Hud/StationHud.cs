@@ -369,6 +369,8 @@ namespace GasStation.Mono
                 _builder.AppendLine(Loc.F("panel.staff.candidate", i + 1, GameTexts.StaffName(candidate.NameIndex),
                     GameTexts.RoleName(candidate.Role), GameTexts.RoleDuty(candidate.Role), candidate.Skill, candidate.Wage,
                     GameTexts.ReferenceText(StaffMath.ReferenceGrade(candidate.Honesty)), StaffMath.HiringFee(candidate.Wage)));
+                if (candidate.Trait != StaffTrait.None)
+                    _builder.AppendLine("    " + GameTexts.TraitName(candidate.Trait));
             }
 
             if (HudModel.Workers.Count == 0)
@@ -383,7 +385,12 @@ namespace GasStation.Mono
                 var worker = HudModel.Workers[slot];
                 _builder.AppendLine(Loc.F("panel.staff.worker", slot + 4, GameTexts.StaffName(worker.NameIndex),
                     GameTexts.RoleName(worker.Role), worker.Skill, worker.Wage, worker.DaysWorked));
+                _builder.AppendLine(Loc.F("panel.staff.state", Loc.T($"shift.{worker.Shift}"),
+                    StaffMath.OnShift(worker.Shift, HudModel.Hour) ? Loc.T("panel.staff.onShift") : Loc.T("panel.staff.offShift"),
+                    worker.Energy * 100f, GameTexts.MoodText(worker.Mood), GameTexts.TraitName(worker.Trait)));
             }
+
+            _builder.Append(Loc.T("panel.staff.laptopHint"));
 
             return _builder.ToString();
         }

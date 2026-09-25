@@ -50,6 +50,18 @@ namespace GasStation.Bridge
         public int ContractId;
     }
 
+    /// <summary>A worker's body on the lot, for StaffPresenter.</summary>
+    public struct StaffBody
+    {
+        public int WorkerId;
+        public StaffRole Role;
+        public UnityEngine.Vector3 Position;
+        public UnityEngine.Quaternion Rotation;
+        public AgentJob Job;
+        /// <summary>Off shift and gone home: not drawn.</summary>
+        public bool Away;
+    }
+
     public struct Review
     {
         public int Stars;
@@ -162,6 +174,8 @@ namespace GasStation.Bridge
         public static UnityEngine.Vector3 PlayerPosition;
         public const float LaptopRadius = 2.5f;
 
+        public static readonly List<StaffBody> StaffBodies = new();
+
         public static int QueueLength;
         public static int CarsOnSite;
         public static InteractionHint Hint;
@@ -190,6 +204,7 @@ namespace GasStation.Bridge
             Finance = default;
             Props.Clear();
             Offers.Clear();
+            StaffBodies.Clear();
             Contracts.Clear();
             HasLaptop = false;
             Regulars.Clear();

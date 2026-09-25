@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 namespace GasStation.Systems
 {
-    /// <summary>The player cleans a dirty restroom with interact next to its door; janitors clean it slowly.</summary>
+    /// <summary>The player cleans a dirty restroom with interact next to its door; janitors come and clean it too.</summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
     [UpdateAfter(typeof(RepairSystem))]
@@ -42,12 +42,7 @@ namespace GasStation.Systems
                 StationEvent.Push(SystemAPI.GetSingletonBuffer<StationEvent>(), StationEventType.RestroomCleaned);
             }
 
-            float janitors = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Janitor : 0f;
-            if (janitors > 0f)
-            {
-                restroom.Dirt = math.max(0f,
-                    restroom.Dirt - FacilityMath.JanitorRestroomCleaningPerSecond * janitors * SystemAPI.Time.DeltaTime);
-            }
+            // Janitors walk over and clean it themselves (StaffAgentSystem).
         }
     }
 }

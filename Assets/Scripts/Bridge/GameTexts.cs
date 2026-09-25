@@ -20,6 +20,13 @@ namespace GasStation.Bridge
 
         public static string ContractName(ContractType type) => Loc.T($"contract.{type}.name");
 
+        public static string TraitName(StaffTrait trait) => Loc.T($"trait.{trait}");
+
+        public static string TraitDescription(StaffTrait trait) => Loc.T($"trait.{trait}.desc");
+
+        /// <summary>Mood in words: miserable, unhappy, okay, happy.</summary>
+        public static string MoodText(float mood) => Loc.T(mood < 0.2f ? "mood.0" : mood < 0.45f ? "mood.1" : mood < 0.7f ? "mood.2" : "mood.3");
+
         public static string PropName(PropType type) => Loc.T($"prop.name.{type}");
 
         public static string PropDescription(PropType type) => Loc.T($"prop.desc.{type}");

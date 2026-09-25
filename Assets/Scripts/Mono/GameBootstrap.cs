@@ -29,6 +29,7 @@ namespace GasStation.Mono
                 root.AddComponent<Audio.RadioPlayer>();
                 root.AddComponent<Build.BuildModeController>();
                 root.AddComponent<Build.PropPresenter>();
+                root.AddComponent<Build.StaffPresenter>();
                 root.AddComponent<Office.LaptopController>();
                 Object.DontDestroyOnLoad(root);
             }

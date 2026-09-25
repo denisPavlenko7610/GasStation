@@ -95,6 +95,12 @@ namespace GasStation.Systems
                     case StationCommandType.RemoveProp:
                         RemoveProp(station, command.Position);
                         break;
+                    case StationCommandType.PraiseWorker:
+                    case StationCommandType.TrainWorker:
+                    case StationCommandType.RaiseWage:
+                    case StationCommandType.ToggleShift:
+                        ManageWorker(station, command.Type, (int)command.Value);
+                        break;
                     case StationCommandType.AcceptContract:
                         AcceptContract(station, (int)command.Value);
                         break;
@@ -105,6 +111,70 @@ namespace GasStation.Systems
                         CancelContract(station, (int)command.Value);
                         break;
                 }
+            }
+        }
+
+        private void ManageWorker(Entity station, StationCommandType action, int workerId)
+        {
+            int today = SystemAPI.HasComponent<GameTime>(station) ? SystemAPI.GetComponent<GameTime>(station).Day : 0;
+            foreach (var worker in SystemAPI.Query<RefRW<Worker>>())
+            {
+                if (worker.ValueRO.Id != workerId)
+                    continue;
+
+                ref var w = ref worker.ValueRW;
+                string name = GameTexts.StaffName(w.NameIndex);
+                switch (action)
+                {
+                    case StationCommandType.PraiseWorker:
+                        if (w.PraisedDay == today)
+                        {
+                            HudModel.Notify(Loc.F("msg.alreadyPraised", name));
+                            return;
+                        }
+
+                        w.PraisedDay = today;
+                        w.Mood = math.saturate(w.Mood + StaffMath.PraiseMood);
+                        HudModel.Notify(Loc.F("msg.praised", name));
+                        break;
+
+                    case StationCommandType.TrainWorker:
+                    {
+                        if (!StaffMath.CanTrain(w))
+                        {
+                            HudModel.Notify(Loc.F("msg.trainingMax", name));
+                            return;
+                        }
+
+                        float cost = StaffMath.TrainingCost(w.Training);
+                        var economy = SystemAPI.GetComponentRW<Economy>(station);
+                        if (economy.ValueRO.Money < cost)
+                        {
+                            HudModel.Notify(Loc.F("msg.noMoney", cost));
+                            return;
+                        }
+
+                        economy.ValueRW.Money -= cost;
+                        economy.ValueRW.DayExpenses += cost;
+                        w.Training++;
+                        w.Skill = math.min(StaffMath.MaxSkill, w.Skill + StaffMath.TrainingSkill);
+                        HudModel.Notify(Loc.F("msg.trained", name, w.Skill * 100f));
+                        break;
+                    }
+
+                    case StationCommandType.RaiseWage:
+                        w.Wage = StaffMath.Raise(w.Wage);
+                        w.Mood = math.saturate(w.Mood + StaffMath.PraiseMood);
+                        HudModel.Notify(Loc.F("msg.raised", name, w.Wage));
+                        break;
+
+                    case StationCommandType.ToggleShift:
+                        w.Shift = w.Shift == WorkShift.Day ? WorkShift.Night : WorkShift.Day;
+                        HudModel.Notify(Loc.F("msg.shiftChanged", name, Loc.T($"shift.{w.Shift}")));
+                        break;
+                }
+
+                return;
             }
         }
 
@@ -511,6 +581,18 @@ namespace GasStation.Systems
             SystemAPI.SetComponent(station, roster);
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.WorkerHired, default, id);
 
+            // New people fill the emptier shift of their role, so nights are covered too.
+            int dayShift = 0, nightShift = 0;
+            foreach (var other in SystemAPI.Query<RefRO<Worker>>())
+            {
+                if (other.ValueRO.Role != candidate.Role)
+                    continue;
+                if (other.ValueRO.Shift == WorkShift.Day)
+                    dayShift++;
+                else
+                    nightShift++;
+            }
+
             var worker = EntityManager.CreateEntity();
             EntityManager.AddComponentData(worker, new Worker
             {
@@ -519,7 +601,12 @@ namespace GasStation.Systems
                 Skill = candidate.Skill,
                 Wage = candidate.Wage,
                 Honesty = candidate.Honesty,
-                NameIndex = candidate.NameIndex
+                NameIndex = candidate.NameIndex,
+                Trait = candidate.Trait,
+                Shift = dayShift > nightShift ? WorkShift.Night : WorkShift.Day,
+                Energy = 1f,
+                Mood = StaffMath.StartMood,
+                PraisedDay = -1
             });
 
             HudModel.Notify(Loc.F("msg.hired", GameTexts.RoleName(candidate.Role), GameTexts.StaffName(candidate.NameIndex)));

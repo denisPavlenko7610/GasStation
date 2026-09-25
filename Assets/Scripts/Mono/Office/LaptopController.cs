@@ -20,6 +20,7 @@ namespace GasStation.Mono.Office
         private enum App
         {
             Mail,
+            Staff,
             Bank,
             Competitor,
             Regulars,
@@ -33,6 +34,7 @@ namespace GasStation.Mono.Office
         private int _cancelArmedId = -1;
         private float _cancelArmedAt = float.NegativeInfinity;
         private bool _buyoutArmed;
+        private int _fireArmedId = -1;
 
         private void Start()
         {
@@ -147,6 +149,7 @@ namespace GasStation.Mono.Office
             switch (_app)
             {
                 case App.Mail: BuildMail(content); break;
+                case App.Staff: BuildStaff(content); break;
                 case App.Bank: BuildBank(content); break;
                 case App.Competitor: BuildCompetitor(content); break;
                 case App.Regulars: BuildRegulars(content); break;
@@ -212,6 +215,62 @@ namespace GasStation.Mono.Office
                         _cancelArmedAt = Time.unscaledTime;
                     }
                 });
+            }
+        }
+
+        private void BuildStaff(VisualElement content)
+        {
+            content.Add(Label(Loc.F("laptop.staff.heading", HudModel.Workers.Count, StaffMath.MaxStaff), "laptop-heading"));
+            if (HudModel.Workers.Count == 0)
+                content.Add(Label(Loc.T("panel.staff.none"), "laptop-muted"));
+
+            foreach (var worker in HudModel.Workers)
+            {
+                var card = Card(Loc.F("laptop.staff.title", GameTexts.StaffName(worker.NameIndex), GameTexts.RoleName(worker.Role)));
+                card.Add(Label(Loc.F("laptop.staff.line", worker.Skill, worker.Wage, worker.DaysWorked, Loc.T($"shift.{worker.Shift}"),
+                    worker.Energy * 100f, GameTexts.MoodText(worker.Mood)), "laptop-line"));
+                if (worker.Trait != StaffTrait.None)
+                    card.Add(Label($"{GameTexts.TraitName(worker.Trait)}: {GameTexts.TraitDescription(worker.Trait)}", "laptop-muted"));
+
+                var actions = Actions(card);
+                int id = worker.Id;
+                var praise = Action(actions, Loc.T("laptop.staff.praise"), () => StationCommands.PraiseWorker(id));
+                praise.SetEnabled(worker.PraisedDay != HudModel.Day);
+                var train = Action(actions, Loc.F("laptop.staff.train", StaffMath.TrainingCost(worker.Training)), () => StationCommands.TrainWorker(id));
+                train.SetEnabled(StaffMath.CanTrain(worker) && HudModel.Economy.Money >= StaffMath.TrainingCost(worker.Training));
+                Action(actions, Loc.F("laptop.staff.raise", StaffMath.Raise(worker.Wage)), () => StationCommands.RaiseWage(id));
+                Action(actions, Loc.T("laptop.staff.shift"), () => StationCommands.ToggleShift(id));
+                bool armed = _fireArmedId == id;
+                Action(actions, armed ? Loc.T("laptop.staff.confirmFire") : Loc.T("laptop.staff.fire"), () =>
+                {
+                    if (armed)
+                    {
+                        StationCommands.FireWorker(id);
+                        _fireArmedId = -1;
+                    }
+                    else
+                    {
+                        _fireArmedId = id;
+                    }
+                });
+            }
+
+            content.Add(Label(Loc.T("panel.staff.candidates"), "laptop-heading"));
+            bool full = HudModel.Workers.Count >= StaffMath.MaxStaff;
+            for (int i = 0; i < HudModel.Candidates.Count; i++)
+            {
+                var candidate = HudModel.Candidates[i];
+                var card = Card(Loc.F("laptop.staff.title", GameTexts.StaffName(candidate.NameIndex), GameTexts.RoleName(candidate.Role)));
+                card.Add(Label(Loc.F("laptop.staff.candidate", candidate.Skill, candidate.Wage,
+                    GameTexts.ReferenceText(StaffMath.ReferenceGrade(candidate.Honesty))), "laptop-line"));
+                card.Add(Label(GameTexts.RoleDuty(candidate.Role), "laptop-muted"));
+                if (candidate.Trait != StaffTrait.None)
+                    card.Add(Label($"{GameTexts.TraitName(candidate.Trait)}: {GameTexts.TraitDescription(candidate.Trait)}", "laptop-muted"));
+
+                int index = i;
+                float fee = StaffMath.HiringFee(candidate.Wage);
+                var hire = Action(Actions(card), Loc.F("laptop.staff.hire", fee), () => StationCommands.HireCandidate(index));
+                hire.SetEnabled(!full && HudModel.Economy.Money >= fee);
             }
         }
 

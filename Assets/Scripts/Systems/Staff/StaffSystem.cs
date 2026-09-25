@@ -1,13 +1,17 @@
 using GasStation.Components;
 using GasStation.Logic;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace GasStation.Systems
 {
     /// <summary>
-    /// Sums the skill of hired staff per role every frame. Every morning workers gain experience,
-    /// dishonest ones may steal from the till, and a new set of applicants arrives.
+    /// Sums the working power of hired staff per role every frame: only people on shift count, scaled by
+    /// skill, energy, mood and trait. Energy drains on shift and recovers off it. Every morning workers gain
+    /// experience, their mood follows pay and tiredness, unhappy ones quit, dishonest ones may steal from the
+    /// till, and a new set of applicants arrives.
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
@@ -22,6 +26,7 @@ namespace GasStation.Systems
             state.RequireForUpdate<StaffPower>();
             state.RequireForUpdate<Economy>();
             state.RequireForUpdate<StationEvent>();
+            state.RequireForUpdate<GameTime>();
         }
 
         [BurstCompile]
@@ -36,13 +41,42 @@ namespace GasStation.Systems
             for (int i = 0; i < events.Length; i++)
                 newDay |= events[i].Type == StationEventType.DayEnded;
 
+            var time = SystemAPI.GetSingleton<GameTime>();
+            float deltaHours = SystemAPI.Time.DeltaTime * time.MinutesPerSecond / 60f;
+            foreach (var worker in SystemAPI.Query<RefRW<Worker>>())
+            {
+                ref var w = ref worker.ValueRW;
+                if (StaffMath.OnShift(w.Shift, time.Hour))
+                {
+                    w.Energy = math.max(0f, w.Energy - StaffMath.EnergyDrain(w.Trait) * deltaHours);
+                    if (w.Energy <= 0f)
+                        w.Exhausted = true;
+                }
+                else
+                {
+                    w.Energy = math.min(1f, w.Energy + StaffMath.EnergyRecoverPerHour * deltaHours);
+                }
+            }
+
             if (newDay)
             {
                 ref var economy = ref SystemAPI.GetSingletonRW<Economy>().ValueRW;
-                foreach (var worker in SystemAPI.Query<RefRW<Worker>>())
+                var ecb = new EntityCommandBuffer(Allocator.Temp);
+                foreach (var (worker, entity) in SystemAPI.Query<RefRW<Worker>>().WithEntityAccess())
                 {
                     worker.ValueRW.DaysWorked++;
                     worker.ValueRW.Skill = StaffMath.GrowSkill(worker.ValueRO.Skill);
+
+                    ref var w = ref worker.ValueRW;
+                    w.Mood = StaffMath.NextMood(w.Mood, w.Wage, StaffMath.Wage(w.Role, w.Skill), w.Exhausted);
+                    w.Exhausted = false;
+                    w.UnhappyDays = w.Mood < StaffMath.UnhappyMood ? w.UnhappyDays + 1 : 0;
+                    if (w.UnhappyDays >= StaffMath.UnhappyDaysToQuit)
+                    {
+                        StationEvent.Push(events, StationEventType.WorkerQuit, default, (float)w.Role, w.NameIndex);
+                        ecb.DestroyEntity(entity);
+                        continue;
+                    }
 
                     if (!StaffMath.Steals(worker.ValueRO.Honesty, roster.Random.NextFloat()))
                         continue;
@@ -53,6 +87,12 @@ namespace GasStation.Systems
                     StationEvent.Push(events, StationEventType.WorkerStole, default, stolen);
                 }
 
+                ecb.Playback(state.EntityManager);
+                ecb.Dispose();
+                // Structural changes above: fetch the station data again.
+                roster = ref SystemAPI.GetComponentRW<StaffRoster>(stationEntity).ValueRW;
+                candidates = SystemAPI.GetBuffer<StaffCandidate>(stationEntity);
+                events = SystemAPI.GetSingletonBuffer<StationEvent>();
                 candidates.Clear();
             }
 
@@ -62,7 +102,7 @@ namespace GasStation.Systems
             var power = new StaffPower();
             foreach (var worker in SystemAPI.Query<RefRO<Worker>>())
             {
-                float skill = worker.ValueRO.Skill;
+                float skill = StaffMath.Efficiency(worker.ValueRO, time.Hour);
                 switch (worker.ValueRO.Role)
                 {
                     case StaffRole.Attendant: power.Attendant += skill; break;

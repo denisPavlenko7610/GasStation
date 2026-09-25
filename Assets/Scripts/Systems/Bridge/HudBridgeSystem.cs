@@ -61,6 +61,20 @@ namespace GasStation.Systems
                     HudModel.Contracts.Add(contract);
             }
 
+            HudModel.StaffBodies.Clear();
+            foreach (var (agent, transform, path) in SystemAPI.Query<RefRO<StaffAgent>, RefRO<LocalTransform>, DynamicBuffer<PathPoint>>())
+            {
+                HudModel.StaffBodies.Add(new StaffBody
+                {
+                    WorkerId = agent.ValueRO.WorkerId,
+                    Role = agent.ValueRO.Role,
+                    Position = transform.ValueRO.Position,
+                    Rotation = transform.ValueRO.Rotation,
+                    Job = agent.ValueRO.Job,
+                    Away = agent.ValueRO.Task == AgentTask.OffDuty && path.IsEmpty
+                });
+            }
+
             DrainEvents();
             CopyProps();
             CopyShop();
@@ -258,6 +272,10 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.ContractCancelled:
                         HudModel.Notify(Loc.F("msg.contractCancelled", GameTexts.ContractName((ContractType)(int)stationEvent.Value)));
+                        break;
+                    case StationEventType.WorkerQuit:
+                        HudModel.Notify(Loc.F("msg.workerQuit", GameTexts.RoleName((StaffRole)(int)stationEvent.Value),
+                            GameTexts.StaffName(stationEvent.Subject)));
                         break;
                     case StationEventType.PropPlaced:
                         HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
