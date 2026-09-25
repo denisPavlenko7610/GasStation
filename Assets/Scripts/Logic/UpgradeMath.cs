@@ -22,7 +22,7 @@ namespace GasStation.Logic
         {
             UpgradeType.PumpSpeed, UpgradeType.TankCapacity, UpgradeType.Comfort, UpgradeType.Advertising,
             UpgradeType.ExtraPump, UpgradeType.SupplyManager, UpgradeType.CarWash, UpgradeType.TruckParking,
-            UpgradeType.TireService, UpgradeType.Motel
+            UpgradeType.TireService, UpgradeType.Motel, UpgradeType.Decor
         };
 
         public static StaffRole LegacyRole(UpgradeType type) => type switch
@@ -47,6 +47,7 @@ namespace GasStation.Logic
             UpgradeType.TruckParking => 900f,
             UpgradeType.TireService => 800f,
             UpgradeType.Motel => 2000f,
+            UpgradeType.Decor => 400f,
             _ => 1000f
         };
 
@@ -61,5 +62,8 @@ namespace GasStation.Logic
         public static float PatienceMultiplier(int level) => 1f + 0.2f * level;
 
         public static float TrafficMultiplier(int level) => 1f + 0.25f * level;
+
+        /// <summary>Flags, flowers and benches make the station more inviting: +3% traffic per level.</summary>
+        public static float DecorMultiplier(int level) => 1f + 0.03f * level;
     }
 }

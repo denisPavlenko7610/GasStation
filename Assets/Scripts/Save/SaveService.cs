@@ -55,6 +55,7 @@ namespace GasStation.Save
                 data.achievements = (long)entityManager.GetComponentData<Achievements>(station).Unlocked;
 
             CaptureShop(entityManager, data);
+            data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
             if (entityManager.HasBuffer<DayHistoryEntry>(station))
             {
@@ -198,6 +199,8 @@ namespace GasStation.Save
                     }
                 }
             }
+
+            GasStation.Bridge.StationProfile.SetName(data.stationName);
 
             if (data.renovationsDone != null)
             {

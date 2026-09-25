@@ -141,8 +141,8 @@ namespace GasStation.Localization
 
             // HUD: status
             { "hud.help", new[] {
-                "WASD — ходить   E / ЛКМ — действие   1/2/3 — топливо   +/- — цена   O — заказать 500 л\nTab — улучшения   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы\nT — скорость   L — язык   F1 — подсказки   F5 — сохранить   F9 — загрузить   Esc — меню",
-                "WASD — walk   E / LMB — action   1/2/3 — fuel   +/- — price   O — order 500 L\nTab — upgrades   M — shop   C — paint   H — staff   J — achievements   F — finances\nT — speed   L — language   F1 — hints   F5 — save   F9 — load   Esc — menu" } },
+                "WASD — ходить   E / ЛКМ — действие   1/2/3 — топливо   +/- — цена   O — заказать 500 л\nTab — улучшения   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы\nT — скорость   R — радио   L — язык   F1 — подсказки   F5 — сохранить   F9 — загрузить   Esc — меню",
+                "WASD — walk   E / LMB — action   1/2/3 — fuel   +/- — price   O — order 500 L\nTab — upgrades   M — shop   C — paint   H — staff   J — achievements   F — finances\nT — speed   R — radio   L — language   F1 — hints   F5 — save   F9 — load   Esc — menu" } },
             { "hud.day", new[] { "День {0}   {1:00}:{2:00}", "Day {0}   {1:00}:{2:00}" } },
             { "hud.money", new[] { "Деньги: ${0:0}", "Money: ${0:0}" } },
             { "hud.reputation", new[] { "Репутация: {0:0}%", "Reputation: {0:0}%" } },
@@ -381,6 +381,19 @@ namespace GasStation.Localization
             { "panel.finance.reviews", new[] { "Последние отзывы:", "Latest reviews:" } },
             { "panel.finance.chart", new[] { "Доход (зелёный) и расходы (красный) по дням:", "Income (green) and expenses (red) per day:" } },
             { "panel.finance.noHistory", new[] { "График появится после первого дня.", "The chart appears after the first day." } },
+            { "upgrade.name.Decor", new[] { "Декор", "Decorations" } },
+            { "upgrade.desc.Decor", new[] { "флаги, цветы, скамейки и гирлянды: +3% клиентов за уровень", "flags, flowers, benches and string lights: +3% customers per level" } },
+            { "station.defaultName", new[] { "Оазис", "Oasis" } },
+            { "menu.stationName", new[] { "Название станции", "Station name" } },
+            { "menu.stationName.hint", new[] { "Название появится на вывеске у дороги. Оставь поле пустым, чтобы вернуть стандартное.", "The name appears on the roadside sign. Leave it empty to use the default." } },
+            { "menu.saveName", new[] { "Сохранить", "Save" } },
+            { "settings.musicVolume", new[] { "Музыка (радио)", "Music (radio)" } },
+            { "settings.radio", new[] { "Радиостанция", "Radio station" } },
+            { "radio.Off", new[] { "выключено", "off" } },
+            { "radio.Country", new[] { "Route 66 FM — кантри", "Route 66 FM — country" } },
+            { "radio.Synthwave", new[] { "Neon Drive — синтвейв", "Neon Drive — synthwave" } },
+            { "radio.LoFi", new[] { "Desert Chill — лоу-фай", "Desert Chill — lo-fi" } },
+            { "msg.radio", new[] { "Радио: {0}", "Radio: {0}" } },
             { "hud.speed", new[] { "   ×{0}", "   ×{0}" } },
             { "menu.title", new[] { "GAS STATION", "GAS STATION" } },
             { "menu.subtitle", new[] { "Симулятор заправки у трассы", "Roadside gas station simulator" } },
@@ -424,8 +437,8 @@ namespace GasStation.Localization
             { "settings.gameSpeed", new[] { "Скорость игры", "Game speed" } },
             { "settings.autosave", new[] { "Автосохранение в конце дня", "Autosave at the end of each day" } },
             { "controls.text", new[] {
-                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (две страницы)   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы\n\nT — скорость игры ×1 / ×2 / ×3   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
-                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (two pages)   M — shop   C — paint   H — staff   J — achievements   F — finances\n\nT — game speed ×1 / ×2 / ×3   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
+                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (две страницы)   M — магазин   C — покраска   H — персонал   J — достижения   F — финансы\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
+                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (two pages)   M — shop   C — paint   H — staff   J — achievements   F — finances\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
         };
     }
 }

@@ -139,3 +139,9 @@
     width: 54%;
     margin: 0;
 }
+
+.name-field {
+    margin-top: 14px;
+    height: 44px;
+    font-size: 22px;
+}

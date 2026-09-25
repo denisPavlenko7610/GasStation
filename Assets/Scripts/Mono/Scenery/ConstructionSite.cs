@@ -19,6 +19,8 @@ namespace GasStation.Mono.Scenery
         public GameObject site;
         [Tooltip("Seconds of game time the construction takes")]
         public float buildSeconds = 6f;
+        [Tooltip("Show scaffolding while building (off for small things like decorations)")]
+        public bool scaffolding = true;
 
         private static Material _scaffoldMaterial;
 
@@ -73,7 +75,8 @@ namespace GasStation.Mono.Scenery
 
             building.SetActive(true);
             building.transform.localScale = _buildingScale;
-            CreateScaffolding(GetBounds(building));
+            if (scaffolding)
+                CreateScaffolding(GetBounds(building));
             // The building object is a ground-level wrapper, so scaling it grows the building upwards.
             building.transform.localScale = new Vector3(_buildingScale.x, _buildingScale.y * 0.05f, _buildingScale.z);
         }

@@ -79,6 +79,7 @@ namespace GasStation.Logic
                 UpgradeType.TruckParking => 3,
                 UpgradeType.TireService => 2,
                 UpgradeType.Motel => 4,
+                UpgradeType.Decor => 2,
                 _ => 1
             };
 

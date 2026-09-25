@@ -500,6 +500,7 @@ namespace GasStation.Mono
             int minutes = (int)((HudModel.Hour - hours) * 60f);
 
             _builder.Clear();
+            _builder.AppendLine(StationProfile.DisplayName);
             _builder.AppendLine(Loc.F("hud.day", HudModel.Day, hours, minutes) + Loc.F("hud.speed", GameSettings.GameSpeed));
             _builder.AppendLine(Loc.F("hud.money", economy.Money));
             _builder.AppendLine(Loc.F("hud.reputation", economy.Reputation * 100f));

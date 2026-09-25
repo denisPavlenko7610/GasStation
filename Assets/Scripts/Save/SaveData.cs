@@ -158,7 +158,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 11;
+        public const int CurrentVersion = 12;
 
         public int version = CurrentVersion;
         public int day;
@@ -213,6 +213,9 @@ namespace GasStation.Save
         public DayHistorySaveData[] history;
         public float dayRatingSum;
         public int dayRatingCount;
+
+        // Version 12. Empty = the default name.
+        public string stationName;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

@@ -20,6 +20,9 @@ namespace GasStation.Bridge
         public static float RenderScale { get; set; } = 1f;
         public static float MasterVolume { get; set; } = 0.8f;
         public static float EffectsVolume { get; set; } = 1f;
+        public static float MusicVolume { get; set; } = 0.5f;
+        /// <summary>0 = off, then radio stations in order.</summary>
+        public static int RadioStation { get; set; } = 1;
         public static float UiScale { get; set; } = 1f;
         public static bool ShowControls { get; set; } = true;
         public static bool Autosave { get; set; } = true;
@@ -39,6 +42,8 @@ namespace GasStation.Bridge
             RenderScale = PlayerPrefs.GetFloat(Prefix + "RenderScale", 1f);
             MasterVolume = PlayerPrefs.GetFloat(Prefix + "MasterVolume", 0.8f);
             EffectsVolume = PlayerPrefs.GetFloat(Prefix + "EffectsVolume", 1f);
+            MusicVolume = PlayerPrefs.GetFloat(Prefix + "MusicVolume", 0.5f);
+            RadioStation = PlayerPrefs.GetInt(Prefix + "RadioStation", 1);
             UiScale = PlayerPrefs.GetFloat(Prefix + "UiScale", 1f);
             ShowControls = PlayerPrefs.GetInt(Prefix + "ShowControls", 1) == 1;
             Autosave = PlayerPrefs.GetInt(Prefix + "Autosave", 1) == 1;
@@ -56,6 +61,8 @@ namespace GasStation.Bridge
             PlayerPrefs.SetFloat(Prefix + "RenderScale", RenderScale);
             PlayerPrefs.SetFloat(Prefix + "MasterVolume", MasterVolume);
             PlayerPrefs.SetFloat(Prefix + "EffectsVolume", EffectsVolume);
+            PlayerPrefs.SetFloat(Prefix + "MusicVolume", MusicVolume);
+            PlayerPrefs.SetInt(Prefix + "RadioStation", RadioStation);
             PlayerPrefs.SetFloat(Prefix + "UiScale", UiScale);
             PlayerPrefs.SetInt(Prefix + "ShowControls", ShowControls ? 1 : 0);
             PlayerPrefs.SetInt(Prefix + "Autosave", Autosave ? 1 : 0);

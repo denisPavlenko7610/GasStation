@@ -54,6 +54,7 @@ namespace GasStation.Systems
                               * StationMath.ReputationFactor(reputation)
                               * attractiveness
                               * UpgradeMath.TrafficMultiplier(upgrades.Advertising)
+                              * UpgradeMath.DecorMultiplier(upgrades.Decor)
                               * CleanlinessFactor(ref state)
                               * ProgressMath.LevelTrafficFactor(stationLevel)
                               * EventFactor(worldEvent)

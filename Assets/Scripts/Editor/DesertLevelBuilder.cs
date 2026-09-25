@@ -129,6 +129,7 @@ namespace GasStation.Editor
 
             BuildRenovations(scene, parent, shop, accent);
             BuildConstructionSites(scene, parent, primary, accent);
+            BuildDecor(scene, parent, shop);
             ScatterNature(scene, parent);
 
             var painter = root.AddComponent<StationPainter>();
@@ -205,8 +206,114 @@ namespace GasStation.Editor
                 oldSign.transform.rotation = Quaternion.Euler(0f, 180f, 9f);
             var sign = Place("Gas_Station_Sign", scene, signFixed.transform, new Vector3(-26f, 0f, -15f), 180f);
             accent.Add(sign);
+            if (sign != null)
+            {
+                // The station name appears on the sign once it is renovated.
+                var signBounds = StationEditorUtility.GetBounds(sign);
+                var nameAnchor = Create("NameAnchor", signFixed.transform, Vector3.zero);
+                nameAnchor.transform.position = new Vector3(signBounds.center.x, signBounds.max.y + 0.7f, signBounds.center.z);
+                nameAnchor.AddComponent<StationNameSign>().characterSize = 0.16f;
+            }
             AddNightLight(sign, new Vector3(-26f, 2f, -12.5f), 9f, 2.5f, new Color(1f, 0.9f, 0.7f),
                 renovationId: (int)RenovationKind.Sign, neon: true);
+        }
+
+        /// <summary>Decorations bought with the Decor upgrade, three levels, each a small group of objects.</summary>
+        private static void BuildDecor(Scene scene, Transform parent, GameObject shop)
+        {
+            // Name plate over the shop door, always visible.
+            if (shop != null)
+            {
+                var bounds = StationEditorUtility.GetBounds(shop);
+                var plate = Create("ShopNamePlate", parent, Vector3.zero);
+                plate.transform.position = new Vector3(bounds.center.x, bounds.max.y - 0.5f, bounds.min.z - 0.15f);
+                plate.AddComponent<StationNameSign>().characterSize = 0.09f;
+            }
+
+            // Level 1: flags along the driveway and cacti in pots by the shop.
+            var level1 = DecorLevel(scene, parent, 1);
+            for (int i = 0; i < 4; i++)
+                Place("Mini_Flags", scene, level1.transform, new Vector3(-30f + i * 20f, 0f, -14f), 0f);
+            var pot = GetOrCreateMaterial("ClayPot", new Color(0.72f, 0.38f, 0.22f));
+            foreach (float x in new[] { -6f, 6f })
+            {
+                Primitive(scene, level1.transform, "Pot", pot, new Vector3(x, 0.3f, 16.5f), new Vector3(0.9f, 0.6f, 0.9f));
+                // Standing in the pot, not on the ground.
+                StationEditorUtility.Place(StationEditorUtility.FindPrefab("Cactus_2"), scene, level1.transform,
+                    new Vector3(x, 0.6f, 16.5f), 0f, 0.6f);
+            }
+
+            // Level 2: benches and flower beds.
+            var level2 = DecorLevel(scene, parent, 2);
+            var wood = GetOrCreateMaterial("BenchWood", new Color(0.55f, 0.36f, 0.2f));
+            var soil = GetOrCreateMaterial("FlowerBed", new Color(0.25f, 0.45f, 0.18f));
+            var petals = new[]
+            {
+                GetOrCreateMaterial("FlowerRed", new Color(0.9f, 0.2f, 0.25f)),
+                GetOrCreateMaterial("FlowerYellow", new Color(0.95f, 0.85f, 0.2f)),
+                GetOrCreateMaterial("FlowerPurple", new Color(0.6f, 0.3f, 0.85f))
+            };
+            foreach (float x in new[] { -14f, 14f })
+            {
+                Primitive(scene, level2.transform, "BenchSeat", wood, new Vector3(x, 0.45f, 16f), new Vector3(2.2f, 0.12f, 0.6f));
+                Primitive(scene, level2.transform, "BenchBack", wood, new Vector3(x, 0.8f, 16.3f), new Vector3(2.2f, 0.6f, 0.1f));
+                Primitive(scene, level2.transform, "BenchLegL", wood, new Vector3(x - 0.9f, 0.2f, 16f), new Vector3(0.1f, 0.4f, 0.5f));
+                Primitive(scene, level2.transform, "BenchLegR", wood, new Vector3(x + 0.9f, 0.2f, 16f), new Vector3(0.1f, 0.4f, 0.5f));
+            }
+
+            foreach (float x in new[] { -20f, 20f })
+            {
+                Primitive(scene, level2.transform, "Bed", soil, new Vector3(x, 0.1f, -12f), new Vector3(4f, 0.2f, 1.2f));
+                for (int i = 0; i < 8; i++)
+                {
+                    var flower = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    flower.name = "Flower";
+                    SceneManager.MoveGameObjectToScene(flower, scene);
+                    flower.transform.SetParent(level2.transform, true);
+                    flower.transform.position = new Vector3(x - 1.7f + i * 0.5f, 0.35f, -12f + (i % 2 == 0 ? -0.25f : 0.25f));
+                    flower.transform.localScale = Vector3.one * 0.3f;
+                    Object.DestroyImmediate(flower.GetComponent<Collider>());
+                    flower.GetComponent<Renderer>().sharedMaterial = petals[i % petals.Length];
+                }
+            }
+
+            // Level 3: string lights along the front edge of the canopy.
+            var level3 = DecorLevel(scene, parent, 3);
+            var bulbs = new[]
+            {
+                GetOrCreateMaterial("BulbWarm", new Color(1f, 0.85f, 0.4f)),
+                GetOrCreateMaterial("BulbRed", new Color(1f, 0.3f, 0.3f)),
+                GetOrCreateMaterial("BulbBlue", new Color(0.3f, 0.6f, 1f))
+            };
+            for (int i = 0; i < 24; i++)
+            {
+                float x = -12f + i;
+                float sag = Mathf.Sin(i / 23f * Mathf.PI) * 0.4f;
+                var bulb = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                bulb.name = "Bulb";
+                SceneManager.MoveGameObjectToScene(bulb, scene);
+                bulb.transform.SetParent(level3.transform, true);
+                bulb.transform.position = new Vector3(x, 4.2f - sag, -8f);
+                bulb.transform.localScale = Vector3.one * 0.18f;
+                Object.DestroyImmediate(bulb.GetComponent<Collider>());
+                bulb.GetComponent<Renderer>().sharedMaterial = bulbs[i % bulbs.Length];
+            }
+
+            foreach (float x in new[] { -6f, 6f })
+                AddNightLight(level3, new Vector3(x, 3.8f, -8f), 8f, 1.5f, new Color(1f, 0.8f, 0.5f), neon: true);
+        }
+
+        private static GameObject DecorLevel(Scene scene, Transform parent, int level)
+        {
+            var root = Create($"Decor_Level{level}", parent, Vector3.zero);
+            var group = Create("Decorations", root.transform, Vector3.zero);
+            var construction = root.AddComponent<ConstructionSite>();
+            construction.upgrade = UpgradeType.Decor;
+            construction.requiredLevel = level;
+            construction.building = group;
+            construction.buildSeconds = 1.5f;
+            construction.scaffolding = false;
+            return group;
         }
 
         /// <summary>Buildings that appear when their upgrade is bought; until then a fenced-off site with cones.</summary>

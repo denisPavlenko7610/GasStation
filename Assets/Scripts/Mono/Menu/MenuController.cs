@@ -27,7 +27,8 @@ namespace GasStation.Mono.Menu
             Settings,
             Controls,
             Confirm,
-            Welcome
+            Welcome,
+            StationName
         }
 
         private const string TutorialSeenKey = "GasStation.TutorialSeen";
@@ -77,6 +78,7 @@ namespace GasStation.Mono.Menu
                     break;
                 case MenuScreen.Controls:
                 case MenuScreen.Confirm:
+                case MenuScreen.StationName:
                     Show(_returnTo);
                     break;
                 case MenuScreen.Welcome:
@@ -102,6 +104,7 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.Controls: BuildControls(); break;
                 case MenuScreen.Confirm: BuildConfirm(); break;
                 case MenuScreen.Welcome: BuildWelcome(); break;
+                case MenuScreen.StationName: BuildStationName(); break;
             }
         }
 
@@ -150,6 +153,7 @@ namespace GasStation.Mono.Menu
                 }));
             load.SetEnabled(SaveService.Exists);
             window.Add(load);
+            window.Add(MenuButton(Loc.T("menu.stationName"), () => Show(MenuScreen.StationName)));
             window.Add(MenuButton(Loc.T("menu.settings"), () => Show(MenuScreen.Settings)));
             window.Add(MenuButton(Loc.T("menu.controls"), () => Show(MenuScreen.Controls)));
             window.Add(MenuButton(Loc.T("menu.toMainMenu"), () =>
@@ -229,6 +233,11 @@ namespace GasStation.Mono.Menu
             }));
             scroll.Add(SliderRow(Loc.T("settings.effectsVolume"), 0f, 1f, GameSettings.EffectsVolume,
                 value => GameSettings.EffectsVolume = value));
+            scroll.Add(SliderRow(Loc.T("settings.musicVolume"), 0f, 1f, GameSettings.MusicVolume,
+                value => GameSettings.MusicVolume = value));
+            var stations = new[] { Audio.RadioStation.Off, Audio.RadioStation.Country, Audio.RadioStation.Synthwave, Audio.RadioStation.LoFi };
+            scroll.Add(Dropdown(Loc.T("settings.radio"), stations.Select(Audio.RadioPlayer.StationName).ToList(),
+                Mathf.Clamp(GameSettings.RadioStation, 0, stations.Length - 1), index => GameSettings.RadioStation = index));
 
             // Interface
             scroll.Add(Text(Loc.T("settings.interface"), "menu-section"));
@@ -321,6 +330,29 @@ namespace GasStation.Mono.Menu
 
             _tutorialPage = 0;
             Show(MenuScreen.Welcome);
+        }
+
+        private void BuildStationName()
+        {
+            var window = Window();
+            window.Add(Accent());
+            window.Add(Text(Loc.T("menu.stationName"), "menu-heading"));
+            window.Add(Text(Loc.T("menu.stationName.hint"), "menu-text"));
+
+            var field = new TextField { maxLength = StationProfile.MaxNameLength, value = StationProfile.CustomName ?? string.Empty };
+            field.AddToClassList("name-field");
+            window.Add(field);
+
+            var buttons = new VisualElement();
+            buttons.AddToClassList("menu-buttons-row");
+            buttons.Add(SmallButton(Loc.T("menu.back"), () => Show(_returnTo)));
+            buttons.Add(SmallButton(Loc.T("menu.saveName"), () =>
+            {
+                StationProfile.SetName(field.value);
+                Show(_returnTo);
+            }));
+            window.Add(buttons);
+            field.schedule.Execute(() => field.Focus());
         }
 
         private void BuildWelcome()
