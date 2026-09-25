@@ -25,9 +25,9 @@ namespace GasStation.Tests
         public void Goals_NeedMoneyAndLevel()
         {
             var first = CampaignMath.Goal(1);
-            Assert.IsFalse(CampaignMath.Met(first, 10000f, 2));
-            Assert.IsFalse(CampaignMath.Met(first, 9000f, 5));
-            Assert.IsTrue(CampaignMath.Met(first, 10000f, 3));
+            Assert.IsFalse(CampaignMath.Met(first, first.Repaid, 2));
+            Assert.IsFalse(CampaignMath.Met(first, first.Repaid - 1000f, 5));
+            Assert.IsTrue(CampaignMath.Met(first, first.Repaid, 3));
             Assert.IsFalse(CampaignMath.Missed(first, 10));
             Assert.IsTrue(CampaignMath.Missed(first, 11));
         }

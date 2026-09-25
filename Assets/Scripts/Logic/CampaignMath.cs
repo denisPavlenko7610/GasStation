@@ -22,8 +22,9 @@ namespace GasStation.Logic
 
         public static ChapterGoal Goal(int chapter) => chapter switch
         {
-            1 => new ChapterGoal { Deadline = 10, Repaid = 10000f, Level = 3 },
-            2 => new ChapterGoal { Deadline = 20, Repaid = 25000f, Level = 1 },
+            // Early on the station earns roughly $700 a day; the goals grow with it.
+            1 => new ChapterGoal { Deadline = 10, Repaid = 5000f, Level = 3 },
+            2 => new ChapterGoal { Deadline = 20, Repaid = 20000f, Level = 1 },
             _ => new ChapterGoal { Deadline = 30, Repaid = Debt, Level = 1 }
         };
 

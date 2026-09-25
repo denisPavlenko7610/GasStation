@@ -8,7 +8,6 @@ namespace GasStation.Systems
 {
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
-    [UpdateAfter(typeof(PlayerInputSystem))]
     public partial struct PlayerMoveSystem : ISystem
     {
         [BurstCompile]
