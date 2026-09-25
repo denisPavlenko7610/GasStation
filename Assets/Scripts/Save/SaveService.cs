@@ -232,7 +232,8 @@ namespace GasStation.Save
             if (entityManager.HasComponent<StationRules>(station))
                 entityManager.SetComponentData(station, new StationRules
                 {
-                    Difficulty = data.finance != null ? data.finance.Difficulty : Difficulty.Normal
+                    Difficulty = data.finance != null ? data.finance.Difficulty : Difficulty.Normal,
+                    Mode = (GameMode)Mathf.Clamp(data.gameMode, 0, (int)GameMode.Sandbox)
                 });
             if (data.competitor != null && entityManager.HasComponent<Competitor>(station))
             {
@@ -511,6 +512,19 @@ namespace GasStation.Save
                 data.plates = entityManager.GetComponentData<PlateCollection>(station).Seen;
             data.catName = GasStation.Bridge.StationProfile.CustomCatName;
 
+            if (entityManager.HasComponent<StationRules>(station))
+                data.gameMode = (int)entityManager.GetComponentData<StationRules>(station).Mode;
+            if (entityManager.HasComponent<Campaign>(station))
+            {
+                var campaign = entityManager.GetComponentData<Campaign>(station);
+                data.campaignActive = campaign.Active;
+                data.campaignChapter = campaign.Chapter;
+                data.campaignRepaid = campaign.Repaid;
+                data.campaignOutcome = (int)campaign.Outcome;
+                data.campaignOfferAnswered = campaign.OfferAnswered;
+                data.campaignVictoryShown = campaign.VictoryShown;
+            }
+
             if (entityManager.HasComponent<OwnerSkillSet>(station))
                 data.skills = entityManager.GetComponentData<OwnerSkillSet>(station).Learned;
             if (entityManager.HasComponent<StationStars>(station))
@@ -551,6 +565,17 @@ namespace GasStation.Save
             if (entityManager.HasComponent<PlateCollection>(station))
                 entityManager.SetComponentData(station, new PlateCollection { Seen = data.plates });
             GasStation.Bridge.StationProfile.SetCatName(data.catName);
+
+            if (entityManager.HasComponent<Campaign>(station))
+                entityManager.SetComponentData(station, new Campaign
+                {
+                    Active = data.campaignActive,
+                    Chapter = Mathf.Clamp(data.campaignChapter, 1, CampaignMath.Chapters),
+                    Repaid = Mathf.Max(0f, data.campaignRepaid),
+                    Outcome = (CampaignOutcome)Mathf.Clamp(data.campaignOutcome, 0, (int)CampaignOutcome.Sold),
+                    OfferAnswered = data.campaignOfferAnswered,
+                    VictoryShown = data.campaignVictoryShown
+                });
 
             if (entityManager.HasComponent<OwnerSkillSet>(station))
             {

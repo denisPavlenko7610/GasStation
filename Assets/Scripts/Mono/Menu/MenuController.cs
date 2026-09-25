@@ -30,7 +30,8 @@ namespace GasStation.Mono.Menu
             Welcome,
             StationName,
             Difficulty,
-            GameOver
+            GameOver,
+            Victory
         }
 
         private const string TutorialSeenKey = "GasStation.TutorialSeen";
@@ -69,6 +70,13 @@ namespace GasStation.Mono.Menu
                 return;
             }
 
+            if (_screen == MenuScreen.None && HudModel.Campaign.Outcome == Components.CampaignOutcome.Won && !HudModel.Campaign.VictoryShown)
+            {
+                StationCommands.AcknowledgeVictory();
+                Show(MenuScreen.Victory);
+                return;
+            }
+
             var keyboard = Keyboard.current;
             // The laptop closes itself on Esc.
             if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame || LaptopState.IsOpen ||
@@ -99,6 +107,9 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.Difficulty:
                     Show(_returnTo);
                     break;
+                case MenuScreen.Victory:
+                    Show(MenuScreen.None);
+                    break;
                 case MenuScreen.Welcome:
                     FinishTutorial();
                     break;
@@ -125,6 +136,7 @@ namespace GasStation.Mono.Menu
                 case MenuScreen.StationName: BuildStationName(); break;
                 case MenuScreen.Difficulty: BuildDifficulty(); break;
                 case MenuScreen.GameOver: BuildGameOver(); break;
+                case MenuScreen.Victory: BuildVictory(); break;
             }
         }
 
@@ -333,9 +345,9 @@ namespace GasStation.Mono.Menu
             Show(MenuScreen.Confirm);
         }
 
-        private void StartNewGame(Components.Difficulty difficulty)
+        private void StartNewGame(Components.Difficulty difficulty, Components.GameMode mode = Components.GameMode.Free)
         {
-            StationCommands.NewGame(difficulty);
+            StationCommands.NewGame(difficulty, mode);
             // The simulation clears the flag on its next update; until then the menu must not reopen it.
             HudModel.GameOver = false;
             StartPlaying();
@@ -358,13 +370,19 @@ namespace GasStation.Mono.Menu
         {
             var window = Window(wide: true);
             window.Add(Accent());
-            window.Add(Text(Loc.T("menu.difficulty"), "menu-heading"));
+            window.Add(Text(Loc.T("menu.mode"), "menu-heading"));
+
+            window.Add(MenuButton(Loc.T("mode.Campaign"), () => StartNewGame(Components.Difficulty.Normal, Components.GameMode.Campaign)));
+            window.Add(Text(Loc.T("mode.Campaign.text"), "menu-text"));
 
             foreach (var difficulty in new[] { Components.Difficulty.Relaxed, Components.Difficulty.Normal, Components.Difficulty.Survival })
             {
-                window.Add(MenuButton(Loc.T($"difficulty.{difficulty}"), () => StartNewGame(difficulty)));
+                window.Add(MenuButton(Loc.F("mode.Free", Loc.T($"difficulty.{difficulty}")), () => StartNewGame(difficulty)));
                 window.Add(Text(Loc.T($"difficulty.{difficulty}.text"), "menu-text"));
             }
+
+            window.Add(MenuButton(Loc.T("mode.Sandbox"), () => StartNewGame(Components.Difficulty.Relaxed, Components.GameMode.Sandbox)));
+            window.Add(Text(Loc.F("mode.Sandbox.text", Logic.CampaignMath.SandboxMoney), "menu-text"));
 
             var buttons = new VisualElement();
             buttons.AddToClassList("menu-buttons-row");
@@ -376,11 +394,30 @@ namespace GasStation.Mono.Menu
         {
             var window = Window();
             window.Add(Accent());
-            window.Add(Text(Loc.T("menu.gameOver"), "menu-heading"));
-            window.Add(Text(Loc.F("menu.gameOver.text", StationProfile.DisplayName, HudModel.Day,
+            var outcome = HudModel.Campaign.Outcome;
+            string reason = outcome == Components.CampaignOutcome.Sold ? "menu.gameOver.sold"
+                : outcome == Components.CampaignOutcome.Lost ? "menu.gameOver.campaign"
+                : "menu.gameOver";
+            window.Add(Text(Loc.T(reason), "menu-heading"));
+            window.Add(Text(Loc.F($"{reason}.text", StationProfile.DisplayName, HudModel.Day,
                 HudModel.Stats.Served, HudModel.Level.Level), "menu-text"));
             window.Add(MenuButton(Loc.T("menu.newGame"), () => Show(MenuScreen.Difficulty)));
             window.Add(MenuButton(Loc.T("menu.quit"), Quit));
+        }
+
+        private void BuildVictory()
+        {
+            var window = Window(wide: true);
+            window.Add(Accent());
+            window.Add(Text(Loc.T("menu.victory"), "menu-heading"));
+            window.Add(Text(Loc.F("menu.victory.text", StationProfile.DisplayName, HudModel.Day, HudModel.Stats.Served,
+                HudModel.Stars.Stars), "menu-text"));
+            window.Add(MenuButton(Loc.T("menu.victory.continue"), () => Show(MenuScreen.None)));
+            window.Add(MenuButton(Loc.T("menu.toMainMenu"), () =>
+            {
+                StationCommands.SaveGame();
+                Show(MenuScreen.Main);
+            }));
         }
 
         private void BuildStationName()

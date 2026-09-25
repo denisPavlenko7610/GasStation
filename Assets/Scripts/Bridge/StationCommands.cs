@@ -24,6 +24,9 @@ namespace GasStation.Bridge
         PlaceProp,
         RemoveProp,
         AcceptContract,
+        RepayUncleDebt,
+        AcknowledgeVictory,
+        AnswerBuyoutOffer,
         LearnSkill,
         PlanEvent,
         TogglePromo,
@@ -44,6 +47,7 @@ namespace GasStation.Bridge
         public UpgradeType Upgrade;
         public ProductType Product;
         public PropType Prop;
+        public GameMode Mode;
         public float Value;
         /// <summary>World position for build mode commands.</summary>
         public UnityEngine.Vector3 Position;
@@ -69,8 +73,16 @@ namespace GasStation.Bridge
 
         public static void LoadGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.LoadGame });
 
-        public static void NewGame(Difficulty difficulty = Difficulty.Normal) =>
-            Queue.Enqueue(new StationCommand { Type = StationCommandType.NewGame, Value = (int)difficulty });
+        public static void NewGame(Difficulty difficulty = Difficulty.Normal, GameMode mode = GameMode.Free) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.NewGame, Value = (int)difficulty, Mode = mode });
+
+        public static void RepayUncleDebt(float amount) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.RepayUncleDebt, Value = amount });
+
+        public static void AcknowledgeVictory() => Queue.Enqueue(new StationCommand { Type = StationCommandType.AcknowledgeVictory });
+
+        public static void AnswerBuyoutOffer(bool accept) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.AnswerBuyoutOffer, Value = accept ? 1f : 0f });
 
         public static void TakeLoan(LoanKind kind) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.TakeLoan, Value = (int)kind });

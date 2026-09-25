@@ -87,7 +87,8 @@ namespace GasStation.Authoring
             AddComponent(entity, new StaffPower());
             AddComponent(entity, new StationStats());
             AddBuffer<DayHistoryEntry>(entity);
-            AddComponent(entity, new StationRules { Difficulty = Difficulty.Normal });
+            AddComponent(entity, new StationRules { Difficulty = Difficulty.Normal, Mode = GameMode.Free });
+            AddComponent(entity, new Campaign { Chapter = 1 });
             AddComponent(entity, new Finance());
             AddComponent(entity, new Competitor
             {

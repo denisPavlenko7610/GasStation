@@ -147,7 +147,12 @@ namespace GasStation.Components
         /// <summary>Subject = plate id of a paying customer.</summary>
         PlateSeen,
         /// <summary>Subject = plate id seen for the first time.</summary>
-        NewPlate
+        NewPlate,
+        /// <summary>Value = the new chapter.</summary>
+        CampaignChapter,
+        CampaignWon,
+        /// <summary>Value = amount paid towards the uncle's debt.</summary>
+        CampaignPayment
     }
 
     /// <summary>

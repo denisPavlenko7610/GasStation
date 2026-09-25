@@ -789,6 +789,12 @@ namespace GasStation.Mono
                 ? Loc.F("hud.level.max", level.Level)
                 : Loc.F("hud.level", level.Level, level.Experience, ProgressMath.ExperienceToNext(level.Level)));
 
+            if (HudModel.Campaign.Active)
+            {
+                var goal = CampaignMath.Goal(HudModel.Campaign.Chapter);
+                _builder.AppendLine(Loc.F("hud.campaign", HudModel.Campaign.Chapter, HudModel.Campaign.Repaid, goal.Repaid, goal.Deadline));
+            }
+
             _builder.AppendLine(Loc.F("hud.stars", Stars(HudModel.Stars.Stars)));
             _builder.AppendLine(Loc.F("hud.season", Loc.T($"season.{HudModel.Season.Season}"), SeasonMath.DayOfSeason(HudModel.Day),
                 SeasonMath.DaysPerSeason, Loc.T($"weather.{HudModel.Season.Weather}")));

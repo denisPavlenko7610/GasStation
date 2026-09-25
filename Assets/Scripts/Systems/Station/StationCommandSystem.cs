@@ -73,8 +73,7 @@ namespace GasStation.Systems
                         SaveService.Delete();
                         if (SaveService.Defaults != null)
                             SaveService.Apply(EntityManager, station, SaveService.Defaults);
-                        if (SystemAPI.HasComponent<StationRules>(station))
-                            SystemAPI.SetComponent(station, new StationRules { Difficulty = (Difficulty)(int)command.Value });
+                        StartMode(station, (Difficulty)(int)command.Value, command.Mode);
                         HudModel.Notify(Loc.T("msg.newGame"));
                         break;
                     case StationCommandType.TakeLoan:
@@ -94,6 +93,16 @@ namespace GasStation.Systems
                         break;
                     case StationCommandType.RemoveProp:
                         RemoveProp(station, command.Position);
+                        break;
+                    case StationCommandType.RepayUncleDebt:
+                        RepayUncleDebt(station, command.Value);
+                        break;
+                    case StationCommandType.AcknowledgeVictory:
+                        if (SystemAPI.HasComponent<Campaign>(station))
+                            SystemAPI.GetComponentRW<Campaign>(station).ValueRW.VictoryShown = true;
+                        break;
+                    case StationCommandType.AnswerBuyoutOffer:
+                        AnswerBuyoutOffer(station, command.Value > 0.5f);
                         break;
                     case StationCommandType.LearnSkill:
                         LearnSkill(station, (OwnerSkill)(int)command.Value);
@@ -127,6 +136,68 @@ namespace GasStation.Systems
                         break;
                 }
             }
+        }
+
+        /// <summary>Rules of the new game: difficulty and mode; the sandbox starts rich, the campaign starts chapter one.</summary>
+        private void StartMode(Entity station, Difficulty difficulty, GameMode mode)
+        {
+            if (mode == GameMode.Sandbox)
+                difficulty = Difficulty.Relaxed;
+            if (SystemAPI.HasComponent<StationRules>(station))
+                SystemAPI.SetComponent(station, new StationRules { Difficulty = difficulty, Mode = mode });
+
+            if (mode == GameMode.Sandbox)
+                SystemAPI.GetComponentRW<Economy>(station).ValueRW.Money = CampaignMath.SandboxMoney;
+
+            if (SystemAPI.HasComponent<Campaign>(station))
+                SystemAPI.SetComponent(station, new Campaign { Active = mode == GameMode.Campaign, Chapter = 1 });
+        }
+
+        private void RepayUncleDebt(Entity station, float wanted)
+        {
+            if (!SystemAPI.HasComponent<Campaign>(station))
+                return;
+
+            var campaign = SystemAPI.GetComponent<Campaign>(station);
+            if (!campaign.Active)
+                return;
+
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            float amount = CampaignMath.Payment(wanted, campaign.Repaid, economy.ValueRO.Money);
+            if (amount <= 0f)
+            {
+                HudModel.Notify(Loc.F("msg.noMoney", wanted));
+                return;
+            }
+
+            economy.ValueRW.Money -= amount;
+            economy.ValueRW.DayExpenses += amount;
+            campaign.Repaid += amount;
+            SystemAPI.SetComponent(station, campaign);
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.CampaignPayment, default, amount);
+            HudModel.Notify(Loc.F("msg.debtPaid", amount, CampaignMath.Remaining(campaign.Repaid)));
+        }
+
+        /// <summary>PetroMax wants the land. Selling ends the story; declining keeps it going.</summary>
+        private void AnswerBuyoutOffer(Entity station, bool accept)
+        {
+            if (!SystemAPI.HasComponent<Campaign>(station))
+                return;
+
+            var campaign = SystemAPI.GetComponent<Campaign>(station);
+            if (!campaign.Active || campaign.Chapter < 2 || campaign.OfferAnswered)
+                return;
+
+            campaign.OfferAnswered = true;
+            if (accept)
+            {
+                SystemAPI.GetComponentRW<Economy>(station).ValueRW.Money += CampaignMath.BuyoutOffer;
+                campaign.Active = false;
+                campaign.Outcome = CampaignOutcome.Sold;
+            }
+
+            SystemAPI.SetComponent(station, campaign);
+            HudModel.Notify(Loc.T(accept ? "msg.soldLand" : "msg.declinedOffer"));
         }
 
         private void LearnSkill(Entity station, OwnerSkill skill)

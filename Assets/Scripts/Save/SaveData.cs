@@ -372,7 +372,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 21;
+        public const int CurrentVersion = 22;
 
         public int version = CurrentVersion;
         public int day;
@@ -474,6 +474,15 @@ namespace GasStation.Save
         public int weather;
         public int plates;
         public string catName;
+
+        // Version 22. Older saves are free play without a campaign.
+        public int gameMode;
+        public bool campaignActive;
+        public int campaignChapter = 1;
+        public float campaignRepaid;
+        public int campaignOutcome;
+        public bool campaignOfferAnswered;
+        public bool campaignVictoryShown;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

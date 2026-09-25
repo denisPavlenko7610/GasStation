@@ -169,6 +169,8 @@ namespace GasStation.Mono.Office
 
         private void BuildMail(VisualElement content)
         {
+            BuildLetters(content);
+
             content.Add(Label(Loc.T("laptop.mail.offers"), "laptop-heading"));
             if (HudModel.Offers.Count == 0)
                 content.Add(Label(Loc.T("laptop.mail.noOffers"), "laptop-muted"));
@@ -224,6 +226,49 @@ namespace GasStation.Mono.Office
                     }
                 });
             }
+        }
+
+        /// <summary>"Inheritance": the story letters, the debt and PetroMax's offer.</summary>
+        private void BuildLetters(VisualElement content)
+        {
+            var campaign = HudModel.Campaign;
+            if (HudModel.Mode != GameMode.Campaign)
+                return;
+
+            content.Add(Label(Loc.T("laptop.letters"), "laptop-heading"));
+            if (!campaign.Active)
+            {
+                var ending = Card(Loc.T($"letter.end.{campaign.Outcome}"));
+                ending.Add(Label(Loc.T($"letter.end.{campaign.Outcome}.text"), "laptop-line"));
+                return;
+            }
+
+            var goal = CampaignMath.Goal(campaign.Chapter);
+            var letter = Card(Loc.T($"letter.{campaign.Chapter}.title"));
+            letter.Add(Label(Loc.T($"letter.{campaign.Chapter}.text"), "laptop-line"));
+            letter.Add(Label(Loc.F("laptop.letters.goal", goal.Deadline, goal.Repaid, campaign.Repaid, goal.Level), "laptop-line"));
+            letter.Add(Label(Loc.F("laptop.letters.debt", CampaignMath.Remaining(campaign.Repaid)), "laptop-muted"));
+
+            var actions = Actions(letter);
+            foreach (float amount in new[] { 1000f, 5000f })
+            {
+                float pay = amount;
+                var button = Action(actions, Loc.F("laptop.letters.pay", amount), () => StationCommands.RepayUncleDebt(pay));
+                button.SetEnabled(HudModel.Economy.Money >= amount);
+            }
+
+            float all = CampaignMath.Payment(float.MaxValue, campaign.Repaid, HudModel.Economy.Money);
+            var payAll = Action(actions, Loc.F("laptop.letters.payAll", all), () => StationCommands.RepayUncleDebt(all));
+            payAll.SetEnabled(all > 0f);
+
+            if (campaign.Chapter < 2 || campaign.OfferAnswered)
+                return;
+
+            var offer = Card(Loc.T("letter.offer.title"));
+            offer.Add(Label(Loc.F("letter.offer.text", CampaignMath.BuyoutOffer), "laptop-line"));
+            var answer = Actions(offer);
+            Action(answer, Loc.T("letter.offer.decline"), () => StationCommands.AnswerBuyoutOffer(false));
+            Action(answer, Loc.F("letter.offer.accept", CampaignMath.BuyoutOffer), () => StationCommands.AnswerBuyoutOffer(true));
         }
 
         private void BuildStaff(VisualElement content)

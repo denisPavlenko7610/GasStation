@@ -35,10 +35,16 @@ namespace GasStation.Systems
             if (SystemAPI.HasSingleton<Finance>())
                 HudModel.Finance = SystemAPI.GetSingleton<Finance>();
             if (SystemAPI.HasSingleton<StationRules>())
+            {
                 HudModel.Difficulty = SystemAPI.GetSingleton<StationRules>().Difficulty;
+                HudModel.Mode = SystemAPI.GetSingleton<StationRules>().Mode;
+            }
+
+            HudModel.Campaign = SystemAPI.HasSingleton<Campaign>() ? SystemAPI.GetSingleton<Campaign>() : default;
             if (SystemAPI.HasSingleton<Competitor>())
                 HudModel.Competitor = SystemAPI.GetSingleton<Competitor>();
-            HudModel.GameOver = HudModel.Finance.Bankrupt;
+            HudModel.GameOver = HudModel.Finance.Bankrupt ||
+                                HudModel.Campaign.Outcome is CampaignOutcome.Lost or CampaignOutcome.Sold;
 
             HudModel.Regulars.Clear();
             if (SystemAPI.HasSingleton<RegularState>())
@@ -326,6 +332,9 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.NewPlate:
                         HudModel.Notify(Loc.F("msg.newPlate", Loc.T($"plate.{stationEvent.Subject}"), stationEvent.Value, PlateMath.Count));
+                        break;
+                    case StationEventType.CampaignChapter:
+                        HudModel.Notify(Loc.F("msg.chapter", stationEvent.Value));
                         break;
                     case StationEventType.StarGained:
                         HudModel.Notify(Loc.F("msg.starGained", StarText((int)stationEvent.Value)));

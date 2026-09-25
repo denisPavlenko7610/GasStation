@@ -11,10 +11,47 @@ namespace GasStation.Components
         Survival = 2
     }
 
+    public enum GameMode : byte
+    {
+        /// <summary>Free play: no goal, the chosen difficulty.</summary>
+        Free = 0,
+        /// <summary>The "Inheritance" story: repay the uncle's debt in 30 days.</summary>
+        Campaign = 1,
+        /// <summary>Lots of money, no bankruptcy.</summary>
+        Sandbox = 2
+    }
+
     /// <summary>Rules chosen for this game (new game dialog).</summary>
     public struct StationRules : IComponentData
     {
         public Difficulty Difficulty;
+        public GameMode Mode;
+    }
+
+    public enum CampaignOutcome : byte
+    {
+        None = 0,
+        Won = 1,
+        /// <summary>Missed a deadline: the bank took the station.</summary>
+        Lost = 2,
+        /// <summary>Sold the land to PetroMax.</summary>
+        Sold = 3
+    }
+
+    /// <summary>
+    /// The "Inheritance" campaign: an uncle left a run-down station and a $50 000 bank debt. Three chapters,
+    /// each with a deadline and a goal. Lives on the station entity.
+    /// </summary>
+    public struct Campaign : IComponentData
+    {
+        public bool Active;
+        public int Chapter;
+        public float Repaid;
+        public CampaignOutcome Outcome;
+        /// <summary>PetroMax's offer to buy the land was answered (declined).</summary>
+        public bool OfferAnswered;
+        /// <summary>The victory screen was shown once.</summary>
+        public bool VictoryShown;
     }
 
     public enum LoanKind : byte
