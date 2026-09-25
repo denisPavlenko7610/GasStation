@@ -13,6 +13,11 @@ namespace GasStation.Bridge
 
         public static string UpgradeName(UpgradeType type) => Loc.T($"upgrade.name.{type}");
 
+        /// <param name="id">1-based regular id.</param>
+        public static string RegularName(int id) => Loc.T($"regular.{id - 1}.name");
+
+        public static string RegularAbout(int id) => Loc.T($"regular.{id - 1}.about");
+
         public static string PropName(PropType type) => Loc.T($"prop.name.{type}");
 
         public static string PropDescription(PropType type) => Loc.T($"prop.desc.{type}");

@@ -44,11 +44,15 @@ namespace GasStation.Bridge
         public float RequestedLiters;
         public float ReceivedLiters;
         public float PatienceRatio;
+        /// <summary>1-based regular id; 0 = a stranger.</summary>
+        public int RegularId;
     }
 
     public struct Review
     {
         public int Stars;
+        /// <summary>1-based id of the regular who wrote it; 0 = anonymous.</summary>
+        public int RegularId;
         /// <summary>Which of the texts for this star count.</summary>
         public int Variant;
         public int Day;
@@ -146,6 +150,9 @@ namespace GasStation.Bridge
         public static readonly List<NoBuildZone> NoBuildZones = new();
         public static PropEffects PropEffects;
 
+        public static readonly List<RegularState> Regulars = new();
+        public static Buzz Buzz;
+
         public static int QueueLength;
         public static int CarsOnSite;
         public static InteractionHint Hint;
@@ -173,6 +180,8 @@ namespace GasStation.Bridge
             LastReport = default;
             Finance = default;
             Props.Clear();
+            Regulars.Clear();
+            Buzz = default;
             NoBuildZones.Clear();
             HasBuildArea = false;
             Competitor = default;

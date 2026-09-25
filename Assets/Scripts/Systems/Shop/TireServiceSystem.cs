@@ -112,6 +112,7 @@ namespace GasStation.Systems
                         economy.Reputation = StationMath.ClampReputation(economy.Reputation - StationMath.LostCustomerPenalty);
                         StationEvent.Push(events, StationEventType.CustomerLeftAngry);
                         StationEvent.Push(events, StationEventType.CustomerReview, default, ReviewMath.AngryStars);
+                        VisitOutcome.Rate(events, car.ValueRO, ReviewMath.AngryStars);
                         CarRoutes.SendToExit(ref car.ValueRW, path, exitRoute);
                         break;
                     }
@@ -123,6 +124,9 @@ namespace GasStation.Systems
                             break;
 
                         float price = ShopMath.TirePrice(service.Price, level);
+                        // A tow truck brings a broken-down car: a bigger job.
+                        if (car.ValueRO.Customer == CustomerType.TowTruck)
+                            price *= VisitorMath.TowTireMultiplier;
                         economy.Money += price;
                         economy.DayIncome += price;
                         StationEvent.Push(events, StationEventType.TiresChanged, default, price);

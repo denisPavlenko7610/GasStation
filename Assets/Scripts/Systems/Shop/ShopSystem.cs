@@ -52,7 +52,11 @@ namespace GasStation.Systems
                     car.ValueRW.DriverAway = true;
                     if (shop.PedestrianPrefab != Entity.Null)
                     {
-                        SpawnDriver(ecb, shop, entity, transform.ValueRO);
+                        // The driver plus any passengers (a tour bus unloads a crowd).
+                        int people = 1 + car.ValueRO.Passengers;
+                        car.ValueRW.PeopleAway = (byte)people;
+                        for (int i = 0; i < people; i++)
+                            SpawnDriver(ecb, shop, entity, transform.ValueRO, i);
                     }
                     else
                     {
@@ -70,8 +74,12 @@ namespace GasStation.Systems
                 if (car.ValueRO.Timer > 0f)
                     continue;
 
-                Purchase(ref shop, shelves, ref economy, events, car.ValueRO.Customer);
-                UseRestroom(ref state, ref shop, ref economy, events);
+                for (int i = 0; i <= car.ValueRO.Passengers; i++)
+                {
+                    Purchase(ref shop, shelves, ref economy, events, car.ValueRO.Customer);
+                    UseRestroom(ref state, ref shop, ref economy, events);
+                }
+
                 car.ValueRW.DriverAway = false;
                 car.ValueRW.State = CarState.ReadyToLeave;
             }
@@ -111,9 +119,17 @@ namespace GasStation.Systems
                             break;
 
                         var car = SystemAPI.GetComponentRW<Car>(carEntity);
+                        ecb.DestroyEntity(entity);
+                        // Everyone has to be back on board before the car leaves.
+                        if (car.ValueRO.PeopleAway > 1)
+                        {
+                            car.ValueRW.PeopleAway--;
+                            break;
+                        }
+
+                        car.ValueRW.PeopleAway = 0;
                         car.ValueRW.DriverAway = false;
                         car.ValueRW.State = CarState.ReadyToLeave;
-                        ecb.DestroyEntity(entity);
                         break;
                 }
             }
@@ -141,9 +157,11 @@ namespace GasStation.Systems
             }
         }
 
-        private static void SpawnDriver(EntityCommandBuffer ecb, Shop shop, Entity car, LocalTransform carTransform)
+        private static void SpawnDriver(EntityCommandBuffer ecb, Shop shop, Entity car, LocalTransform carTransform, int index)
         {
-            float3 start = DoorOfCar(carTransform);
+            // Passengers step out one behind the other along the car.
+            float3 back = math.mul(carTransform.Rotation, new float3(0f, 0f, -1f));
+            float3 start = DoorOfCar(carTransform) + back * (0.7f * index);
             var driver = ecb.Instantiate(shop.PedestrianPrefab);
             ecb.AddComponent(driver, LocalTransform.FromPosition(start));
             ecb.AddComponent(driver, new Pedestrian { State = PedestrianState.ToShop, Car = car });

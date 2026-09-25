@@ -9,7 +9,17 @@ namespace GasStation.Components
         Trucker,
         Hurry,
         Tourist,
-        Thief
+        Thief,
+        // Special guests: never picked at random, only sent by VisitorSystem.
+        /// <summary>Incognito food-and-fuel critic; a great or awful visit makes the news.</summary>
+        Critic,
+        Biker,
+        /// <summary>Ambulance or police: goes to the front of the queue.</summary>
+        Emergency,
+        /// <summary>Brings a crowd of passengers into the shop.</summary>
+        TourBus,
+        /// <summary>Brings a broken-down car: always needs the tire service, pays double.</summary>
+        TowTruck
     }
 
     public enum CarState : byte
@@ -58,6 +68,12 @@ namespace GasStation.Components
         public int ParkingSpot;
         /// <summary>Game hour at which a parked trucker leaves.</summary>
         public float ParkUntilHour;
+        /// <summary>1-based index in RegularCatalog; 0 = a stranger.</summary>
+        public byte RegularId;
+        /// <summary>People besides the driver who go to the shop (tour bus).</summary>
+        public byte Passengers;
+        /// <summary>How many of them are still out of the car.</summary>
+        public byte PeopleAway;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

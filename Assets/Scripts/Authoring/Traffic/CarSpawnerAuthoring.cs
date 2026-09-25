@@ -73,6 +73,8 @@ namespace GasStation.Authoring
             foreach (var point in Valid(authoring.entryRoute))
                 entry.Add(new EntryRoutePoint { Position = point.position });
 
+            AddBuffer<SpawnRequest>(entity);
+
             var exit = AddBuffer<ExitRoutePoint>(entity);
             foreach (var point in Valid(authoring.exitRoute))
                 exit.Add(new ExitRoutePoint { Position = point.position });

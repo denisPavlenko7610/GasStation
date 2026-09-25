@@ -40,6 +40,14 @@ namespace GasStation.Systems
                 HudModel.Competitor = SystemAPI.GetSingleton<Competitor>();
             HudModel.GameOver = HudModel.Finance.Bankrupt;
 
+            HudModel.Regulars.Clear();
+            if (SystemAPI.HasSingleton<RegularState>())
+            {
+                foreach (var regular in SystemAPI.GetSingletonBuffer<RegularState>(true))
+                    HudModel.Regulars.Add(regular);
+            }
+            HudModel.Buzz = SystemAPI.HasSingleton<Buzz>() ? SystemAPI.GetSingleton<Buzz>() : default;
+
             DrainEvents();
             CopyProps();
             CopyShop();
@@ -191,6 +199,37 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.CompetitorPromoStarted:
                         HudModel.Notify(Loc.T($"msg.competitorPromo.{(CompetitorPromo)(int)stationEvent.Value}"));
+                        break;
+                    case StationEventType.RegularArrived:
+                        HudModel.Notify(stationEvent.Value > 0.5f
+                            ? Loc.F("msg.regularMet", GameTexts.RegularName(stationEvent.Subject), GameTexts.RegularAbout(stationEvent.Subject))
+                            : Loc.F("msg.regularArrived", GameTexts.RegularName(stationEvent.Subject),
+                                Loc.T($"regular.{stationEvent.Subject - 1}.line.{UnityEngine.Random.Range(0, 2)}")));
+                        break;
+                    case StationEventType.RegularVisit:
+                        // The review pushed just before belongs to this regular.
+                        if (HudModel.Reviews.Count > 0)
+                        {
+                            var review = HudModel.Reviews[0];
+                            review.RegularId = stationEvent.Subject;
+                            HudModel.Reviews[0] = review;
+                        }
+                        break;
+                    case StationEventType.RegularLost:
+                        HudModel.Notify(Loc.F(HudModel.Competitor.Active && !HudModel.Competitor.BoughtOut ? "msg.regularLost" : "msg.regularLostNoRival",
+                            GameTexts.RegularName(stationEvent.Subject)));
+                        break;
+                    case StationEventType.RegularBestFriend:
+                        HudModel.Notify(Loc.F("msg.regularFriend", GameTexts.RegularName(stationEvent.Subject)));
+                        break;
+                    case StationEventType.CriticArticle:
+                        HudModel.Notify(Loc.T(stationEvent.Value > 1f ? "msg.criticPraise" : "msg.criticPan"));
+                        break;
+                    case StationEventType.SpecialArrived:
+                        HudModel.Notify(Loc.F($"msg.special.{(CustomerType)(int)stationEvent.Value}", stationEvent.Subject));
+                        break;
+                    case StationEventType.EmergencyServed:
+                        HudModel.Notify(Loc.T("msg.emergencyServed"));
                         break;
                     case StationEventType.PropPlaced:
                         HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
@@ -438,7 +477,8 @@ namespace GasStation.Systems
                     Fuel = car.ValueRO.FuelType,
                     RequestedLiters = car.ValueRO.RequestedLiters,
                     ReceivedLiters = car.ValueRO.ReceivedLiters,
-                    PatienceRatio = patience.ValueRO.Max > 0f ? patience.ValueRO.Current / patience.ValueRO.Max : 0f
+                    PatienceRatio = patience.ValueRO.Max > 0f ? patience.ValueRO.Current / patience.ValueRO.Max : 0f,
+                    RegularId = car.ValueRO.RegularId
                 });
             }
         }

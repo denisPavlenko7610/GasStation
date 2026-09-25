@@ -96,6 +96,17 @@ namespace GasStation.Authoring
                 OurShare = 1f,
                 Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 211)
             });
+            AddComponent(entity, new Buzz { Factor = 1f });
+            AddComponent(entity, new Visitors
+            {
+                LastRolledHour = -1,
+                LastCriticDay = -100,
+                LastBusDay = -100,
+                Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 307)
+            });
+            var regulars = AddBuffer<RegularState>(entity);
+            for (int i = 0; i < RegularCatalog.Count; i++)
+                regulars.Add(new RegularState { Loyalty = VisitorMath.StartLoyalty, LastVisitDay = -1 });
             AddComponent(entity, new Achievements());
             AddComponent(entity, new StaffRoster
             {

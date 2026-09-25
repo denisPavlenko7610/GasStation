@@ -67,7 +67,22 @@ namespace GasStation.Components
         CompetitorPromoStarted,
         CompetitorBoughtOut,
         /// <summary>Value = PropType.</summary>
-        PropPlaced
+        PropPlaced,
+        /// <summary>Subject = regular id (1-based); Value = 1 on the very first visit.</summary>
+        RegularArrived,
+        /// <summary>Subject = regular id; Value = stars. Pushed right after the matching CustomerReview.</summary>
+        RegularVisit,
+        /// <summary>Subject = regular id: upset three times, now drives to the competitor.</summary>
+        RegularLost,
+        /// <summary>Subject = regular id: loyalty reached the top.</summary>
+        RegularBestFriend,
+        /// <summary>Value = stars the incognito critic gave.</summary>
+        CriticVisit,
+        /// <summary>Value = traffic factor of the article (above 1 = praise).</summary>
+        CriticArticle,
+        /// <summary>Value = CustomerType of the special guest; Subject = passengers or convoy size.</summary>
+        SpecialArrived,
+        EmergencyServed
     }
 
     /// <summary>
@@ -82,11 +97,14 @@ namespace GasStation.Components
         public StationEventType Type;
         public FuelType Fuel;
         public float Value;
+        /// <summary>Who the event is about, e.g. a regular id; 0 when unused.</summary>
+        public int Subject;
 
-        public static void Push(DynamicBuffer<StationEvent> buffer, StationEventType type, FuelType fuel = default, float value = 0f)
+        public static void Push(DynamicBuffer<StationEvent> buffer, StationEventType type, FuelType fuel = default, float value = 0f,
+            int subject = 0)
         {
             if (buffer.Length < MaxPending)
-                buffer.Add(new StationEvent { Type = type, Fuel = fuel, Value = value });
+                buffer.Add(new StationEvent { Type = type, Fuel = fuel, Value = value, Subject = subject });
         }
     }
 }

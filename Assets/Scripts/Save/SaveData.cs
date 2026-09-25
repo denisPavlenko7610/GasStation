@@ -271,11 +271,42 @@ namespace GasStation.Save
         };
     }
 
+    [Serializable]
+    public class RegularSaveData
+    {
+        public float loyalty;
+        public int visits;
+        public int upsets;
+        public bool lost;
+        public int lastVisitDay;
+        public float lastStars;
+
+        public static RegularSaveData From(RegularState regular) => new()
+        {
+            loyalty = regular.Loyalty,
+            visits = regular.Visits,
+            upsets = regular.Upsets,
+            lost = regular.Lost,
+            lastVisitDay = regular.LastVisitDay,
+            lastStars = regular.LastStars
+        };
+
+        public RegularState ToState() => new()
+        {
+            Loyalty = Mathf.Clamp01(loyalty),
+            Visits = Mathf.Max(0, visits),
+            Upsets = Mathf.Max(0, upsets),
+            Lost = lost,
+            LastVisitDay = lastVisitDay,
+            LastStars = lastStars
+        };
+    }
+
     /// <summary>Persistent part of the game state. Cars on the road are not saved.</summary>
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 14;
+        public const int CurrentVersion = 15;
 
         public int version = CurrentVersion;
         public int day;
@@ -340,6 +371,13 @@ namespace GasStation.Save
 
         // Version 14. Null or empty in older saves: no props.
         public PropSaveData[] props;
+
+        // Version 15. Null in older saves: every regular is still a stranger, no article running.
+        public RegularSaveData[] regulars;
+        public float buzzFactor;
+        public int buzzDays;
+        public int lastCriticDay;
+        public int lastBusDay;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

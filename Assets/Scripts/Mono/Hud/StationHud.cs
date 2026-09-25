@@ -33,6 +33,7 @@ namespace GasStation.Mono
         private bool _staffOpen;
         private bool _achievementsOpen;
         private bool _financeOpen;
+        private bool _regularsOpen;
         /// <summary>0 = overview, 1 = bank, 2 = competitor.</summary>
         private int _financePage;
         private const int FinancePages = 3;
@@ -70,6 +71,7 @@ namespace GasStation.Mono
                 : _paintOpen ? BuildPaint()
                 : _staffOpen ? BuildStaff()
                 : _achievementsOpen ? BuildAchievements()
+                : _regularsOpen ? BuildRegulars()
                 : _financeOpen ? _financePage switch { 1 => BuildBank(), 2 => BuildCompetitor(), _ => BuildFinance() }
                 : BuildQuest());
             _view.SetChart(_financeOpen && _financePage == 0 && !BuildMode.Active ? HudModel.History : null);
@@ -112,6 +114,8 @@ namespace GasStation.Mono
                 Toggle(ref _staffOpen);
             if (keyboard.jKey.wasPressedThisFrame)
                 Toggle(ref _achievementsOpen);
+            if (keyboard.kKey.wasPressedThisFrame)
+                Toggle(ref _regularsOpen);
             if (keyboard.fKey.wasPressedThisFrame)
             {
                 // F: overview → bank → competitor → closed.
@@ -200,6 +204,7 @@ namespace GasStation.Mono
             _staffOpen = false;
             _achievementsOpen = false;
             _financeOpen = false;
+            _regularsOpen = false;
         }
 
         private void HandleFuelKeys(Keyboard keyboard)
@@ -463,7 +468,10 @@ namespace GasStation.Mono
             _cardTexts.Clear();
             foreach (var card in HudModel.Cards)
             {
-                string who = card.Customer == CustomerType.Regular ? string.Empty : GameTexts.CustomerName(card.Customer) + "\n";
+                // Regulars are shown by name; the critic is incognito and looks like anyone else.
+                string who = card.RegularId > 0 ? GameTexts.RegularName(card.RegularId) + "\n"
+                    : card.Customer is CustomerType.Regular or CustomerType.Critic ? string.Empty
+                    : GameTexts.CustomerName(card.Customer) + "\n";
                 _cardTexts.Add(card.State == CarState.Fueling
                     ? Loc.F("card.fueling", who, GameTexts.FuelName(card.Fuel), card.ReceivedLiters, card.RequestedLiters)
                     : card.State == CarState.WaitingForTires
@@ -508,12 +516,77 @@ namespace GasStation.Mono
                 for (int i = 0; i < HudModel.Reviews.Count && i < 4; i++)
                 {
                     var review = HudModel.Reviews[i];
-                    _builder.AppendLine($"{Stars(review.Stars)}  {Loc.T($"review.{review.Stars}.{review.Variant}")}");
+                    string author = review.RegularId > 0 ? GameTexts.RegularName(review.RegularId) + ": " : string.Empty;
+                    _builder.AppendLine($"{Stars(review.Stars)}  {author}{Loc.T($"review.{review.Stars}.{review.Variant}")}");
                 }
             }
 
             _builder.Append(HudModel.History.Count > 0 ? Loc.T("panel.finance.chart") : Loc.T("panel.finance.noHistory"));
             return _builder.ToString();
+        }
+
+        private string BuildRegulars()
+        {
+            int met = 0;
+            foreach (var regular in HudModel.Regulars)
+            {
+                if (regular.Visits > 0)
+                    met++;
+            }
+
+            _builder.Clear();
+            _builder.AppendLine(Loc.F("panel.regulars", met, HudModel.Regulars.Count));
+            if (HudModel.Buzz.DaysLeft > 0)
+                _builder.AppendLine(Loc.F(HudModel.Buzz.Factor > 1f ? "panel.regulars.praise" : "panel.regulars.pan", HudModel.Buzz.DaysLeft));
+
+            for (int i = 0; i < HudModel.Regulars.Count && i < RegularCatalog.Count; i++)
+            {
+                var regular = HudModel.Regulars[i];
+                if (regular.Visits == 0)
+                    continue;
+
+                var info = RegularCatalog.Get(i);
+                string status = regular.Lost ? Loc.T("panel.regulars.lost")
+                    : regular.Upsets > 0 ? Loc.F("panel.regulars.upset", regular.Upsets, VisitorMath.UpsetsToLeave)
+                    : Hearts(regular.Loyalty);
+                _builder.AppendLine(Loc.F("panel.regulars.line", GameTexts.RegularName(i + 1), GameTexts.FuelName(info.Fuel),
+                    DaysText(info.Days), info.Hour, regular.Visits, status));
+            }
+
+            if (met == 0)
+                _builder.AppendLine(Loc.T("panel.regulars.none"));
+            _builder.Append(Loc.T("panel.regulars.help"));
+            return _builder.ToString();
+        }
+
+        private static string Hearts(float loyalty)
+        {
+            int full = Mathf.Clamp(Mathf.RoundToInt(loyalty * 5f), 0, 5);
+            return new string('♥', full) + new string('♡', 5 - full);
+        }
+
+        /// <summary>When a regular comes: every day, weekdays, weekends or a list of days.</summary>
+        private static string DaysText(byte days) => days switch
+        {
+            RegularCatalog.EveryDay => Loc.T("weekday.every"),
+            RegularCatalog.Weekdays => Loc.T("weekday.weekdays"),
+            RegularCatalog.Weekend => Loc.T("weekday.weekend"),
+            _ => DayList(days)
+        };
+
+        private static string DayList(byte days)
+        {
+            var builder = new StringBuilder();
+            for (int i = 0; i < 7; i++)
+            {
+                if ((days & (1 << i)) == 0)
+                    continue;
+                if (builder.Length > 0)
+                    builder.Append(", ");
+                builder.Append(Loc.T($"weekday.{i}"));
+            }
+
+            return builder.ToString();
         }
 
         private string BuildBuildMode()

@@ -265,6 +265,22 @@ namespace GasStation.Systems
             rival.ValueRW.Promo = CompetitorPromo.None;
             rival.ValueRW.OurShare = 1f;
 
+            // Regulars who left for PetroMax have nowhere else to go now.
+            if (SystemAPI.HasBuffer<RegularState>(station))
+            {
+                var regulars = SystemAPI.GetBuffer<RegularState>(station);
+                for (int i = 0; i < regulars.Length; i++)
+                {
+                    var regular = regulars[i];
+                    if (!regular.Lost)
+                        continue;
+                    regular.Lost = false;
+                    regular.Upsets = 0;
+                    regular.Loyalty = VisitorMath.StartLoyalty;
+                    regulars[i] = regular;
+                }
+            }
+
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.CompetitorBoughtOut, default, CompetitionMath.BuyoutPrice);
         }
 

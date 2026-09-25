@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using GasStation.Components;
+using GasStation.Logic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -66,6 +67,7 @@ namespace GasStation.Save
 
             CaptureShop(entityManager, data);
             CaptureProps(entityManager, data);
+            CaptureVisitors(entityManager, station, data);
             data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
             if (entityManager.HasBuffer<DayHistoryEntry>(station))
@@ -183,6 +185,7 @@ namespace GasStation.Save
                 RestorePumps(entityManager, data.pumps);
 
             RestoreProps(entityManager, data.props);
+            RestoreVisitors(entityManager, station, data);
 
             if (data.products != null)
                 RestoreShop(entityManager, data.products);
@@ -328,6 +331,73 @@ namespace GasStation.Save
                 shelf.SellPrice = saved[i].sellPrice > 0f ? saved[i].sellPrice : shelf.SellPrice;
                 shelves[i] = shelf;
             }
+        }
+
+        private static void CaptureVisitors(EntityManager entityManager, Entity station, SaveData data)
+        {
+            if (entityManager.HasBuffer<RegularState>(station))
+            {
+                var regulars = entityManager.GetBuffer<RegularState>(station, true);
+                data.regulars = new RegularSaveData[regulars.Length];
+                for (int i = 0; i < regulars.Length; i++)
+                    data.regulars[i] = RegularSaveData.From(regulars[i]);
+            }
+
+            if (entityManager.HasComponent<Buzz>(station))
+            {
+                var buzz = entityManager.GetComponentData<Buzz>(station);
+                data.buzzFactor = buzz.Factor;
+                data.buzzDays = buzz.DaysLeft;
+            }
+
+            if (entityManager.HasComponent<Visitors>(station))
+            {
+                var visitors = entityManager.GetComponentData<Visitors>(station);
+                data.lastCriticDay = visitors.LastCriticDay;
+                data.lastBusDay = visitors.LastBusDay;
+            }
+        }
+
+        /// <summary>Older saves meet every regular again from scratch.</summary>
+        private static void RestoreVisitors(EntityManager entityManager, Entity station, SaveData data)
+        {
+            if (entityManager.HasBuffer<RegularState>(station))
+            {
+                var regulars = entityManager.GetBuffer<RegularState>(station);
+                for (int i = 0; i < regulars.Length; i++)
+                {
+                    var saved = data.regulars != null && i < data.regulars.Length ? data.regulars[i] : null;
+                    regulars[i] = saved != null
+                        ? saved.ToState()
+                        : new RegularState { Loyalty = VisitorMath.StartLoyalty, LastVisitDay = -1 };
+                }
+            }
+
+            if (entityManager.HasComponent<Buzz>(station))
+            {
+                bool running = data.buzzFactor > 0f && data.buzzDays > 0;
+                entityManager.SetComponentData(station, new Buzz
+                {
+                    Factor = running ? data.buzzFactor : 1f,
+                    DaysLeft = running ? data.buzzDays : 0
+                });
+            }
+
+            if (entityManager.HasComponent<Visitors>(station))
+            {
+                var visitors = entityManager.GetComponentData<Visitors>(station);
+                bool hasDays = data.version >= 15;
+                visitors.LastCriticDay = hasDays ? data.lastCriticDay : -100;
+                visitors.LastBusDay = hasDays ? data.lastBusDay : -100;
+                visitors.LastRolledHour = -1;
+                entityManager.SetComponentData(station, visitors);
+            }
+
+            // Guests invited before the load belong to the old game.
+            using var spawnerQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<SpawnRequest>());
+            using var spawners = spawnerQuery.ToEntityArray(Allocator.Temp);
+            foreach (var spawner in spawners)
+                entityManager.GetBuffer<SpawnRequest>(spawner).Clear();
         }
 
         private static void CaptureProps(EntityManager entityManager, SaveData data)

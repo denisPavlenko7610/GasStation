@@ -22,7 +22,10 @@ namespace GasStation.Logic
 
     public static class CustomerProfiles
     {
+        /// <summary>Types picked at random for ordinary traffic (Regular..Thief).</summary>
         public const int Count = 5;
+        /// <summary>All customer types, special guests included.</summary>
+        public const int AllCount = 10;
 
         public static CustomerProfile Get(CustomerType type) => type switch
         {
@@ -49,6 +52,35 @@ namespace GasStation.Logic
                 Weight = 3f, MinStationLevel = 2, LitersMultiplier = 1.5f, PatienceMultiplier = 1f,
                 SpeedMultiplier = 1.2f, TipShare = 0f, LitterMultiplier = 1f,
                 ShopChance = 0f, WashChance = 0f, TireChance = 0f
+            },
+            CustomerType.Critic => new CustomerProfile
+            {
+                MinStationLevel = 3, LitersMultiplier = 1f, PatienceMultiplier = 0.8f,
+                SpeedMultiplier = 1f, TipShare = 0f, LitterMultiplier = 0f,
+                ShopChance = 0.6f, WashChance = 0.2f
+            },
+            CustomerType.Biker => new CustomerProfile
+            {
+                MinStationLevel = 3, LitersMultiplier = 0.4f, PatienceMultiplier = 0.9f,
+                SpeedMultiplier = 1.2f, TipShare = 0.12f, LitterMultiplier = 2.5f,
+                ShopChance = 0.9f
+            },
+            CustomerType.Emergency => new CustomerProfile
+            {
+                MinStationLevel = 2, LitersMultiplier = 1.2f, PatienceMultiplier = 0.4f,
+                SpeedMultiplier = 1.4f, TipShare = 0f, LitterMultiplier = 0f
+            },
+            CustomerType.TourBus => new CustomerProfile
+            {
+                MinStationLevel = 4, LitersMultiplier = 4f, PatienceMultiplier = 1.4f,
+                SpeedMultiplier = 0.6f, TipShare = 0.03f, LitterMultiplier = 2f, DieselOnly = true,
+                ShopChance = 1f
+            },
+            CustomerType.TowTruck => new CustomerProfile
+            {
+                MinStationLevel = 3, LitersMultiplier = 1.5f, PatienceMultiplier = 1.3f,
+                SpeedMultiplier = 0.7f, TipShare = 0.05f, LitterMultiplier = 1f, DieselOnly = true,
+                TireChance = 1f
             },
             _ => new CustomerProfile
             {
