@@ -85,6 +85,8 @@ namespace GasStation.Components
         public byte Plate;
         /// <summary>The player started this fueling by hand — fuel flows only while they hold E.</summary>
         public bool PlayerPumping;
+        /// <summary>Seconds spent stuck behind another car; after a grace period cars push through.</summary>
+        public float BlockedTimer;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>
