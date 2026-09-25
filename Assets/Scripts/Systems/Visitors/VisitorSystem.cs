@@ -81,7 +81,7 @@ namespace GasStation.Systems
                 {
                     Customer = info.Type,
                     RegularId = (byte)(i + 1),
-                    Delay = visitors.Random.NextFloat(0f, 20f),
+                    Delay = visitors.Random.NextFloat(0f, VisitorMath.RegularArrivalSpread),
                     HasHabits = true,
                     Fuel = info.Fuel,
                     LitersMultiplier = info.Liters * CustomerProfiles.Get(info.Type).LitersMultiplier,
@@ -95,18 +95,19 @@ namespace GasStation.Systems
             int day, int hour, int level)
         {
             ref var random = ref visitors.Random;
-            bool daytime = hour >= 10 && hour <= 18;
+            bool daytime = hour >= VisitorMath.DaytimeFirstHour && hour <= VisitorMath.DaytimeLastHour;
 
             // The critic is incognito: no announcement.
             if (level >= VisitorMath.CriticMinLevel && daytime && day - visitors.LastCriticDay >= VisitorMath.CriticEveryDays &&
-                random.NextFloat() < 0.12f)
+                random.NextFloat() < VisitorMath.CriticChancePerHour)
             {
                 visitors.LastCriticDay = day;
-                requests.Add(new SpawnRequest { Customer = CustomerType.Critic, Delay = random.NextFloat(0f, 30f) });
+                requests.Add(new SpawnRequest { Customer = CustomerType.Critic, Delay = random.NextFloat(0f, VisitorMath.CriticArrivalSpread) });
             }
 
-            if (level >= VisitorMath.BusMinLevel && SystemAPI.HasSingleton<Shop>() && hour >= 10 && hour <= 16 &&
-                day - visitors.LastBusDay >= VisitorMath.BusEveryDays && random.NextFloat() < 0.15f)
+            if (level >= VisitorMath.BusMinLevel && SystemAPI.HasSingleton<Shop>() &&
+                hour >= VisitorMath.BusFirstHour && hour <= VisitorMath.BusLastHour &&
+                day - visitors.LastBusDay >= VisitorMath.BusEveryDays && random.NextFloat() < VisitorMath.BusChancePerHour)
             {
                 visitors.LastBusDay = day;
                 int passengers = random.NextInt(VisitorMath.BusMinPassengers, VisitorMath.BusMaxPassengers + 1);
@@ -115,7 +116,9 @@ namespace GasStation.Systems
                 return;
             }
 
-            if (level >= CustomerProfiles.Get(CustomerType.Biker).MinStationLevel && hour >= 16 && hour <= 21 && random.NextFloat() < 0.05f)
+            if (level >= CustomerProfiles.Get(CustomerType.Biker).MinStationLevel &&
+                hour >= VisitorMath.ConvoyFirstHour && hour <= VisitorMath.ConvoyLastHour &&
+                random.NextFloat() < VisitorMath.ConvoyChancePerHour)
             {
                 int convoy = random.NextInt(VisitorMath.ConvoyMin, VisitorMath.ConvoyMax + 1);
                 for (int i = 0; i < convoy; i++)
@@ -124,7 +127,8 @@ namespace GasStation.Systems
                 return;
             }
 
-            if (level >= CustomerProfiles.Get(CustomerType.Emergency).MinStationLevel && random.NextFloat() < 0.03f)
+            if (level >= CustomerProfiles.Get(CustomerType.Emergency).MinStationLevel &&
+                random.NextFloat() < VisitorMath.EmergencyChancePerHour)
             {
                 requests.Add(new SpawnRequest { Customer = CustomerType.Emergency });
                 StationEvent.Push(events, StationEventType.SpecialArrived, default, (float)CustomerType.Emergency);
@@ -132,8 +136,8 @@ namespace GasStation.Systems
             }
 
             bool hasTires = SystemAPI.HasSingleton<StationUpgrades>() && SystemAPI.GetSingleton<StationUpgrades>().TireService > 0;
-            if (hasTires && level >= CustomerProfiles.Get(CustomerType.TowTruck).MinStationLevel && hour >= 8 && hour <= 18 &&
-                random.NextFloat() < 0.05f)
+            if (hasTires && level >= CustomerProfiles.Get(CustomerType.TowTruck).MinStationLevel && daytime &&
+                random.NextFloat() < VisitorMath.TowTruckChancePerHour)
             {
                 requests.Add(new SpawnRequest { Customer = CustomerType.TowTruck });
                 StationEvent.Push(events, StationEventType.SpecialArrived, default, (float)CustomerType.TowTruck);

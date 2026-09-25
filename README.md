@@ -528,6 +528,8 @@ Panel Settings создаются при запуске кодом (`Mono/Hud/To
 
 ## Структура кода
 
+Слои, поток данных, договорённости и пошаговый рецепт новой системы — в [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
 ```
 Assets/Scripts/                 GasStation.Runtime.asmdef
   Components/  Movement, Player, Cars, Station, Traffic   — ECS-данные

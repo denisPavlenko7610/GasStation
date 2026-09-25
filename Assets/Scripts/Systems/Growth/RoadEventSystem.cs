@@ -48,9 +48,7 @@ namespace GasStation.Systems
                 }
             }
 
-            bool newDay = false;
-            for (int i = 0; i < events.Length; i++)
-                newDay |= events[i].Type == StationEventType.DayEnded;
+            bool newDay = StationEvent.Contains(events, StationEventType.DayEnded);
             if (newDay && road.Kind == RoadEventKind.None && road.Random.NextFloat() < RoadMath.DailyChance)
                 Start(ref road, events, RoadMath.PickDaily(road.Random.NextFloat()));
 

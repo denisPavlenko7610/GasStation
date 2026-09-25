@@ -51,21 +51,10 @@ namespace GasStation.Systems
                 StationEvent.Push(events, StationEventType.CompetitorOpened);
             }
 
-            if (NewDay(events))
+            if (StationEvent.Contains(events, StationEventType.DayEnded))
                 MorningMove(ref rival, stock, events);
 
             rival.OurShare = CompetitionMath.Share(OurAppeal(ref state, stock), TheirAppeal(rival, stock));
-        }
-
-        private static bool NewDay(DynamicBuffer<StationEvent> events)
-        {
-            for (int i = 0; i < events.Length; i++)
-            {
-                if (events[i].Type == StationEventType.DayEnded)
-                    return true;
-            }
-
-            return false;
         }
 
         private static void MorningMove(ref Competitor rival, DynamicBuffer<FuelStock> stock, DynamicBuffer<StationEvent> events)

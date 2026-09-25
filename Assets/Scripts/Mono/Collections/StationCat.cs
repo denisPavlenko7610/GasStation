@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Localization;
+using GasStation.Mono.Scenery;
 using UnityEngine;
 
 namespace GasStation.Mono.Collections
@@ -35,11 +36,11 @@ namespace GasStation.Mono.Collections
             _body = new GameObject("Station Cat");
             _body.transform.SetParent(transform, false);
             var fur = new Color(0.9f, 0.55f, 0.2f);
-            Part(PrimitiveType.Capsule, new Vector3(0f, 0.22f, 0f), new Vector3(0.22f, 0.2f, 0.45f), fur, Quaternion.Euler(90f, 0f, 0f));
-            Part(PrimitiveType.Sphere, new Vector3(0f, 0.38f, 0.28f), new Vector3(0.2f, 0.18f, 0.18f), fur, Quaternion.identity);
-            Part(PrimitiveType.Cube, new Vector3(-0.06f, 0.49f, 0.3f), new Vector3(0.05f, 0.07f, 0.03f), fur, Quaternion.Euler(0f, 0f, 20f));
-            Part(PrimitiveType.Cube, new Vector3(0.06f, 0.49f, 0.3f), new Vector3(0.05f, 0.07f, 0.03f), fur, Quaternion.Euler(0f, 0f, -20f));
-            Part(PrimitiveType.Capsule, new Vector3(0f, 0.32f, -0.3f), new Vector3(0.05f, 0.18f, 0.05f), fur, Quaternion.Euler(-40f, 0f, 0f));
+            PrimitiveArt.Part(_body.transform, PrimitiveType.Capsule, new Vector3(0f, 0.22f, 0f), new Vector3(0.22f, 0.2f, 0.45f), fur, Quaternion.Euler(90f, 0f, 0f));
+            PrimitiveArt.Part(_body.transform, PrimitiveType.Sphere, new Vector3(0f, 0.38f, 0.28f), new Vector3(0.2f, 0.18f, 0.18f), fur, Quaternion.identity);
+            PrimitiveArt.Part(_body.transform, PrimitiveType.Cube, new Vector3(-0.06f, 0.49f, 0.3f), new Vector3(0.05f, 0.07f, 0.03f), fur, Quaternion.Euler(0f, 0f, 20f));
+            PrimitiveArt.Part(_body.transform, PrimitiveType.Cube, new Vector3(0.06f, 0.49f, 0.3f), new Vector3(0.05f, 0.07f, 0.03f), fur, Quaternion.Euler(0f, 0f, -20f));
+            PrimitiveArt.Part(_body.transform, PrimitiveType.Capsule, new Vector3(0f, 0.32f, -0.3f), new Vector3(0.05f, 0.18f, 0.05f), fur, Quaternion.Euler(-40f, 0f, 0f));
 
             var tagObject = new GameObject("CatName");
             tagObject.transform.SetParent(_body.transform, false);
@@ -162,15 +163,5 @@ namespace GasStation.Mono.Collections
             return new Vector3(Random.Range(min.x + 2f, max.x - 2f), 0f, Random.Range(Mathf.Lerp(min.y, max.y, 0.55f), max.y - 1f));
         }
 
-        private void Part(PrimitiveType primitive, Vector3 position, Vector3 scale, Color color, Quaternion rotation)
-        {
-            var go = GameObject.CreatePrimitive(primitive);
-            Destroy(go.GetComponent<Collider>());
-            go.transform.SetParent(_body.transform, false);
-            go.transform.localPosition = position;
-            go.transform.localRotation = rotation;
-            go.transform.localScale = scale;
-            go.GetComponent<Renderer>().sharedMaterial = Build.PropVisuals.MaterialFor(color);
-        }
     }
 }

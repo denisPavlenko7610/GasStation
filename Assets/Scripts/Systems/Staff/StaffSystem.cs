@@ -37,9 +37,7 @@ namespace GasStation.Systems
             var candidates = SystemAPI.GetBuffer<StaffCandidate>(stationEntity);
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
 
-            bool newDay = false;
-            for (int i = 0; i < events.Length; i++)
-                newDay |= events[i].Type == StationEventType.DayEnded;
+            bool newDay = StationEvent.Contains(events, StationEventType.DayEnded);
 
             var time = SystemAPI.GetSingleton<GameTime>();
             float drainFactor = SkillMath.StaffDrainFactor((SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0));

@@ -170,6 +170,18 @@ namespace GasStation.Components
         /// <summary>Who the event is about, e.g. a regular id; 0 when unused.</summary>
         public int Subject;
 
+        /// <summary>True when an event of this type was pushed this frame (e.g. DayEnded at midnight).</summary>
+        public static bool Contains(DynamicBuffer<StationEvent> buffer, StationEventType type)
+        {
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                if (buffer[i].Type == type)
+                    return true;
+            }
+
+            return false;
+        }
+
         public static void Push(DynamicBuffer<StationEvent> buffer, StationEventType type, FuelType fuel = default, float value = 0f,
             int subject = 0)
         {

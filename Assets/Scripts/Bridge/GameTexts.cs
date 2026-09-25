@@ -20,6 +20,16 @@ namespace GasStation.Bridge
 
         public static string ContractName(ContractType type) => Loc.T($"contract.{type}.name");
 
+        /// <summary>★★★☆☆ for 0..5 stars.</summary>
+        public static string Stars(int stars)
+        {
+            int full = stars < 0 ? 0 : stars > 5 ? 5 : stars;
+            return new string('★', full) + new string('☆', 5 - full);
+        }
+
+        /// <summary>♥♥♥♡♡ for loyalty 0..1.</summary>
+        public static string Hearts(float loyalty) => Stars((int)System.Math.Round(loyalty * 5f)).Replace('★', '♥').Replace('☆', '♡');
+
         public static string TraitName(StaffTrait trait) => Loc.T($"trait.{trait}");
 
         public static string TraitDescription(StaffTrait trait) => Loc.T($"trait.{trait}.desc");

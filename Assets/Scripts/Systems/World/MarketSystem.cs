@@ -23,9 +23,7 @@ namespace GasStation.Systems
         public void OnUpdate(ref SystemState state)
         {
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
-            bool newDay = false;
-            for (int i = 0; i < events.Length; i++)
-                newDay |= events[i].Type == StationEventType.DayEnded;
+            bool newDay = StationEvent.Contains(events, StationEventType.DayEnded);
 
             if (!newDay)
                 return;

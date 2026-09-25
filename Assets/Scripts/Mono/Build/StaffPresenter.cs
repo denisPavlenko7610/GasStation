@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Mono.Scenery;
 using UnityEngine;
 
 namespace GasStation.Mono.Build
@@ -98,10 +99,10 @@ namespace GasStation.Mono.Build
         {
             var root = new GameObject($"Staff_{role}");
             root.transform.SetParent(transform, false);
-            Part(root.transform, PrimitiveType.Capsule, new Vector3(0f, 0.8f, 0f), new Vector3(0.5f, 0.8f, 0.5f), Uniform(role));
-            Part(root.transform, PrimitiveType.Sphere, new Vector3(0f, 1.75f, 0f), new Vector3(0.35f, 0.35f, 0.35f), new Color(0.9f, 0.75f, 0.6f));
+            PrimitiveArt.Part(root.transform, PrimitiveType.Capsule, new Vector3(0f, 0.8f, 0f), new Vector3(0.5f, 0.8f, 0.5f), Uniform(role));
+            PrimitiveArt.Part(root.transform, PrimitiveType.Sphere, new Vector3(0f, 1.75f, 0f), new Vector3(0.35f, 0.35f, 0.35f), new Color(0.9f, 0.75f, 0.6f));
             // A cap in the uniform color shows which way they face.
-            Part(root.transform, PrimitiveType.Cube, new Vector3(0f, 1.9f, 0.1f), new Vector3(0.3f, 0.06f, 0.35f), Uniform(role));
+            PrimitiveArt.Part(root.transform, PrimitiveType.Cube, new Vector3(0f, 1.9f, 0.1f), new Vector3(0.3f, 0.06f, 0.35f), Uniform(role));
 
             var tagObject = new GameObject("NameTag");
             tagObject.transform.SetParent(root.transform, false);
@@ -118,14 +119,5 @@ namespace GasStation.Mono.Build
             return new Body { Root = root, Tag = tag };
         }
 
-        private static void Part(Transform parent, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)
-        {
-            var go = GameObject.CreatePrimitive(primitive);
-            Destroy(go.GetComponent<Collider>());
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = position;
-            go.transform.localScale = scale;
-            go.GetComponent<Renderer>().sharedMaterial = PropVisuals.MaterialFor(color);
-        }
     }
 }

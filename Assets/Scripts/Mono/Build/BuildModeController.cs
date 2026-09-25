@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using GasStation.Bridge;
 using GasStation.Components;
 using GasStation.Logic;
+using GasStation.Mono.Hud;
+using GasStation.Mono.Scenery;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -107,7 +109,7 @@ namespace GasStation.Mono.Build
         {
             for (int i = 0; i < PropTypes.Count; i++)
             {
-                if (DigitPressed(keyboard, i + 1))
+                if (Keys.DigitPressed(keyboard, i + 1))
                     BuildMode.Selected = (PropType)i;
             }
 
@@ -143,7 +145,7 @@ namespace GasStation.Mono.Build
                 return;
 
             _ghostValid = valid;
-            PropVisuals.Tint(_ghost, valid ? Valid : Invalid);
+            PrimitiveArt.Tint(_ghost, valid ? Valid : Invalid);
         }
 
         private void SetGhostVisible(bool visible)
@@ -152,17 +154,5 @@ namespace GasStation.Mono.Build
                 _ghost.SetActive(visible);
         }
 
-        private static bool DigitPressed(Keyboard keyboard, int digit) => digit switch
-        {
-            1 => keyboard.digit1Key.wasPressedThisFrame,
-            2 => keyboard.digit2Key.wasPressedThisFrame,
-            3 => keyboard.digit3Key.wasPressedThisFrame,
-            4 => keyboard.digit4Key.wasPressedThisFrame,
-            5 => keyboard.digit5Key.wasPressedThisFrame,
-            6 => keyboard.digit6Key.wasPressedThisFrame,
-            7 => keyboard.digit7Key.wasPressedThisFrame,
-            8 => keyboard.digit8Key.wasPressedThisFrame,
-            _ => false
-        };
     }
 }

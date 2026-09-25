@@ -93,6 +93,22 @@ namespace GasStation.Logic
         public const int ConvoyMax = 6;
         public const float ConvoyInterval = 1.5f;
 
+        // Hourly chances of special guests (VisitorSystem) and the hours they come.
+        public const float CriticChancePerHour = 0.12f;
+        public const float BusChancePerHour = 0.15f;
+        public const float ConvoyChancePerHour = 0.05f;
+        public const float EmergencyChancePerHour = 0.03f;
+        public const float TowTruckChancePerHour = 0.05f;
+        public const int BusFirstHour = 10;
+        public const int BusLastHour = 16;
+        public const int ConvoyFirstHour = 16;
+        public const int ConvoyLastHour = 21;
+        public const int DaytimeFirstHour = 10;
+        public const int DaytimeLastHour = 18;
+        /// <summary>Regulars arrive spread over this many seconds after their hour starts.</summary>
+        public const float RegularArrivalSpread = 20f;
+        public const float CriticArrivalSpread = 30f;
+
         public const float EmergencyReputation = 0.02f;
         public const float TowTireMultiplier = 2f;
 
