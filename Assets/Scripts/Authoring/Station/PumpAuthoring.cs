@@ -10,6 +10,8 @@ namespace GasStation.Authoring
         public int number = 1;
         public Transform stopPoint;
         [Tooltip("Liters per second")] public float flowRate = 5f;
+        [Tooltip("ExtraPump upgrade level that opens this pump. 0 = open from the start")]
+        public int requiredUpgradeLevel;
     }
 
     public class PumpBaker : Baker<PumpAuthoring>
@@ -35,7 +37,8 @@ namespace GasStation.Authoring
                 StopPosition = stopPosition,
                 StopRotation = stopRotation,
                 FlowRate = authoring.flowRate,
-                Occupant = Entity.Null
+                Occupant = Entity.Null,
+                RequiredUpgradeLevel = authoring.requiredUpgradeLevel
             });
         }
     }

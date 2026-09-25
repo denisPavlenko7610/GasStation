@@ -21,6 +21,8 @@ namespace GasStation.Components
         public float ReceivedLiters;
         public Entity Pump;
         public uint ArrivalOrder;
+        /// <summary>Seconds spent at the pump waiting for service.</summary>
+        public float ServiceWait;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

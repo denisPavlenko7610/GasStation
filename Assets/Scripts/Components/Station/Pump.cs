@@ -12,5 +12,7 @@ namespace GasStation.Components
         /// <summary>Liters per second.</summary>
         public float FlowRate;
         public Entity Occupant;
+        /// <summary>ExtraPump upgrade level needed before cars use this pump. 0 = always open.</summary>
+        public int RequiredUpgradeLevel;
     }
 }

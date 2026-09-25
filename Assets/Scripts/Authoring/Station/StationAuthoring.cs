@@ -65,6 +65,9 @@ namespace GasStation.Authoring
                 InteractionRadius = authoring.interactionRadius
             });
 
+            AddComponent(entity, new StationUpgrades());
+            AddBuffer<StationEvent>(entity);
+
             var stock = AddBuffer<FuelStock>(entity);
             for (int i = 0; i < FuelTypes.Count; i++)
                 stock.Add(ToStock(Find(authoring, (FuelType)i)));

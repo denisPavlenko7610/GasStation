@@ -27,6 +27,7 @@ namespace GasStation.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<CarSpawner>();
+            state.RequireForUpdate<StationUpgrades>();
         }
 
         [BurstCompile]
@@ -47,11 +48,15 @@ namespace GasStation.Systems
 
             queue.Sort();
             int head = 0;
+            int openedPumps = SystemAPI.GetSingleton<StationUpgrades>().ExtraPump;
 
             foreach (var (pump, pumpEntity) in SystemAPI.Query<RefRW<Pump>>().WithEntityAccess())
             {
                 if (head >= queue.Length)
                     break;
+
+                if (pump.ValueRO.RequiredUpgradeLevel > openedPumps)
+                    continue;
 
                 var occupant = pump.ValueRO.Occupant;
                 if (occupant != Entity.Null && SystemAPI.Exists(occupant))

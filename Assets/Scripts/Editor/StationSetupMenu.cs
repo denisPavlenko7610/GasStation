@@ -49,8 +49,11 @@ namespace GasStation.Editor
                 Create("Exit_1_Despawn", spawnerGo.transform, new Vector3(40f, 0f, 0f)).transform
             };
 
-            CreatePump(root.transform, 1, new Vector3(0f, 0f, -5f), new Vector3(0f, 0f, -2.5f));
-            CreatePump(root.transform, 2, new Vector3(0f, 0f, 5f), new Vector3(0f, 0f, 2.5f));
+            CreatePump(root.transform, 1, new Vector3(0f, 0f, -5f), new Vector3(0f, 0f, -2.5f), 0);
+            CreatePump(root.transform, 2, new Vector3(0f, 0f, 5f), new Vector3(0f, 0f, 2.5f), 0);
+            // Pumps 3 and 4 are opened by the ExtraPump upgrade.
+            CreatePump(root.transform, 3, new Vector3(0f, 0f, -12f), new Vector3(0f, 0f, -9.5f), 1);
+            CreatePump(root.transform, 4, new Vector3(0f, 0f, 12f), new Vector3(0f, 0f, 9.5f), 2);
 
             EditorSceneManager.MarkSceneDirty(scene);
             Selection.activeGameObject = root;
@@ -59,11 +62,12 @@ namespace GasStation.Editor
                       $"Найдено машин: {spawner.carPrefabs.Length}. Расставьте точки маршрута и колонки под окружение.");
         }
 
-        private static void CreatePump(Transform parent, int number, Vector3 position, Vector3 stopPosition)
+        private static void CreatePump(Transform parent, int number, Vector3 position, Vector3 stopPosition, int requiredUpgradeLevel)
         {
             var pumpGo = Create($"Pump_{number}", parent, position);
             var pump = pumpGo.AddComponent<PumpAuthoring>();
             pump.number = number;
+            pump.requiredUpgradeLevel = requiredUpgradeLevel;
 
             var stop = Create("StopPoint", pumpGo.transform, stopPosition - position);
             stop.transform.rotation = Quaternion.LookRotation(Vector3.right);

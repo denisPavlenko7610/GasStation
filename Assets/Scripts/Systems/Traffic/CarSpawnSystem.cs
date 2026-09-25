@@ -22,6 +22,7 @@ namespace GasStation.Systems
             state.RequireForUpdate<GameTime>();
             state.RequireForUpdate<Economy>();
             state.RequireForUpdate<FuelStock>();
+            state.RequireForUpdate<StationUpgrades>();
             _cars = SystemAPI.QueryBuilder().WithAll<Car>().Build();
         }
 
@@ -35,6 +36,7 @@ namespace GasStation.Systems
 
             float hour = SystemAPI.GetSingleton<GameTime>().Hour;
             float reputation = SystemAPI.GetSingleton<Economy>().Reputation;
+            var upgrades = SystemAPI.GetSingleton<StationUpgrades>();
             var stock = SystemAPI.GetSingletonBuffer<FuelStock>(true);
 
             float attractiveness = 0f;
@@ -44,7 +46,8 @@ namespace GasStation.Systems
 
             float intensity = StationMath.TrafficIntensity(hour)
                               * StationMath.ReputationFactor(reputation)
-                              * attractiveness;
+                              * attractiveness
+                              * UpgradeMath.TrafficMultiplier(upgrades.Advertising);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;
@@ -59,7 +62,8 @@ namespace GasStation.Systems
             float scale = SystemAPI.HasComponent<LocalTransform>(prefab)
                 ? SystemAPI.GetComponent<LocalTransform>(prefab).Scale
                 : 1f;
-            float patience = spawner.Random.NextFloat(spawner.PatienceRange.x, spawner.PatienceRange.y);
+            float patience = spawner.Random.NextFloat(spawner.PatienceRange.x, spawner.PatienceRange.y)
+                             * UpgradeMath.PatienceMultiplier(upgrades.Comfort);
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var car = ecb.Instantiate(prefab);

@@ -16,6 +16,7 @@ namespace GasStation.Systems
         {
             state.RequireForUpdate<FuelStock>();
             state.RequireForUpdate<FuelDelivery>();
+            state.RequireForUpdate<StationEvent>();
         }
 
         [BurstCompile]
@@ -23,6 +24,7 @@ namespace GasStation.Systems
         {
             float deltaTime = SystemAPI.Time.DeltaTime;
             var stock = SystemAPI.GetSingletonBuffer<FuelStock>();
+            var events = SystemAPI.GetSingletonBuffer<StationEvent>();
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (delivery, entity) in SystemAPI.Query<RefRW<FuelDelivery>>().WithEntityAccess())
@@ -35,6 +37,7 @@ namespace GasStation.Systems
                 var entry = stock[index];
                 entry.Amount = math.min(entry.Capacity, entry.Amount + delivery.ValueRO.Liters);
                 stock[index] = entry;
+                StationEvent.Push(events, StationEventType.FuelDelivered, delivery.ValueRO.Type, delivery.ValueRO.Liters);
                 ecb.DestroyEntity(entity);
             }
 

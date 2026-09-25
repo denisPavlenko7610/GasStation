@@ -7,13 +7,18 @@ namespace GasStation.Bridge
     public enum StationCommandType
     {
         ChangePrice,
-        OrderFuel
+        OrderFuel,
+        BuyUpgrade,
+        SaveGame,
+        LoadGame,
+        NewGame
     }
 
     public struct StationCommand
     {
         public StationCommandType Type;
         public FuelType Fuel;
+        public UpgradeType Upgrade;
         public float Value;
     }
 
@@ -29,6 +34,15 @@ namespace GasStation.Bridge
 
         public static void OrderFuel(FuelType fuel, float liters) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.OrderFuel, Fuel = fuel, Value = liters });
+
+        public static void BuyUpgrade(UpgradeType upgrade) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.BuyUpgrade, Upgrade = upgrade });
+
+        public static void SaveGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.SaveGame });
+
+        public static void LoadGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.LoadGame });
+
+        public static void NewGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.NewGame });
 
         public static bool TryDequeue(out StationCommand command) => Queue.TryDequeue(out command);
 

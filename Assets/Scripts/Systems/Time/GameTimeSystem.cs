@@ -15,6 +15,7 @@ namespace GasStation.Systems
         {
             state.RequireForUpdate<GameTime>();
             state.RequireForUpdate<Economy>();
+            state.RequireForUpdate<StationEvent>();
         }
 
         [BurstCompile]
@@ -37,6 +38,8 @@ namespace GasStation.Systems
                 Served = economy.DayServed,
                 Lost = economy.DayLost
             });
+
+            StationEvent.Push(SystemAPI.GetSingletonBuffer<StationEvent>(), StationEventType.DayEnded, default, economy.DayIncome - economy.DayExpenses);
 
             economy.DayIncome = 0f;
             economy.DayExpenses = 0f;

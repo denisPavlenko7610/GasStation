@@ -4,6 +4,7 @@
     "references": [
         "GasStation.Runtime",
         "Unity.Mathematics",
+        "Unity.Entities",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

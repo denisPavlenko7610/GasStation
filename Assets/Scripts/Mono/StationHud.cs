@@ -1,6 +1,7 @@
 using System.Text;
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Logic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ namespace GasStation.Mono
         private const float MessageDuration = 3f;
         private const float ReportDuration = 8f;
 
-        private static readonly string[] FuelNames = { "АИ-92", "АИ-95", "ДТ" };
+        private const float NewGameConfirmTime = 2f;
 
         private readonly StringBuilder _builder = new();
         private Canvas _canvas;
@@ -24,6 +25,9 @@ namespace GasStation.Mono
         private Text _pumps;
         private Text _center;
         private Text _help;
+        private Text _shop;
+        private bool _shopOpen;
+        private float _newGameRequestedAt = float.NegativeInfinity;
         private FuelType _selectedFuel;
         private int _shownReportDay;
         private float _reportShownAt = float.NegativeInfinity;
@@ -45,7 +49,9 @@ namespace GasStation.Mono
             _pumps = CreateText("Pumps", font, new Vector2(0f, 0f), TextAnchor.LowerLeft, 26);
             _center = CreateText("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 34);
             _help = CreateText("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 22);
-            _help.text = "WASD — ходить   E / ЛКМ — заправить\n1/2/3 — выбрать топливо   +/- — цена   O — заказать 500 л";
+            _help.text = "WASD — ходить   E / ЛКМ — заправить\n1/2/3 — топливо   +/- — цена   O — заказать 500 л\n" +
+                         "Tab — улучшения   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
+            _shop = CreateText("Shop", font, new Vector2(0.5f, 1f), TextAnchor.UpperCenter, 26);
         }
 
         private void Update()
@@ -59,6 +65,7 @@ namespace GasStation.Mono
             _fuel.text = BuildFuel();
             _pumps.text = BuildPumps();
             _center.text = BuildCenter();
+            _shop.text = _shopOpen ? BuildShop() : string.Empty;
         }
 
         private void HandleKeys()
@@ -66,6 +73,38 @@ namespace GasStation.Mono
             var keyboard = Keyboard.current;
             if (keyboard == null)
                 return;
+
+            if (keyboard.tabKey.wasPressedThisFrame)
+                _shopOpen = !_shopOpen;
+
+            if (keyboard.f5Key.wasPressedThisFrame)
+                StationCommands.SaveGame();
+            if (keyboard.f9Key.wasPressedThisFrame)
+                StationCommands.LoadGame();
+            if (keyboard.f10Key.wasPressedThisFrame)
+            {
+                if (Time.unscaledTime - _newGameRequestedAt < NewGameConfirmTime)
+                {
+                    StationCommands.NewGame();
+                    _newGameRequestedAt = float.NegativeInfinity;
+                }
+                else
+                {
+                    _newGameRequestedAt = Time.unscaledTime;
+                    HudModel.Notify("Нажмите F10 ещё раз, чтобы начать заново");
+                }
+            }
+
+            if (_shopOpen)
+            {
+                for (int i = 0; i < UpgradeTypes.Count; i++)
+                {
+                    if (DigitPressed(keyboard, i + 1))
+                        StationCommands.BuyUpgrade((UpgradeType)i);
+                }
+
+                return;
+            }
 
             if (keyboard.digit1Key.wasPressedThisFrame) _selectedFuel = FuelType.Petrol92;
             if (keyboard.digit2Key.wasPressedThisFrame) _selectedFuel = FuelType.Petrol95;
@@ -77,6 +116,33 @@ namespace GasStation.Mono
                 StationCommands.ChangePrice(_selectedFuel, -PriceStep);
             if (keyboard.oKey.wasPressedThisFrame)
                 StationCommands.OrderFuel(_selectedFuel, OrderLiters);
+        }
+
+        private static bool DigitPressed(Keyboard keyboard, int digit) => digit switch
+        {
+            1 => keyboard.digit1Key.wasPressedThisFrame,
+            2 => keyboard.digit2Key.wasPressedThisFrame,
+            3 => keyboard.digit3Key.wasPressedThisFrame,
+            4 => keyboard.digit4Key.wasPressedThisFrame,
+            5 => keyboard.digit5Key.wasPressedThisFrame,
+            6 => keyboard.digit6Key.wasPressedThisFrame,
+            _ => false
+        };
+
+        private string BuildShop()
+        {
+            _builder.Clear();
+            _builder.AppendLine("УЛУЧШЕНИЯ (цифра — купить, Tab — закрыть)");
+            for (int i = 0; i < UpgradeTypes.Count; i++)
+            {
+                var type = (UpgradeType)i;
+                int level = HudModel.Upgrades.Get(type);
+                int max = UpgradeMath.MaxLevel(type);
+                string price = UpgradeMath.CanUpgrade(type, level) ? $"${UpgradeMath.Cost(type, level):0}" : "макс.";
+                _builder.AppendLine($"{i + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
+            }
+
+            return _builder.ToString();
         }
 
         private string BuildStatus()
@@ -101,7 +167,7 @@ namespace GasStation.Mono
             {
                 var fuel = HudModel.Fuel[i];
                 string marker = (int)_selectedFuel == i ? "▶ " : "";
-                _builder.Append($"{marker}{FuelNames[i]}: {fuel.Amount:0}/{fuel.Capacity:0} л   ${fuel.SellPrice:0.00} (рынок ${fuel.MarketPrice:0.00})");
+                _builder.Append($"{marker}{GameTexts.FuelName((FuelType)i)}: {fuel.Amount:0}/{fuel.Capacity:0} л   ${fuel.SellPrice:0.00} (рынок ${fuel.MarketPrice:0.00})");
                 if (HudModel.PendingDelivery[i] > 0f)
                     _builder.Append($"   +{HudModel.PendingDelivery[i]:0} л в пути");
                 _builder.AppendLine();
@@ -117,13 +183,19 @@ namespace GasStation.Mono
             foreach (var pump in HudModel.Pumps)
             {
                 _builder.Append($"Колонка {pump.Number}: ");
+                if (pump.Locked)
+                {
+                    _builder.AppendLine("закрыта (улучшение «Новая колонка»)");
+                    continue;
+                }
+
                 if (!pump.Occupied)
                 {
                     _builder.AppendLine("свободна");
                     continue;
                 }
 
-                string fuel = FuelNames[(int)pump.FuelType];
+                string fuel = GameTexts.FuelName(pump.FuelType);
                 string state = pump.CarState switch
                 {
                     CarState.DrivingToPump => "подъезжает",

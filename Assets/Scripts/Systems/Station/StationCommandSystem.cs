@@ -1,11 +1,13 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Logic;
+using GasStation.Save;
 using Unity.Entities;
 using Unity.Mathematics;
 
 namespace GasStation.Systems
 {
-    /// <summary>Applies commands queued by the UI: price changes and fuel orders.</summary>
+    /// <summary>Applies commands queued by the UI: prices, fuel orders, upgrades, save/load.</summary>
     [UpdateInGroup(typeof(StationSystemGroup))]
     [UpdateAfter(typeof(GameTimeSystem))]
     public partial class StationCommandSystem : SystemBase
@@ -16,6 +18,7 @@ namespace GasStation.Systems
         {
             RequireForUpdate<Economy>();
             RequireForUpdate<StationSettings>();
+            RequireForUpdate<StationUpgrades>();
         }
 
         protected override void OnUpdate()
@@ -30,6 +33,30 @@ namespace GasStation.Systems
                         break;
                     case StationCommandType.OrderFuel:
                         OrderFuel(station, command.Fuel, command.Value);
+                        break;
+                    case StationCommandType.BuyUpgrade:
+                        BuyUpgrade(station, command.Upgrade);
+                        break;
+                    case StationCommandType.SaveGame:
+                        SaveService.Write(SaveService.Capture(EntityManager, station));
+                        HudModel.Notify("Игра сохранена");
+                        break;
+                    case StationCommandType.LoadGame:
+                        if (SaveService.TryRead(out var data))
+                        {
+                            SaveService.Apply(EntityManager, station, data);
+                            HudModel.Notify("Игра загружена");
+                        }
+                        else
+                        {
+                            HudModel.Notify("Сохранение не найдено");
+                        }
+                        break;
+                    case StationCommandType.NewGame:
+                        SaveService.Delete();
+                        if (SaveService.Defaults != null)
+                            SaveService.Apply(EntityManager, station, SaveService.Defaults);
+                        HudModel.Notify("Новая игра");
                         break;
                 }
             }
@@ -65,7 +92,7 @@ namespace GasStation.Systems
             float cost = liters * stock.BuyPrice;
             if (economy.ValueRO.Money < cost)
             {
-                HudModel.Notify($"Не хватает денег: нужно {cost:0}");
+                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
                 return;
             }
 
@@ -81,7 +108,49 @@ namespace GasStation.Systems
                 TimeLeft = settings.FuelDeliveryTime
             });
 
-            HudModel.Notify($"Заказано {liters:0} л, привезут через {settings.FuelDeliveryTime:0} с");
+            HudModel.Notify($"Заказано {liters:0} л {GameTexts.FuelName(fuel)}, привезут через {settings.FuelDeliveryTime:0} с");
+        }
+
+        private void BuyUpgrade(Entity station, UpgradeType type)
+        {
+            var upgrades = SystemAPI.GetComponentRW<StationUpgrades>(station);
+            int level = upgrades.ValueRO.Get(type);
+            if (!UpgradeMath.CanUpgrade(type, level))
+            {
+                HudModel.Notify($"{GameTexts.UpgradeName(type)}: максимальный уровень");
+                return;
+            }
+
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            float cost = UpgradeMath.Cost(type, level);
+            if (economy.ValueRO.Money < cost)
+            {
+                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                return;
+            }
+
+            economy.ValueRW.Money -= cost;
+            economy.ValueRW.DayExpenses += cost;
+            upgrades.ValueRW.Set(type, level + 1);
+
+            switch (type)
+            {
+                case UpgradeType.TankCapacity:
+                    var stock = SystemAPI.GetBuffer<FuelStock>(station);
+                    for (int i = 0; i < stock.Length; i++)
+                    {
+                        var entry = stock[i];
+                        entry.Capacity += UpgradeMath.TankBonusPerLevel;
+                        stock[i] = entry;
+                    }
+                    break;
+                case UpgradeType.Attendant:
+                    economy.ValueRW.DailyFixedCosts += UpgradeMath.AttendantSalaryPerLevel;
+                    break;
+            }
+
+            HudModel.Notify($"Куплено: {GameTexts.UpgradeName(type)}, уровень {level + 1}");
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.UpgradeBought, default, cost);
         }
     }
 }

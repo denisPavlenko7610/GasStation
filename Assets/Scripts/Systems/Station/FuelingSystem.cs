@@ -17,6 +17,8 @@ namespace GasStation.Systems
             state.RequireForUpdate<CarSpawner>();
             state.RequireForUpdate<Economy>();
             state.RequireForUpdate<FuelStock>();
+            state.RequireForUpdate<StationUpgrades>();
+            state.RequireForUpdate<StationEvent>();
         }
 
         [BurstCompile]
@@ -25,6 +27,8 @@ namespace GasStation.Systems
             float deltaTime = SystemAPI.Time.DeltaTime;
             var stock = SystemAPI.GetSingletonBuffer<FuelStock>();
             var economy = SystemAPI.GetSingletonRW<Economy>();
+            var events = SystemAPI.GetSingletonBuffer<StationEvent>();
+            float flowMultiplier = UpgradeMath.FlowMultiplier(SystemAPI.GetSingleton<StationUpgrades>().PumpSpeed);
             var exitRoute = SystemAPI.GetBuffer<ExitRoutePoint>(SystemAPI.GetSingletonEntity<CarSpawner>());
 
             foreach (var (car, patience, path) in SystemAPI
@@ -45,13 +49,16 @@ namespace GasStation.Systems
                 var fuel = stock[fuelIndex];
 
                 float remaining = car.ValueRO.RequestedLiters - car.ValueRO.ReceivedLiters;
-                float amount = StationMath.Dispense(pump.ValueRO.FlowRate * deltaTime, remaining, fuel.Amount);
+                float amount = StationMath.Dispense(pump.ValueRO.FlowRate * flowMultiplier * deltaTime, remaining, fuel.Amount);
+                bool hadFuel = fuel.Amount > 0f;
                 fuel.Amount -= amount;
                 stock[fuelIndex] = fuel;
                 car.ValueRW.ReceivedLiters += amount;
 
                 bool full = car.ValueRO.ReceivedLiters >= car.ValueRO.RequestedLiters - 0.001f;
                 bool outOfFuel = fuel.Amount <= 0f;
+                if (hadFuel && outOfFuel)
+                    StationEvent.Push(events, StationEventType.FuelRanOut, car.ValueRO.FuelType);
                 if (!full && !outOfFuel)
                     continue;
 
@@ -63,12 +70,14 @@ namespace GasStation.Systems
                     eco.Money += payment;
                     eco.DayIncome += payment;
                     eco.DayServed++;
+                    StationEvent.Push(events, StationEventType.CustomerPaid, car.ValueRO.FuelType, payment);
                     eco.Reputation = StationMath.ClampReputation(
                         eco.Reputation + StationMath.ServiceReputationDelta(patienceRatio, fuel.SellPrice, fuel.MarketPrice));
                 }
                 else
                 {
                     eco.DayLost++;
+                    StationEvent.Push(events, StationEventType.CustomerLeftAngry, car.ValueRO.FuelType);
                     eco.Reputation = StationMath.ClampReputation(eco.Reputation - StationMath.LostCustomerPenalty);
                 }
 

@@ -1,26 +1,38 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GasStation.Mono
 {
-    /// <summary>Creates the HUD and attaches the day/night cycle without manual scene setup.</summary>
+    /// <summary>Creates the HUD and audio, and attaches the day/night cycle, without manual scene setup.</summary>
     public static class GameBootstrap
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
         {
-            if (Object.FindFirstObjectByType<StationHud>() == null)
+            if (Object.FindAnyObjectByType<StationHud>() == null)
             {
-                var hud = new GameObject("StationHud");
-                hud.AddComponent<StationHud>();
-                Object.DontDestroyOnLoad(hud);
+                var root = new GameObject("StationHud");
+                root.AddComponent<StationHud>();
+                root.AddComponent<StationAudio>();
+                Object.DontDestroyOnLoad(root);
             }
 
+            AttachDayNightCycle();
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private static void OnSceneLoaded(Scene scene, LoadSceneMode mode) => AttachDayNightCycle();
+
+        private static void AttachDayNightCycle()
+        {
             var sun = RenderSettings.sun;
             if (sun == null)
             {
-                foreach (var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                // Resources.FindObjectsOfTypeAll avoids the FindObjectsSortMode overloads deprecated in Unity 6.5+.
+                foreach (var light in Resources.FindObjectsOfTypeAll<Light>())
                 {
-                    if (light.type == LightType.Directional)
+                    if (light.type == LightType.Directional && light.gameObject.scene.IsValid() && light.isActiveAndEnabled)
                     {
                         sun = light;
                         break;

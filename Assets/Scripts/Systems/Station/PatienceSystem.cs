@@ -16,6 +16,7 @@ namespace GasStation.Systems
         {
             state.RequireForUpdate<CarSpawner>();
             state.RequireForUpdate<Economy>();
+            state.RequireForUpdate<StationEvent>();
         }
 
         [BurstCompile]
@@ -23,6 +24,7 @@ namespace GasStation.Systems
         {
             float deltaTime = SystemAPI.Time.DeltaTime;
             var economy = SystemAPI.GetSingletonRW<Economy>();
+            var events = SystemAPI.GetSingletonBuffer<StationEvent>();
             var exitRoute = SystemAPI.GetBuffer<ExitRoutePoint>(SystemAPI.GetSingletonEntity<CarSpawner>());
 
             foreach (var (car, patience, path) in SystemAPI
@@ -41,6 +43,7 @@ namespace GasStation.Systems
                     SystemAPI.GetComponentRW<Pump>(pumpEntity).ValueRW.Occupant = Entity.Null;
 
                 economy.ValueRW.DayLost++;
+                StationEvent.Push(events, StationEventType.CustomerLeftAngry, car.ValueRO.FuelType);
                 economy.ValueRW.Reputation = StationMath.ClampReputation(
                     economy.ValueRO.Reputation - StationMath.LostCustomerPenalty);
 

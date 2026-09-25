@@ -18,6 +18,7 @@ namespace GasStation.Systems
         {
             state.RequireForUpdate<PlayerTag>();
             state.RequireForUpdate<StationSettings>();
+            state.RequireForUpdate<StationEvent>();
         }
 
         [BurstCompile]
@@ -52,8 +53,11 @@ namespace GasStation.Systems
                     continue;
 
                 var car = SystemAPI.GetComponentRW<Car>(occupant);
-                if (car.ValueRO.State == CarState.WaitingForService)
-                    car.ValueRW.State = CarState.Fueling;
+                if (car.ValueRO.State != CarState.WaitingForService)
+                    continue;
+
+                car.ValueRW.State = CarState.Fueling;
+                StationEvent.Push(SystemAPI.GetSingletonBuffer<StationEvent>(), StationEventType.FuelingStarted, car.ValueRO.FuelType);
             }
         }
     }

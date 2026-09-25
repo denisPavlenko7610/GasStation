@@ -16,6 +16,7 @@ namespace GasStation.Bridge
     public struct PumpInfo
     {
         public int Number;
+        public bool Locked;
         public bool Occupied;
         public CarState CarState;
         public FuelType FuelType;
@@ -37,6 +38,11 @@ namespace GasStation.Bridge
         public static readonly FuelStock[] Fuel = new FuelStock[FuelTypes.Count];
         public static readonly float[] PendingDelivery = new float[FuelTypes.Count];
         public static readonly List<PumpInfo> Pumps = new();
+        public static StationUpgrades Upgrades;
+
+        /// <summary>Events of the last simulation frame. Refilled every frame; read them in Update.</summary>
+        public static readonly List<StationEvent> Events = new();
+        public static bool AnyFueling;
 
         public static int QueueLength;
         public static int CarsOnSite;
@@ -56,6 +62,9 @@ namespace GasStation.Bridge
         {
             HasStation = false;
             Pumps.Clear();
+            Events.Clear();
+            AnyFueling = false;
+            Upgrades = default;
             LastReport = default;
             Message = null;
             MessageTime = float.NegativeInfinity;
