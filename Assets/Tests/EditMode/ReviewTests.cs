@@ -45,8 +45,8 @@ namespace GasStation.Tests
         public void ReviewEvents_CountIntoStats()
         {
             var stats = new StationStats();
-            AchievementCatalog.Count(ref stats, StationEventType.CustomerReview, 4f);
-            AchievementCatalog.Count(ref stats, StationEventType.CustomerReview, 2f);
+            AchievementCatalog.Record(ref stats, StationEventType.CustomerReview, 4f);
+            AchievementCatalog.Record(ref stats, StationEventType.CustomerReview, 2f);
             Assert.AreEqual(2, stats.RatingCount);
             Assert.AreEqual(6f, stats.RatingSum);
         }

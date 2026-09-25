@@ -3,10 +3,6 @@
     "rootNamespace": "GasStation.Editor",
     "references": [
         "GasStation.Runtime",
-        "Unity.Scenes",
-        "Unity.Entities",
-        "Unity.Localization",
-        "Unity.Localization.Editor",
         "Unity.Addressables",
         "Unity.Addressables.Editor"
     ],

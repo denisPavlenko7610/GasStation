@@ -31,7 +31,7 @@ namespace GasStation.Systems
             for (int i = 0; i < count; i++)
             {
                 var stationEvent = events[i];
-                AchievementCatalog.Count(ref stats, stationEvent.Type, stationEvent.Value);
+                AchievementCatalog.Record(ref stats, stationEvent.Type, stationEvent.Value);
 
                 if (stationEvent.Type != StationEventType.DayEnded)
                     continue;

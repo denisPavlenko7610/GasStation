@@ -147,7 +147,7 @@ namespace GasStation.Systems
 
             var areaEntity = SystemAPI.GetSingletonEntity<BuildArea>();
             HudModel.BuildArea = SystemAPI.GetComponent<BuildArea>(areaEntity);
-            foreach (var zone in SystemAPI.GetBuffer<NoBuildZone>(areaEntity, true))
+            foreach (var zone in SystemAPI.GetBuffer<NoBuildZone>(areaEntity))
                 HudModel.NoBuildZones.Add(zone);
             if (SystemAPI.HasSingleton<PropEffects>())
                 HudModel.PropEffects = SystemAPI.GetSingleton<PropEffects>();
@@ -160,7 +160,7 @@ namespace GasStation.Systems
             {
                 var dinerEntity = SystemAPI.GetSingletonEntity<Diner>();
                 HudModel.Diner = SystemAPI.GetComponent<Diner>(dinerEntity);
-                var counter = SystemAPI.GetBuffer<DinerCounter>(dinerEntity, true);
+                var counter = SystemAPI.GetBuffer<DinerCounter>(dinerEntity);
                 for (int i = 0; i < DinerDishes.Count; i++)
                     HudModel.DinerCounter[i] = i < counter.Length ? counter[i] : default;
             }
@@ -170,7 +170,7 @@ namespace GasStation.Systems
             if (!SystemAPI.HasSingleton<ChargingStation>())
                 return;
 
-            var spots = SystemAPI.GetBuffer<ChargerSpot>(SystemAPI.GetSingletonEntity<ChargingStation>(), true);
+            var spots = SystemAPI.GetBuffer<ChargerSpot>(SystemAPI.GetSingletonEntity<ChargingStation>());
             HudModel.ChargersOpen = EvMath.OpenChargers(HudModel.Upgrades.EvCharger, spots.Length);
             for (int i = 0; i < HudModel.ChargersOpen; i++)
             {

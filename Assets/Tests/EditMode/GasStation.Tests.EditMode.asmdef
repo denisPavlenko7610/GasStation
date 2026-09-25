@@ -5,6 +5,7 @@
         "GasStation.Runtime",
         "Unity.Mathematics",
         "Unity.Entities",
+        "Unity.Collections",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

@@ -31,10 +31,11 @@ namespace GasStation.Logic
             _ => 1
         };
 
-        /// <summary>Main (walls, canopy) and accent (pumps, trims) colors, linear RGB.</summary>
+        /// <summary>Main (walls, canopy) and accent (pumps, trims) colors, linear RGB.
+        /// Scheme 0 stays near white so the asset pack textures remain readable.</summary>
         public static float3 Primary(int scheme) => scheme switch
         {
-            0 => new float3(0.55f, 0.5f, 0.45f),
+            0 => new float3(0.85f, 0.8f, 0.72f),
             1 => new float3(0.95f, 0.95f, 0.92f),
             2 => new float3(0.95f, 0.62f, 0.35f),
             3 => new float3(0.25f, 0.2f, 0.35f),
@@ -43,7 +44,7 @@ namespace GasStation.Logic
 
         public static float3 Accent(int scheme) => scheme switch
         {
-            0 => new float3(0.45f, 0.35f, 0.3f),
+            0 => new float3(0.78f, 0.64f, 0.54f),
             1 => new float3(0.85f, 0.15f, 0.15f),
             2 => new float3(0.55f, 0.2f, 0.45f),
             3 => new float3(0.1f, 0.9f, 0.85f),

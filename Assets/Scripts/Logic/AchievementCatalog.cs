@@ -83,7 +83,7 @@ namespace GasStation.Logic
             or StationEventType.ParkingPaid or StationEventType.MotelPaid or StationEventType.TiresChanged
             or StationEventType.InspectionPassed;
 
-        public static void Count(ref StationStats stats, StationEventType type, float value)
+        public static void Record(ref StationStats stats, StationEventType type, float value)
         {
             if (IsIncome(type))
                 stats.Income += value;

@@ -31,10 +31,10 @@ namespace GasStation.Tests
         public void Count_TracksServedAndIncome()
         {
             var stats = new StationStats();
-            AchievementCatalog.Count(ref stats, StationEventType.CustomerPaid, 30f);
-            AchievementCatalog.Count(ref stats, StationEventType.TipReceived, 5f);
-            AchievementCatalog.Count(ref stats, StationEventType.QuestCompleted, 500f);
-            AchievementCatalog.Count(ref stats, StationEventType.TrashCollected, 0f);
+            AchievementCatalog.Record(ref stats, StationEventType.CustomerPaid, 30f);
+            AchievementCatalog.Record(ref stats, StationEventType.TipReceived, 5f);
+            AchievementCatalog.Record(ref stats, StationEventType.QuestCompleted, 500f);
+            AchievementCatalog.Record(ref stats, StationEventType.TrashCollected, 0f);
 
             Assert.AreEqual(1, stats.Served);
             Assert.AreEqual(1, stats.TrashCollected);

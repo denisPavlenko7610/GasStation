@@ -11,9 +11,9 @@
         "Unity.InputSystem",
         "UnityEngine.UI",
         "Unity.Localization",
+        "Unity.ResourceManager",
         "Unity.RenderPipelines.Universal.Runtime",
-        "Unity.RenderPipelines.Core.Runtime",
-        "Zenject"
+        "Unity.RenderPipelines.Core.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
