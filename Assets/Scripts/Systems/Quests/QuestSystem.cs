@@ -41,7 +41,8 @@ namespace GasStation.Systems
                 economy.DayIncome,
                 SystemAPI.GetComponent<StationUpgrades>(station).ExtraPump,
                 SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1,
-                SystemAPI.GetComponent<StationUpgrades>(station).CarWash);
+                SystemAPI.GetComponent<StationUpgrades>(station).CarWash,
+                SystemAPI.HasComponent<StationStyle>(station) ? SystemAPI.GetComponent<StationStyle>(station).Scheme : 1);
 
             if (QuestCatalog.IsComplete(quest, current))
             {
@@ -76,6 +77,7 @@ namespace GasStation.Systems
             QuestGoal.SellProducts => type == StationEventType.ShopSale,
             QuestGoal.CleanRestroom => type == StationEventType.RestroomCleaned,
             QuestGoal.HostTruckers => type == StationEventType.ParkingPaid,
+            QuestGoal.ChangeTires => type == StationEventType.TiresChanged,
             _ => false
         };
     }

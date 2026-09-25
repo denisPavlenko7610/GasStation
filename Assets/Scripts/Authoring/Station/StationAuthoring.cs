@@ -36,6 +36,10 @@ namespace GasStation.Authoring
         [Tooltip("Seed for market prices and random events")]
         public uint eventSeed = 11;
 
+        [Header("Look")]
+        [Tooltip("0 = peeling paint (abandoned), 1 = classic, 2 = desert sunset, 3 = neon")]
+        [Range(0, 3)] public int startPaintScheme = 1;
+
         public FuelSettings[] fuels =
         {
             new() { type = FuelType.Petrol92, buyPrice = 1.00f, sellPrice = 1.40f, marketPrice = 1.40f },
@@ -75,6 +79,7 @@ namespace GasStation.Authoring
             AddComponent(entity, new QuestProgress());
             AddComponent(entity, new StationLevel { Level = 1 });
             AddComponent(entity, new SupplyManagerState());
+            AddComponent(entity, new StationStyle { Scheme = Mathf.Clamp(authoring.startPaintScheme, 0, 3) });
             AddComponent(entity, new WorldEvents
             {
                 Active = WorldEventKind.None,

@@ -22,6 +22,7 @@ namespace GasStation.Bridge
             UpgradeType.CarWash => "Автомойка",
             UpgradeType.SupplyManager => "Завхоз",
             UpgradeType.TruckParking => "Стоянка для фур",
+            UpgradeType.TireService => "Шиномонтаж",
             _ => type.ToString()
         };
 
@@ -38,12 +39,22 @@ namespace GasStation.Bridge
             UpgradeType.CarWash => "открывает мойку, уровни — быстрее и дороже",
             UpgradeType.SupplyManager => "сам заказывает топливо и товар; ур.2 −10%, ур.3 быстрее; $50/день",
             UpgradeType.TruckParking => "+2 места для ночёвки дальнобойщиков",
+            UpgradeType.TireService => "меняете шины за деньги; уровни — быстрее и дороже",
             _ => string.Empty
         };
 
         private static readonly string[] ProductNames = { "Вода", "Кофе", "Снеки", "Моторное масло", "Сувениры" };
 
         public static string ProductName(ProductType type) => ProductNames[(int)type];
+
+        public static string SchemeName(int scheme) => scheme switch
+        {
+            0 => "Облезлая краска",
+            1 => "Классика",
+            2 => "Пустынный закат",
+            3 => "Неон 80-х",
+            _ => scheme.ToString()
+        };
 
         public static string CustomerName(CustomerType type) => type switch
         {
@@ -74,6 +85,8 @@ namespace GasStation.Bridge
             15 => "Автомойка",
             16 => "Туалет",
             17 => "Ночлег",
+            18 => "Новый облик",
+            19 => "Шиномонтаж",
             _ => "Задание дня"
         };
 
@@ -91,6 +104,8 @@ namespace GasStation.Bridge
             QuestGoal.StationLevel => $"Подними уровень станции до {quest.Target:0}: сейчас {{0}}",
             QuestGoal.SellProducts => $"Продай товары в магазине (M — ассортимент): {{0}}/{quest.Target:0}",
             QuestGoal.OpenCarWash => "Открой автомойку (Tab): {0}/1",
+            QuestGoal.PaintStation => "Перекрась станцию (C): {0}/1",
+            QuestGoal.ChangeTires => $"Поменяй шины клиентам (E у бокса шиномонтажа): {{0}}/{quest.Target:0}",
             QuestGoal.CleanRestroom => "Убери туалет (E у двери): {0}/1",
             QuestGoal.HostTruckers => $"Прими дальнобойщиков на ночь (Стоянка для фур): {{0}}/{quest.Target:0}",
             QuestGoal.CatchThief => "Стой рядом с машиной вора, когда он заправляется: {0}/1",

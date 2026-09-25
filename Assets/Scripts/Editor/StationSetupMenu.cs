@@ -64,6 +64,11 @@ namespace GasStation.Editor
                 parkingAuthoring.spots[i] = spot.transform;
             }
 
+            var tires = Create("TireService_Bay", root.transform, new Vector3(20f, 0f, -8f));
+            tires.transform.rotation = Quaternion.LookRotation(Vector3.right);
+            tires.AddComponent<TireServiceAuthoring>().entryRoute =
+                new[] { Create("Tires_Entry", root.transform, new Vector3(10f, 0f, -6f)).transform };
+
             var wash = Create("CarWash_Bay", root.transform, new Vector3(20f, 0f, 10f));
             wash.transform.rotation = Quaternion.LookRotation(Vector3.right);
             var washAuthoring = wash.AddComponent<CarWashAuthoring>();

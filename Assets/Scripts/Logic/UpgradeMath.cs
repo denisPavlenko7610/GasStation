@@ -28,6 +28,7 @@ namespace GasStation.Logic
             UpgradeType.CarWash => 1200f,
             UpgradeType.SupplyManager => 700f,
             UpgradeType.TruckParking => 900f,
+            UpgradeType.TireService => 800f,
             _ => 1000f
         };
 

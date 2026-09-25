@@ -14,7 +14,8 @@ namespace GasStation.Bridge
         Fueling,
         Trash,
         Repair,
-        Restroom
+        Restroom,
+        Tires
     }
 
     public struct PumpInfo
@@ -67,6 +68,11 @@ namespace GasStation.Bridge
         public static int ParkingOpen;
         public static int ParkingTotal;
         public static int ParkingUsed;
+
+        public static bool HasTireService;
+        public static bool TireCarWaiting;
+        public static float TireTimeLeft;
+        public static int PaintScheme;
 
         public static bool HasRestroom;
         public static float RestroomDirt;

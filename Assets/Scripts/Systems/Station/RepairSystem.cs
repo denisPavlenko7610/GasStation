@@ -13,6 +13,7 @@ namespace GasStation.Systems
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
     [UpdateAfter(typeof(PlayerInteractionSystem))]
+    [UpdateAfter(typeof(TireServiceSystem))]
     [UpdateBefore(typeof(TrashPickupSystem))]
     public partial struct RepairSystem : ISystem
     {

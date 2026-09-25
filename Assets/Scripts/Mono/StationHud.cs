@@ -31,6 +31,7 @@ namespace GasStation.Mono
         private bool _upgradesOpen;
         private int _upgradePage;
         private bool _storeOpen;
+        private bool _paintOpen;
         private ProductType _selectedProduct;
         private float _newGameRequestedAt = float.NegativeInfinity;
         private FuelType _selectedFuel;
@@ -55,7 +56,7 @@ namespace GasStation.Mono
             _center = CreateText("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 34);
             _help = CreateText("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 22);
             _help.text = "WASD — ходить   E / ЛКМ — заправить / убрать мусор\n1/2/3 — топливо   +/- — цена   O — заказать 500 л\n" +
-                         "Tab — улучшения   M — магазин   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
+                         "Tab — улучшения   M — магазин   C — покраска   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
             _shop = CreateText("Shop", font, new Vector2(0.5f, 1f), TextAnchor.UpperCenter, 26);
         }
 
@@ -70,7 +71,7 @@ namespace GasStation.Mono
             _fuel.text = BuildFuel();
             _pumps.text = BuildPumps();
             _center.text = BuildCenter();
-            _shop.text = _upgradesOpen ? BuildUpgrades() : _storeOpen ? BuildStore() : BuildQuest();
+            _shop.text = _upgradesOpen ? BuildUpgrades() : _storeOpen ? BuildStore() : _paintOpen ? BuildPaint() : BuildQuest();
         }
 
         private void HandleKeys()
@@ -94,12 +95,21 @@ namespace GasStation.Mono
                 }
 
                 _storeOpen = false;
+                _paintOpen = false;
             }
 
             if (keyboard.mKey.wasPressedThisFrame && HudModel.HasShop)
             {
                 _storeOpen = !_storeOpen;
                 _upgradesOpen = false;
+                _paintOpen = false;
+            }
+
+            if (keyboard.cKey.wasPressedThisFrame)
+            {
+                _paintOpen = !_paintOpen;
+                _upgradesOpen = false;
+                _storeOpen = false;
             }
 
             if (keyboard.f5Key.wasPressedThisFrame)
@@ -118,6 +128,17 @@ namespace GasStation.Mono
                     _newGameRequestedAt = Time.unscaledTime;
                     HudModel.Notify("Нажмите F10 ещё раз, чтобы начать заново");
                 }
+            }
+
+            if (_paintOpen)
+            {
+                for (int scheme = 1; scheme < StyleMath.SchemeCount; scheme++)
+                {
+                    if (DigitPressed(keyboard, scheme))
+                        StationCommands.PaintStation(scheme);
+                }
+
+                return;
             }
 
             if (_upgradesOpen)
@@ -194,6 +215,23 @@ namespace GasStation.Mono
                     : HudModel.Level.Level < requiredLevel ? $"нужен уровень {requiredLevel}"
                     : $"${UpgradeMath.Cost(type, level):0}";
                 _builder.AppendLine($"{slot + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
+            }
+
+            return _builder.ToString();
+        }
+
+        private string BuildPaint()
+        {
+            _builder.Clear();
+            _builder.AppendLine("ПОКРАСКА (цифра — перекрасить, C — закрыть)");
+            _builder.AppendLine($"Сейчас: «{GameTexts.SchemeName(HudModel.PaintScheme)}», клиентов {StyleMath.TrafficFactor(HudModel.PaintScheme) * 100f - 100f:+0;-0;0}%");
+            for (int scheme = 1; scheme < StyleMath.SchemeCount; scheme++)
+            {
+                int required = StyleMath.RequiredLevel(scheme);
+                string price = scheme == HudModel.PaintScheme ? "уже так"
+                    : HudModel.Level.Level < required ? $"нужен уровень {required}"
+                    : $"${StyleMath.Cost(scheme):0}";
+                _builder.AppendLine($"{scheme}. «{GameTexts.SchemeName(scheme)}» — {price}, клиентов {StyleMath.TrafficFactor(scheme) * 100f - 100f:+0;-0;0}%");
             }
 
             return _builder.ToString();
@@ -290,6 +328,15 @@ namespace GasStation.Mono
                     : $"Стоянка для фур: {HudModel.ParkingUsed}/{HudModel.ParkingOpen} мест занято");
             }
 
+            if (HudModel.HasTireService)
+            {
+                string tires = HudModel.Upgrades.TireService == 0 ? "закрыт (улучшение «Шиномонтаж»)"
+                    : HudModel.TireTimeLeft > 0f ? $"меняем шины, ещё {HudModel.TireTimeLeft:0} с"
+                    : HudModel.TireCarWaiting ? "МАШИНА ЖДЁТ — E у бокса"
+                    : "свободен";
+                _builder.AppendLine($"Шиномонтаж: {tires}");
+            }
+
             if (HudModel.HasRestroom)
                 _builder.AppendLine($"Туалет: {(HudModel.RestroomDirt >= FacilityMath.RestroomDisgustingDirt ? "ОТВРАТИТЕЛЬНО" : $"грязь {HudModel.RestroomDirt * 100f:0}%")}");
             foreach (var pump in HudModel.Pumps)
@@ -356,6 +403,7 @@ namespace GasStation.Mono
                 InteractionHint.CarArriving => "Машина подъезжает",
                 InteractionHint.Trash => "[E / ЛКМ] Убрать мусор",
                 InteractionHint.Restroom => "[E / ЛКМ] Убрать туалет",
+                InteractionHint.Tires => "[E / ЛКМ] Поменять шины",
                 InteractionHint.Repair => $"[E / ЛКМ] Чинить колонку (${ProgressMath.RepairStepCost:0} за шаг)",
                 _ => string.Empty
             };

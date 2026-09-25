@@ -35,6 +35,8 @@ namespace GasStation.Logic
             StationEventType.CarWashed => 5f,
             StationEventType.ParkingPaid => 8f,
             StationEventType.RestroomCleaned => 5f,
+            StationEventType.TiresChanged => 8f,
+            StationEventType.StationPainted => 30f,
             _ => 0f
         };
 
@@ -72,6 +74,7 @@ namespace GasStation.Logic
                 UpgradeType.CarWash => 3,
                 UpgradeType.SupplyManager => 2,
                 UpgradeType.TruckParking => 3,
+                UpgradeType.TireService => 2,
                 _ => 1
             };
 

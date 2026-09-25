@@ -81,14 +81,18 @@ namespace GasStation.Editor
             TileAlongX("Road_Part1", scene, parent, RoadZ, -RoadHalfLength, RoadHalfLength);
             TileAlongX("Road_fence", scene, parent, RoadZ - 8f, -RoadHalfLength, RoadHalfLength);
 
-            Place("Station_Canopy", scene, parent, new Vector3(0f, 0f, 0f), 0f);
-            Place("Petrol_pump", scene, parent, new Vector3(0f, 0f, -5f), 90f);
-            Place("Petrol_pump", scene, parent, new Vector3(0f, 0f, 5f), 90f);
-            // Closed pumps look old until the ExtraPump upgrade opens them.
-            Place("Petrol_pump_2", scene, parent, new Vector3(0f, 0f, -12f), 90f);
-            Place("Petrol_pump_2", scene, parent, new Vector3(0f, 0f, 12f), 90f);
+            // Buildings and pumps are tinted by StationPainter with the current paint scheme.
+            var primary = new List<GameObject>();
+            var accent = new List<GameObject>();
 
-            Place("Operator 's_room", scene, parent, new Vector3(0f, 0f, 21f), 180f);
+            primary.Add(Place("Station_Canopy", scene, parent, new Vector3(0f, 0f, 0f), 0f));
+            accent.Add(Place("Petrol_pump", scene, parent, new Vector3(0f, 0f, -5f), 90f));
+            accent.Add(Place("Petrol_pump", scene, parent, new Vector3(0f, 0f, 5f), 90f));
+            // Closed pumps look old until the ExtraPump upgrade opens them.
+            accent.Add(Place("Petrol_pump_2", scene, parent, new Vector3(0f, 0f, -12f), 90f));
+            accent.Add(Place("Petrol_pump_2", scene, parent, new Vector3(0f, 0f, 12f), 90f));
+
+            primary.Add(Place("Operator 's_room", scene, parent, new Vector3(0f, 0f, 21f), 180f));
             Place("Electric_panel", scene, parent, new Vector3(-11f, 0f, 21f), 180f);
             Place("Fire_extinguisher", scene, parent, new Vector3(7f, 0f, 18f), 180f);
             Place("Vending_machine_Rusted", scene, parent, new Vector3(10f, 0f, 19f), 180f);
@@ -97,13 +101,19 @@ namespace GasStation.Editor
             Place("Gas_Cistern", scene, parent, new Vector3(-27f, 0f, 19f), 90f);
             Place("Old_Rust_Car", scene, parent, new Vector3(-18f, 0f, 24f), 35f);
             // Car wash bay, opened by the CarWash upgrade.
-            Place("Station_Canopy_2", scene, parent, new Vector3(26f, 0f, 12f), 90f);
+            primary.Add(Place("Station_Canopy_2", scene, parent, new Vector3(26f, 0f, 12f), 90f));
+
+            // Tire service corner: a pile of wheels and cones next to the bay.
+            for (int i = 0; i < 4; i++)
+                Place("wheel", scene, parent, new Vector3(31f + 0.9f * i, 0f, -12f), 20f * i);
+            Place("Conus", scene, parent, new Vector3(22f, 0f, -12f), 0f);
+            Place("Conus", scene, parent, new Vector3(30f, 0f, -4f), 0f);
             Place("Air_conditioning", scene, parent, new Vector3(-6f, 0f, 24f), 180f);
-            CreateRestroomHut(scene, parent, new Vector3(11f, 0f, 21f));
+            primary.Add(CreateRestroomHut(scene, parent, new Vector3(11f, 0f, 21f)));
             Place("Hydrant", scene, parent, new Vector3(-34f, 0f, -13f), 0f);
-            Place("Gas_Station_Sign", scene, parent, new Vector3(-26f, 0f, -15f), 180f);
+            accent.Add(Place("Gas_Station_Sign", scene, parent, new Vector3(-26f, 0f, -15f), 180f));
             Place("Warning_sign_1", scene, parent, new Vector3(-16f, 0f, -9f), 180f);
-            Place("Warning_sign_2", scene, parent, new Vector3(20f, 0f, -12f), 0f);
+            Place("Warning_sign_2", scene, parent, new Vector3(-24f, 0f, -12f), 0f);
             Place("Mini_Flags", scene, parent, new Vector3(30f, 0f, -14f), 0f);
 
             for (int i = 0; i < 3; i++)
@@ -122,6 +132,10 @@ namespace GasStation.Editor
             TileLine(fences, scene, parent, new Vector3(Lot.xMax, 0f, Lot.yMin + 10f), Vector3.forward, Lot.height - 10f);
 
             ScatterNature(scene, parent);
+
+            var painter = root.AddComponent<StationPainter>();
+            painter.primary = RenderersOf(primary);
+            painter.accent = RenderersOf(accent);
         }
 
         private static void CreateGround(Scene scene, Transform parent)
@@ -151,7 +165,19 @@ namespace GasStation.Editor
             driveway.transform.localScale = new Vector3(Lot.width + 10f, 0.02f, Lot.yMin - RoadZ);
         }
 
-        private static void CreateRestroomHut(Scene scene, Transform parent, Vector3 position)
+        private static Renderer[] RenderersOf(List<GameObject> objects)
+        {
+            var renderers = new List<Renderer>();
+            foreach (var go in objects)
+            {
+                if (go != null)
+                    renderers.AddRange(go.GetComponentsInChildren<Renderer>());
+            }
+
+            return renderers.ToArray();
+        }
+
+        private static GameObject CreateRestroomHut(Scene scene, Transform parent, Vector3 position)
         {
             var hut = GameObject.CreatePrimitive(PrimitiveType.Cube);
             hut.name = "Restroom_Hut";
@@ -160,6 +186,7 @@ namespace GasStation.Editor
             hut.transform.localPosition = position + new Vector3(1.5f, 1.25f, 0f);
             hut.transform.localScale = new Vector3(3f, 2.5f, 3f);
             hut.GetComponent<Renderer>().sharedMaterial = GetOrCreateMaterial("RestroomWalls", new Color(0.75f, 0.78f, 0.8f));
+            return hut;
         }
 
         private static void ScatterNature(Scene scene, Transform parent)
@@ -217,6 +244,7 @@ namespace GasStation.Editor
             // The story starts at an abandoned station: little money, poor reputation.
             stationAuthoring.startMoney = 600f;
             stationAuthoring.startReputation = 0.3f;
+            stationAuthoring.startPaintScheme = 0;
             station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
 
             var spawnerGo = Create("CarSpawner", parent, new Vector3(-RoadHalfLength + 20f, 0f, RoadZ));
@@ -269,6 +297,14 @@ namespace GasStation.Editor
                 parkingAuthoring.spots[i] = spot.transform;
             }
 
+            var tires = Create("TireService_Bay", parent, new Vector3(26f, 0f, -8f));
+            tires.transform.rotation = Quaternion.LookRotation(Vector3.right);
+            tires.AddComponent<TireServiceAuthoring>().entryRoute = new[]
+            {
+                Create("Tires_Entry_0", parent, new Vector3(12f, 0f, -5f)).transform,
+                Create("Tires_Entry_1", parent, new Vector3(18f, 0f, -8f)).transform
+            };
+
             var wash = Create("CarWash_Bay", parent, new Vector3(26f, 0f, 12f));
             wash.transform.rotation = Quaternion.LookRotation(Vector3.right);
             var washAuthoring = wash.AddComponent<CarWashAuthoring>();
@@ -292,7 +328,8 @@ namespace GasStation.Editor
                 new(-3f, -14f, 6f, 28f),   // pump island
                 new(-4f, 15f, 8f, 5f),     // shop door
                 new(8f, 4f, 30f, 12f),     // wash lane
-                new(10f, 17f, 26f, 10f)    // truck parking and restroom
+                new(10f, 17f, 26f, 10f),   // truck parking and restroom
+                new(8f, -13f, 26f, 9f)     // tire service lane
             };
             StationEditorUtility.ScatterTrash(scene, trash.transform, new Vector3(Lot.center.x, 0f, Lot.center.y),
                 new Vector2(Lot.width / 2f - 2f, Lot.height / 2f - 2f), 45, 1234, keepOut);

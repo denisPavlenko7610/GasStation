@@ -74,6 +74,11 @@ namespace GasStation.Logic
 
         public static float WashDuration(float baseDuration, int level) => baseDuration / (1f + 0.5f * math.max(0, level - 1));
 
+        /// <summary>Tire service levels: faster work, higher price (same curve as the wash).</summary>
+        public static float TireDuration(float baseDuration, int level) => WashDuration(baseDuration, level);
+
+        public static float TirePrice(float basePrice, int level) => WashPrice(basePrice, level);
+
         public static float WashPrice(float basePrice, int level) => basePrice * (1f + 0.25f * math.max(0, level - 1));
     }
 }

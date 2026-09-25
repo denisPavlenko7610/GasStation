@@ -58,6 +58,9 @@ namespace GasStation.Systems
                     case StationCommandType.OrderProducts:
                         OrderProducts(station, command.Product, (int)command.Value);
                         break;
+                    case StationCommandType.PaintStation:
+                        PaintStation(station, (int)command.Value);
+                        break;
                     case StationCommandType.NewGame:
                         SaveService.Delete();
                         if (SaveService.Defaults != null)
@@ -169,6 +172,40 @@ namespace GasStation.Systems
             EntityManager.AddComponentData(order, new ProductDelivery { Type = product, Count = count, TimeLeft = shop.DeliveryTime });
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.ProductsOrdered, default, count);
             HudModel.Notify($"Заказано: {GameTexts.ProductName(product)} × {count}, привезут через {shop.DeliveryTime:0} с");
+        }
+
+        private void PaintStation(Entity station, int scheme)
+        {
+            if (!SystemAPI.HasComponent<StationStyle>(station) || scheme < 1 || scheme >= StyleMath.SchemeCount)
+                return;
+
+            if (SystemAPI.GetComponent<StationStyle>(station).Scheme == scheme)
+            {
+                HudModel.Notify("Станция уже так покрашена");
+                return;
+            }
+
+            int requiredLevel = StyleMath.RequiredLevel(scheme);
+            int stationLevel = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
+            if (stationLevel < requiredLevel)
+            {
+                HudModel.Notify($"«{GameTexts.SchemeName(scheme)}»: нужен уровень станции {requiredLevel}");
+                return;
+            }
+
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            float cost = StyleMath.Cost(scheme);
+            if (economy.ValueRO.Money < cost)
+            {
+                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                return;
+            }
+
+            economy.ValueRW.Money -= cost;
+            economy.ValueRW.DayExpenses += cost;
+            SystemAPI.SetComponent(station, new StationStyle { Scheme = scheme });
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.StationPainted, default, scheme);
+            HudModel.Notify($"Станция перекрашена: «{GameTexts.SchemeName(scheme)}»");
         }
 
         private void BuyUpgrade(Entity station, UpgradeType type)

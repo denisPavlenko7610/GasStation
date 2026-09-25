@@ -28,7 +28,10 @@ namespace GasStation.Components
         ReadyToLeave,
         DrivingToParking,
         /// <summary>A trucker sleeping on the parking lot until morning.</summary>
-        Parked
+        Parked,
+        DrivingToTires,
+        WaitingForTires,
+        ChangingTires
     }
 
     public struct Car : IComponentData
@@ -44,6 +47,7 @@ namespace GasStation.Components
         public float ServiceWait;
         public bool WantsShop;
         public bool WantsWash;
+        public bool NeedsTires;
         /// <summary>The driver is out of the car (a pedestrian walking to or from the shop).</summary>
         public bool DriverAway;
         /// <summary>Generic countdown: shopping without a pedestrian, washing.</summary>

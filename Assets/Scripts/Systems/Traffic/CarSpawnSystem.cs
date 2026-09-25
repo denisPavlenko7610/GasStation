@@ -56,7 +56,8 @@ namespace GasStation.Systems
                               * UpgradeMath.TrafficMultiplier(upgrades.Advertising)
                               * CleanlinessFactor(ref state)
                               * ProgressMath.LevelTrafficFactor(stationLevel)
-                              * EventFactor(worldEvent);
+                              * EventFactor(worldEvent)
+                              * (SystemAPI.HasSingleton<StationStyle>() ? StyleMath.TrafficFactor(SystemAPI.GetSingleton<StationStyle>().Scheme) : 1f);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;
@@ -93,7 +94,8 @@ namespace GasStation.Systems
                 Pump = Entity.Null,
                 ArrivalOrder = spawner.NextArrivalOrder++,
                 WantsShop = spawner.Random.NextFloat() < profile.ShopChance,
-                WantsWash = spawner.Random.NextFloat() < profile.WashChance
+                WantsWash = spawner.Random.NextFloat() < profile.WashChance,
+                NeedsTires = spawner.Random.NextFloat() < profile.TireChance
             });
             ecb.AddComponent(car, new Patience { Current = patience, Max = patience });
             ecb.AddComponent(car, new CarMovement

@@ -13,7 +13,8 @@ namespace GasStation.Bridge
         LoadGame,
         NewGame,
         ChangeProductPrice,
-        OrderProducts
+        OrderProducts,
+        PaintStation
     }
 
     public struct StationCommand
@@ -52,6 +53,9 @@ namespace GasStation.Bridge
 
         public static void OrderProducts(ProductType product, int count) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.OrderProducts, Product = product, Value = count });
+
+        public static void PaintStation(int scheme) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.PaintStation, Value = scheme });
 
         public static bool TryDequeue(out StationCommand command) => Queue.TryDequeue(out command);
 

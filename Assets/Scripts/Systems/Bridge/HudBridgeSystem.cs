@@ -187,6 +187,22 @@ namespace GasStation.Systems
                 HudModel.ParkingUsed = used;
             }
 
+            HudModel.HasTireService = SystemAPI.HasSingleton<TireService>();
+            HudModel.TireCarWaiting = false;
+            HudModel.TireTimeLeft = 0f;
+            if (HudModel.HasTireService)
+            {
+                var occupant = SystemAPI.GetSingleton<TireService>().Occupant;
+                if (occupant != Entity.Null && SystemAPI.Exists(occupant) && SystemAPI.HasComponent<Car>(occupant))
+                {
+                    var car = SystemAPI.GetComponent<Car>(occupant);
+                    HudModel.TireCarWaiting = car.State == CarState.WaitingForTires;
+                    HudModel.TireTimeLeft = car.State == CarState.ChangingTires ? car.Timer : 0f;
+                }
+            }
+
+            HudModel.PaintScheme = SystemAPI.HasSingleton<StationStyle>() ? SystemAPI.GetSingleton<StationStyle>().Scheme : 1;
+
             HudModel.HasRestroom = SystemAPI.HasSingleton<Restroom>();
             HudModel.RestroomDirt = HudModel.HasRestroom ? SystemAPI.GetSingleton<Restroom>().Dirt : 0f;
         }
@@ -246,6 +262,12 @@ namespace GasStation.Systems
                     HudModel.Hint = InteractionHint.Repair;
 
                 bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling or InteractionHint.Repair;
+                if (!fuelingAction && NearWaitingTireCar())
+                {
+                    HudModel.Hint = InteractionHint.Tires;
+                    fuelingAction = true;
+                }
+
                 if (!fuelingAction && NearDirtyRestroom())
                 {
                     HudModel.Hint = InteractionHint.Restroom;
@@ -256,6 +278,22 @@ namespace GasStation.Systems
                 if (!fuelingAction && trash != Entity.Null && SystemAPI.Exists(trash))
                     HudModel.Hint = InteractionHint.Trash;
             }
+        }
+
+        private bool NearWaitingTireCar()
+        {
+            if (!HudModel.TireCarWaiting || !SystemAPI.HasSingleton<StationSettings>())
+                return false;
+
+            var bay = SystemAPI.GetSingleton<TireService>().Bay;
+            float radius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
+            foreach (var transform in SystemAPI.Query<RefRO<Unity.Transforms.LocalTransform>>().WithAll<PlayerTag>())
+            {
+                if (Unity.Mathematics.math.distancesq(transform.ValueRO.Position.xz, bay.xz) <= radius * radius)
+                    return true;
+            }
+
+            return false;
         }
 
         private bool NearDirtyRestroom()

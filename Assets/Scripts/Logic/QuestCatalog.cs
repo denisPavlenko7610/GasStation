@@ -33,7 +33,11 @@ namespace GasStation.Logic
         /// <summary>Counter: restroom cleanings.</summary>
         CleanRestroom,
         /// <summary>Counter: nights paid by parked truckers.</summary>
-        HostTruckers
+        HostTruckers,
+        /// <summary>State: paint scheme number (0 = peeling paint).</summary>
+        PaintStation,
+        /// <summary>Counter: tire jobs done.</summary>
+        ChangeTires
     }
 
     public struct QuestDefinition
@@ -47,7 +51,8 @@ namespace GasStation.Logic
 
         public bool IsCounter => Goal is QuestGoal.CollectTrash or QuestGoal.ServeCustomers
             or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief
-            or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers;
+            or QuestGoal.SellProducts or QuestGoal.CleanRestroom or QuestGoal.HostTruckers
+            or QuestGoal.ChangeTires;
     }
 
     /// <summary>
@@ -68,6 +73,7 @@ namespace GasStation.Logic
             Quest(2, QuestGoal.Cleanliness, 80f, 0f, 0.05f),
             Quest(3, QuestGoal.OrderFuel, 1f, 100f),
             Quest(4, QuestGoal.BuyUpgrade, 1f, 250f),
+            Quest(18, QuestGoal.PaintStation, 1f, 200f, 0.05f),
             Quest(5, QuestGoal.ServeCustomers, 15f, 400f),
             Quest(6, QuestGoal.CollectTrash, 40f, 400f),
             Quest(7, QuestGoal.Reputation, 70f, 500f),
@@ -76,6 +82,7 @@ namespace GasStation.Logic
             Quest(9, QuestGoal.OpenPumps, 1f, 1000f),
             Quest(15, QuestGoal.OpenCarWash, 1f, 800f),
             Quest(17, QuestGoal.HostTruckers, 3f, 600f),
+            Quest(19, QuestGoal.ChangeTires, 3f, 500f),
             Quest(13, QuestGoal.CatchThief, 1f, 500f, 0.05f),
             Quest(10, QuestGoal.Cleanliness, 100f, 500f, 0.05f),
         };
@@ -121,7 +128,7 @@ namespace GasStation.Logic
 
         /// <summary>Progress towards the goal. Counter goals use the stored counter, state goals read the station.</summary>
         public static float Progress(QuestDefinition quest, float counter, float cleanliness, float reputation,
-            float dayIncome, int openPumps, int stationLevel, int carWashLevel)
+            float dayIncome, int openPumps, int stationLevel, int carWashLevel, int paintScheme = 1)
         {
             return quest.Goal switch
             {
@@ -131,6 +138,7 @@ namespace GasStation.Logic
                 QuestGoal.OpenPumps => openPumps,
                 QuestGoal.StationLevel => stationLevel,
                 QuestGoal.OpenCarWash => carWashLevel,
+                QuestGoal.PaintStation => paintScheme,
                 _ => counter
             };
         }

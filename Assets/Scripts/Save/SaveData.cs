@@ -44,7 +44,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 5;
+        public const int CurrentVersion = 6;
 
         public int version = CurrentVersion;
         public int day;
@@ -78,6 +78,9 @@ namespace GasStation.Save
 
         // Version 5; -1 means "no restroom saved" (older saves keep the scene value).
         public float restroomDirt = -1f;
+
+        // Version 6; -1 means "keep the scene paint".
+        public int paintScheme = -1;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

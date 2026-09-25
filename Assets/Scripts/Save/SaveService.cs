@@ -47,6 +47,8 @@ namespace GasStation.Save
                 data.CaptureQuest(entityManager.GetComponentData<QuestProgress>(station));
             if (entityManager.HasComponent<StationLevel>(station))
                 data.CaptureLevel(entityManager.GetComponentData<StationLevel>(station));
+            if (entityManager.HasComponent<StationStyle>(station))
+                data.paintScheme = entityManager.GetComponentData<StationStyle>(station).Scheme;
 
             CaptureShop(entityManager, data);
 
@@ -112,6 +114,8 @@ namespace GasStation.Save
 
             if (entityManager.HasComponent<StationLevel>(station))
                 entityManager.SetComponentData(station, data.ToStationLevel());
+            if (data.paintScheme >= 0 && entityManager.HasComponent<StationStyle>(station))
+                entityManager.SetComponentData(station, new StationStyle { Scheme = Mathf.Clamp(data.paintScheme, 0, 3) });
 
             if (data.pumps != null)
                 RestorePumps(entityManager, data.pumps);
@@ -291,6 +295,17 @@ namespace GasStation.Save
                         spot.Occupant = Entity.Null;
                         spots[i] = spot;
                     }
+                }
+            }
+
+            using (var tireQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<TireService>()))
+            using (var tireServices = tireQuery.ToEntityArray(Allocator.Temp))
+            {
+                foreach (var serviceEntity in tireServices)
+                {
+                    var service = entityManager.GetComponentData<TireService>(serviceEntity);
+                    service.Occupant = Entity.Null;
+                    entityManager.SetComponentData(serviceEntity, service);
                 }
             }
 

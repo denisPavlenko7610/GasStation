@@ -37,7 +37,9 @@ namespace GasStation.Components
         RestroomUsed,
         RestroomDisgusting,
         RestroomCleaned,
-        AutoOrder
+        AutoOrder,
+        TiresChanged,
+        StationPainted
     }
 
     /// <summary>
