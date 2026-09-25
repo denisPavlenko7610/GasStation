@@ -302,11 +302,49 @@ namespace GasStation.Save
         };
     }
 
+    [Serializable]
+    public class ContractSaveData
+    {
+        public int id;
+        public int type;
+        public float price;
+        /// <summary>Days left of an active contract, or the length of an offer.</summary>
+        public int days;
+        public int expiresIn;
+        public int served;
+        public int missed;
+
+        public static ContractSaveData From(ContractOffer offer) => new()
+        {
+            id = offer.Id, type = (int)offer.Type, price = offer.Price, days = offer.Days, expiresIn = offer.ExpiresIn
+        };
+
+        public static ContractSaveData From(Contract contract) => new()
+        {
+            id = contract.Id, type = (int)contract.Type, price = contract.Price, days = contract.DaysLeft,
+            served = contract.Served, missed = contract.Missed
+        };
+
+        private ContractType Type => (ContractType)Mathf.Clamp(type, 0, ContractTypes.Count - 1);
+
+        public ContractOffer ToOffer() => new()
+        {
+            Id = id, Type = Type, Price = price, Days = Mathf.Max(1, days), ExpiresIn = Mathf.Max(1, expiresIn)
+        };
+
+        /// <summary>Vehicles already sent today are not sent again (LastSentDay is today's).</summary>
+        public Contract ToContract(int today, int hour) => new()
+        {
+            Id = id, Type = Type, Price = price, DaysLeft = Mathf.Max(1, days), Served = served, Missed = missed,
+            LastSentDay = today, LastSentHour = hour
+        };
+    }
+
     /// <summary>Persistent part of the game state. Cars on the road are not saved.</summary>
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 15;
+        public const int CurrentVersion = 16;
 
         public int version = CurrentVersion;
         public int day;
@@ -378,6 +416,12 @@ namespace GasStation.Save
         public int buzzDays;
         public int lastCriticDay;
         public int lastBusDay;
+
+        // Version 16. Null in older saves: no offers and no contracts yet.
+        public ContractSaveData[] offers;
+        public ContractSaveData[] contracts;
+        public int nextContractId;
+        public int daysToNextOffer;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

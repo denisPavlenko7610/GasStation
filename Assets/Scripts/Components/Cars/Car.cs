@@ -74,6 +74,8 @@ namespace GasStation.Components
         public byte Passengers;
         /// <summary>How many of them are still out of the car.</summary>
         public byte PeopleAway;
+        /// <summary>Id of the contract this vehicle comes for; 0 = none.</summary>
+        public int ContractId;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

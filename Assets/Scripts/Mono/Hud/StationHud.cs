@@ -54,7 +54,7 @@ namespace GasStation.Mono
 
         private void Update()
         {
-            _view.SetVisible(HudModel.HasStation);
+            _view.SetVisible(HudModel.HasStation && !LaptopState.IsOpen);
             if (!HudModel.HasStation)
                 return;
 
@@ -469,7 +469,8 @@ namespace GasStation.Mono
             foreach (var card in HudModel.Cards)
             {
                 // Regulars are shown by name; the critic is incognito and looks like anyone else.
-                string who = card.RegularId > 0 ? GameTexts.RegularName(card.RegularId) + "\n"
+                string who = card.ContractId > 0 ? ContractLabel(card.ContractId) + "\n"
+                    : card.RegularId > 0 ? GameTexts.RegularName(card.RegularId) + "\n"
                     : card.Customer is CustomerType.Regular or CustomerType.Critic ? string.Empty
                     : GameTexts.CustomerName(card.Customer) + "\n";
                 _cardTexts.Add(card.State == CarState.Fueling
@@ -523,6 +524,17 @@ namespace GasStation.Mono
 
             _builder.Append(HudModel.History.Count > 0 ? Loc.T("panel.finance.chart") : Loc.T("panel.finance.noHistory"));
             return _builder.ToString();
+        }
+
+        private static string ContractLabel(int contractId)
+        {
+            foreach (var contract in HudModel.Contracts)
+            {
+                if (contract.Id == contractId)
+                    return Loc.F("card.contract", GameTexts.ContractName(contract.Type));
+            }
+
+            return Loc.F("card.contract", string.Empty);
         }
 
         private string BuildRegulars()

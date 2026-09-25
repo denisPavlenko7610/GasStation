@@ -70,7 +70,8 @@ namespace GasStation.Mono.Menu
             }
 
             var keyboard = Keyboard.current;
-            if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame)
+            // The laptop closes itself on Esc.
+            if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame || LaptopState.IsOpen)
                 return;
 
             switch (_screen)

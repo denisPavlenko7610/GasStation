@@ -96,6 +96,10 @@ namespace GasStation.Systems
             if (customer == CustomerType.Thief && LightingMath.NightFactor(hour) > 0.5f &&
                 spawner.Random.NextFloat() > PropMath.NightCrimeFactor(props.Lamps))
                 customer = CustomerType.Regular;
+            // A police contract keeps most thieves away.
+            if (customer == CustomerType.Thief && PoliceOnDuty(ref state) &&
+                spawner.Random.NextFloat() > ContractMath.PoliceThiefShare)
+                customer = CustomerType.Regular;
 
             SpawnCar(ref state, spawnerEntity, ref spawner, prefabs, new SpawnRequest { Customer = customer }, upgrades, props);
         }
@@ -136,13 +140,14 @@ namespace GasStation.Systems
                 RequestedLiters = liters,
                 ReceivedLiters = 0f,
                 Pump = Entity.Null,
-                // Ambulances and police go to the front of the queue.
-                ArrivalOrder = customer == CustomerType.Emergency ? 0u : order,
+                // Ambulances and police go to the front of the queue, contract vehicles right after them.
+                ArrivalOrder = customer == CustomerType.Emergency ? 0u : request.ContractId > 0 ? 1u : order,
                 WantsShop = wantsShop,
                 WantsWash = wantsWash,
                 NeedsTires = spawner.Random.NextFloat() < profile.TireChance,
                 RegularId = request.RegularId,
-                Passengers = request.Passengers
+                Passengers = request.Passengers,
+                ContractId = request.ContractId
             });
             ecb.AddComponent(car, new Patience { Current = patience, Max = patience });
             ecb.AddComponent(car, new CarMovement
@@ -175,6 +180,21 @@ namespace GasStation.Systems
         }
 
         private const int ExtraCarsForGuests = 6;
+
+        private bool PoliceOnDuty(ref SystemState state)
+        {
+            if (!SystemAPI.HasSingleton<Contract>())
+                return false;
+
+            var contracts = SystemAPI.GetSingletonBuffer<Contract>(true);
+            for (int i = 0; i < contracts.Length; i++)
+            {
+                if (contracts[i].Type == ContractType.Police)
+                    return true;
+            }
+
+            return false;
+        }
 
         /// <summary>Tour buses are big, bikes are small (placeholders until real models).</summary>
         private static float SizeFactor(CustomerType customer) => customer switch

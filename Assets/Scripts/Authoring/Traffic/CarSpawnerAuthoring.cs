@@ -55,7 +55,8 @@ namespace GasStation.Authoring
                 SpeedRange = authoring.speedRange,
                 PatienceRange = authoring.patienceRange,
                 LitersRange = authoring.litersRange,
-                NextArrivalOrder = 0,
+                // 0 and 1 are reserved for emergency and contract vehicles, which jump the queue.
+                NextArrivalOrder = 2,
                 Random = Unity.Mathematics.Random.CreateFromIndex(authoring.seed)
             });
 

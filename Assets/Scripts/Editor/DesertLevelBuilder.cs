@@ -131,6 +131,7 @@ namespace GasStation.Editor
             BuildConstructionSites(scene, parent, primary, accent);
             BuildDecor(scene, parent, shop);
             BuildPriceBoard(scene, parent);
+            BuildLaptopDesk(scene, parent);
             BuildCompetitor(scene, parent);
             ScatterNature(scene, parent);
 
@@ -376,6 +377,21 @@ namespace GasStation.Editor
         }
 
         /// <summary>A point just under the top of an object, or the fallback when it is missing.</summary>
+        private static readonly Vector3 LaptopDesk = new(5f, 0f, 16.5f);
+
+        /// <summary>A desk with the office laptop next to the shop door; the player opens it with E.</summary>
+        private static void BuildLaptopDesk(Scene scene, Transform parent)
+        {
+            var wood = GetOrCreateMaterial("DeskWood", new Color(0.45f, 0.3f, 0.18f));
+            var dark = GetOrCreateMaterial("LaptopBody", new Color(0.12f, 0.12f, 0.14f));
+            var screen = GetOrCreateMaterial("LaptopScreen", new Color(0.35f, 0.7f, 1f));
+            var root = Create("LaptopDesk", parent, Vector3.zero);
+            Primitive(scene, root.transform, "Desk", wood, LaptopDesk + new Vector3(0f, 0.4f, 0f), new Vector3(1.6f, 0.8f, 0.8f));
+            Primitive(scene, root.transform, "Laptop", dark, LaptopDesk + new Vector3(0f, 0.83f, 0f), new Vector3(0.5f, 0.04f, 0.35f));
+            var display = Primitive(scene, root.transform, "Screen", screen, LaptopDesk + new Vector3(0f, 1.0f, 0.17f), new Vector3(0.5f, 0.32f, 0.02f));
+            display.transform.rotation = Quaternion.Euler(-15f, 0f, 0f);
+        }
+
         /// <summary>Our price board by the entrance, facing the highway.</summary>
         private static void BuildPriceBoard(Scene scene, Transform parent)
         {
@@ -631,6 +647,8 @@ namespace GasStation.Editor
             stationAuthoring.startPaintScheme = 0;
             station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
             CreateBuildArea(parent);
+            // The office laptop on a desk by the shop door (the desk itself is built in the environment).
+            Create("Laptop", parent, LaptopDesk + new Vector3(0f, 0f, -1f)).AddComponent<LaptopAuthoring>();
 
             var spawnerGo = Create("CarSpawner", parent, new Vector3(-RoadHalfLength + 20f, 0f, RoadZ));
             spawnerGo.transform.rotation = Quaternion.LookRotation(Vector3.right);

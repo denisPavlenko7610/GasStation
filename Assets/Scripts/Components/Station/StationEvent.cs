@@ -82,7 +82,21 @@ namespace GasStation.Components
         CriticArticle,
         /// <summary>Value = CustomerType of the special guest; Subject = passengers or convoy size.</summary>
         SpecialArrived,
-        EmergencyServed
+        EmergencyServed,
+        /// <summary>Subject = offer id.</summary>
+        ContractOffered,
+        /// <summary>Subject = contract id.</summary>
+        ContractAccepted,
+        /// <summary>Subject = contract id.</summary>
+        ContractVehicleServed,
+        /// <summary>Subject = contract id.</summary>
+        ContractVehicleMissed,
+        /// <summary>Subject = contract id; Value = penalty paid for a missed vehicle.</summary>
+        ContractPenalty,
+        /// <summary>Subject = contract id; Value = bonus paid.</summary>
+        ContractCompleted,
+        /// <summary>Subject = contract id; Value = ContractType.</summary>
+        ContractCancelled
     }
 
     /// <summary>

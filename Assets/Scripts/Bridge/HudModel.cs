@@ -17,7 +17,8 @@ namespace GasStation.Bridge
         Restroom,
         Tires,
         MotelRoom,
-        Renovate
+        Renovate,
+        Laptop
     }
 
     public struct PumpInfo
@@ -46,6 +47,7 @@ namespace GasStation.Bridge
         public float PatienceRatio;
         /// <summary>1-based regular id; 0 = a stranger.</summary>
         public int RegularId;
+        public int ContractId;
     }
 
     public struct Review
@@ -153,6 +155,13 @@ namespace GasStation.Bridge
         public static readonly List<RegularState> Regulars = new();
         public static Buzz Buzz;
 
+        public static readonly List<ContractOffer> Offers = new();
+        public static readonly List<Contract> Contracts = new();
+        public static bool HasLaptop;
+        public static UnityEngine.Vector3 LaptopPosition;
+        public static UnityEngine.Vector3 PlayerPosition;
+        public const float LaptopRadius = 2.5f;
+
         public static int QueueLength;
         public static int CarsOnSite;
         public static InteractionHint Hint;
@@ -180,6 +189,9 @@ namespace GasStation.Bridge
             LastReport = default;
             Finance = default;
             Props.Clear();
+            Offers.Clear();
+            Contracts.Clear();
+            HasLaptop = false;
             Regulars.Clear();
             Buzz = default;
             NoBuildZones.Clear();

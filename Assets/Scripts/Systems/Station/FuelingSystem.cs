@@ -42,6 +42,8 @@ namespace GasStation.Systems
             float cleanliness = SystemAPI.HasSingleton<StationCleanliness>() ? SystemAPI.GetSingleton<StationCleanliness>().Value : 1f;
             bool hasRegulars = SystemAPI.HasSingleton<RegularState>();
             var regulars = hasRegulars ? SystemAPI.GetSingletonBuffer<RegularState>(true) : default;
+            bool hasContracts = SystemAPI.HasSingleton<Contract>();
+            var contracts = hasContracts ? SystemAPI.GetSingletonBuffer<Contract>(true) : default;
 
             foreach (var (car, patience, path, transform) in SystemAPI
                          .Query<RefRW<Car>, RefRO<Patience>, DynamicBuffer<PathPoint>, RefRO<LocalTransform>>())
@@ -84,7 +86,11 @@ namespace GasStation.Systems
                 ref var eco = ref economy.ValueRW;
                 float liters = car.ValueRO.ReceivedLiters;
                 bool paid = false;
-                float bill = StationMath.Payment(liters, fuel.SellPrice);
+                // Contract vehicles pay the price fixed in the contract.
+                float price = hasContracts && car.ValueRO.ContractId > 0
+                    ? ContractPrice(contracts, car.ValueRO.ContractId, fuel.SellPrice)
+                    : fuel.SellPrice;
+                float bill = StationMath.Payment(liters, price);
 
                 if (liters <= 0f)
                 {
@@ -92,6 +98,7 @@ namespace GasStation.Systems
                     StationEvent.Push(events, StationEventType.CustomerLeftAngry, car.ValueRO.FuelType);
                     StationEvent.Push(events, StationEventType.CustomerReview, default, ReviewMath.AngryStars);
                     VisitOutcome.Rate(events, car.ValueRO, ReviewMath.AngryStars);
+                    VisitOutcome.ContractResult(events, car.ValueRO, false);
                     eco.Reputation = StationMath.ClampReputation(eco.Reputation - StationMath.LostCustomerPenalty);
                 }
                 else if (car.ValueRO.Customer == CustomerType.Thief &&
@@ -114,6 +121,7 @@ namespace GasStation.Systems
                         eco.Reputation + StationMath.ServiceReputationDelta(patienceRatio, fuel.SellPrice, fuel.MarketPrice));
 
                     StationEvent.Push(events, StationEventType.CustomerPaid, car.ValueRO.FuelType, bill);
+                    VisitOutcome.ContractResult(events, car.ValueRO, true);
                     if (car.ValueRO.Customer != CustomerType.Thief)
                     {
                         float stars = ReviewMath.Stars(patienceRatio, fuel.SellPrice, fuel.MarketPrice, cleanliness);
@@ -144,6 +152,17 @@ namespace GasStation.Systems
                 pump.ValueRW.Occupant = Entity.Null;
                 CarRoutes.SendToExit(ref car.ValueRW, path, exitRoute);
             }
+        }
+
+        private static float ContractPrice(DynamicBuffer<Contract> contracts, int id, float fallback)
+        {
+            for (int i = 0; i < contracts.Length; i++)
+            {
+                if (contracts[i].Id == id)
+                    return contracts[i].Price;
+            }
+
+            return fallback;
         }
 
         /// <summary>Security cameras near the pump may catch a thief the player did not stop.</summary>

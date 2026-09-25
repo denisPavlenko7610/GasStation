@@ -95,7 +95,98 @@ namespace GasStation.Systems
                     case StationCommandType.RemoveProp:
                         RemoveProp(station, command.Position);
                         break;
+                    case StationCommandType.AcceptContract:
+                        AcceptContract(station, (int)command.Value);
+                        break;
+                    case StationCommandType.DeclineContract:
+                        DeclineContract(station, (int)command.Value);
+                        break;
+                    case StationCommandType.CancelContract:
+                        CancelContract(station, (int)command.Value);
+                        break;
                 }
+            }
+        }
+
+        private void AcceptContract(Entity station, int offerId)
+        {
+            if (!SystemAPI.HasBuffer<ContractOffer>(station) || !SystemAPI.HasBuffer<Contract>(station))
+                return;
+
+            var offers = SystemAPI.GetBuffer<ContractOffer>(station);
+            var contracts = SystemAPI.GetBuffer<Contract>(station);
+            int index = -1;
+            for (int i = 0; i < offers.Length; i++)
+            {
+                if (offers[i].Id == offerId)
+                    index = i;
+            }
+
+            if (index < 0)
+                return;
+
+            if (contracts.Length >= ContractMath.MaxActive)
+            {
+                HudModel.Notify(Loc.F("msg.contractsFull", ContractMath.MaxActive));
+                return;
+            }
+
+            var offer = offers[index];
+            int stationLevel = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
+            int required = ContractMath.Get(offer.Type).RequiredLevel;
+            if (stationLevel < required)
+            {
+                HudModel.Notify(Loc.F("msg.contractNeedsLevel", required));
+                return;
+            }
+
+            offers.RemoveAt(index);
+            contracts.Add(new Contract
+            {
+                Id = offer.Id,
+                Type = offer.Type,
+                Price = offer.Price,
+                DaysLeft = offer.Days,
+                LastSentDay = -1,
+                LastSentHour = -1
+            });
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.ContractAccepted, default, (float)offer.Type, offer.Id);
+        }
+
+        private void DeclineContract(Entity station, int offerId)
+        {
+            if (!SystemAPI.HasBuffer<ContractOffer>(station))
+                return;
+
+            var offers = SystemAPI.GetBuffer<ContractOffer>(station);
+            for (int i = offers.Length - 1; i >= 0; i--)
+            {
+                if (offers[i].Id == offerId)
+                    offers.RemoveAt(i);
+            }
+        }
+
+        /// <summary>Walking away from a contract costs three missed-vehicle penalties and some reputation.</summary>
+        private void CancelContract(Entity station, int contractId)
+        {
+            if (!SystemAPI.HasBuffer<Contract>(station))
+                return;
+
+            var contracts = SystemAPI.GetBuffer<Contract>(station);
+            for (int i = 0; i < contracts.Length; i++)
+            {
+                if (contracts[i].Id != contractId)
+                    continue;
+
+                var contract = contracts[i];
+                float penalty = ContractMath.CancelPenalty(contract.Type);
+                var economy = SystemAPI.GetComponentRW<Economy>(station);
+                economy.ValueRW.Money -= penalty;
+                economy.ValueRW.DayExpenses += penalty;
+                economy.ValueRW.Reputation = StationMath.ClampReputation(economy.ValueRO.Reputation - ContractMath.CancelReputation);
+                contracts.RemoveAt(i);
+                HudModel.Notify(Loc.F("msg.contractWalkedAway", GameTexts.ContractName(contract.Type), penalty));
+                return;
             }
         }
 

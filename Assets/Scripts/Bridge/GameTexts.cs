@@ -18,6 +18,8 @@ namespace GasStation.Bridge
 
         public static string RegularAbout(int id) => Loc.T($"regular.{id - 1}.about");
 
+        public static string ContractName(ContractType type) => Loc.T($"contract.{type}.name");
+
         public static string PropName(PropType type) => Loc.T($"prop.name.{type}");
 
         public static string PropDescription(PropType type) => Loc.T($"prop.desc.{type}");

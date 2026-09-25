@@ -22,7 +22,10 @@ namespace GasStation.Bridge
         ToggleInsurance,
         BuyOutCompetitor,
         PlaceProp,
-        RemoveProp
+        RemoveProp,
+        AcceptContract,
+        DeclineContract,
+        CancelContract
     }
 
     public struct StationCommand
@@ -89,6 +92,15 @@ namespace GasStation.Bridge
 
         public static void RemoveProp(Vector3 position) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.RemoveProp, Position = position });
+
+        public static void AcceptContract(int offerId) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.AcceptContract, Value = offerId });
+
+        public static void DeclineContract(int offerId) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.DeclineContract, Value = offerId });
+
+        public static void CancelContract(int contractId) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.CancelContract, Value = contractId });
 
         public static bool TryDequeue(out StationCommand command) => Queue.TryDequeue(out command);
 

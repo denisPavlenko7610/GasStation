@@ -17,6 +17,8 @@ namespace GasStation.Components
         public bool WantsShop;
         public bool WantsWash;
         public byte Passengers;
+        /// <summary>Contract vehicle: pays the contract price and jumps the queue.</summary>
+        public int ContractId;
     }
 
     /// <summary>What the station knows about one regular. One entry per RegularCatalog entry, on the station.</summary>

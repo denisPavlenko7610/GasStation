@@ -68,6 +68,7 @@ namespace GasStation.Save
             CaptureShop(entityManager, data);
             CaptureProps(entityManager, data);
             CaptureVisitors(entityManager, station, data);
+            CaptureContracts(entityManager, station, data);
             data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
             if (entityManager.HasBuffer<DayHistoryEntry>(station))
@@ -186,6 +187,7 @@ namespace GasStation.Save
 
             RestoreProps(entityManager, data.props);
             RestoreVisitors(entityManager, station, data);
+            RestoreContracts(entityManager, station, data);
 
             if (data.products != null)
                 RestoreShop(entityManager, data.products);
@@ -398,6 +400,77 @@ namespace GasStation.Save
             using var spawners = spawnerQuery.ToEntityArray(Allocator.Temp);
             foreach (var spawner in spawners)
                 entityManager.GetBuffer<SpawnRequest>(spawner).Clear();
+        }
+
+        private static void CaptureContracts(EntityManager entityManager, Entity station, SaveData data)
+        {
+            if (entityManager.HasBuffer<ContractOffer>(station))
+            {
+                var offers = entityManager.GetBuffer<ContractOffer>(station, true);
+                data.offers = new ContractSaveData[offers.Length];
+                for (int i = 0; i < offers.Length; i++)
+                    data.offers[i] = ContractSaveData.From(offers[i]);
+            }
+
+            if (entityManager.HasBuffer<Contract>(station))
+            {
+                var contracts = entityManager.GetBuffer<Contract>(station, true);
+                data.contracts = new ContractSaveData[contracts.Length];
+                for (int i = 0; i < contracts.Length; i++)
+                    data.contracts[i] = ContractSaveData.From(contracts[i]);
+            }
+
+            if (entityManager.HasComponent<ContractBoard>(station))
+            {
+                var board = entityManager.GetComponentData<ContractBoard>(station);
+                data.nextContractId = board.NextId;
+                data.daysToNextOffer = board.DaysToNextOffer;
+            }
+        }
+
+        private static void RestoreContracts(EntityManager entityManager, Entity station, SaveData data)
+        {
+            int maxId = 0;
+            if (entityManager.HasBuffer<ContractOffer>(station))
+            {
+                var offers = entityManager.GetBuffer<ContractOffer>(station);
+                offers.Clear();
+                if (data.offers != null)
+                {
+                    foreach (var offer in data.offers)
+                    {
+                        if (offer == null)
+                            continue;
+                        offers.Add(offer.ToOffer());
+                        maxId = Mathf.Max(maxId, offer.id);
+                    }
+                }
+            }
+
+            if (entityManager.HasBuffer<Contract>(station))
+            {
+                var time = entityManager.GetComponentData<GameTime>(station);
+                var contracts = entityManager.GetBuffer<Contract>(station);
+                contracts.Clear();
+                if (data.contracts != null)
+                {
+                    foreach (var contract in data.contracts)
+                    {
+                        if (contract == null)
+                            continue;
+                        contracts.Add(contract.ToContract(time.Day, (int)time.Hour));
+                        maxId = Mathf.Max(maxId, contract.id);
+                    }
+                }
+            }
+
+            if (entityManager.HasComponent<ContractBoard>(station))
+            {
+                var board = entityManager.GetComponentData<ContractBoard>(station);
+                board.NextId = Mathf.Max(maxId + 1, data.nextContractId, 1);
+                board.DaysToNextOffer = data.version >= 16 ? Mathf.Max(1, data.daysToNextOffer) : 1;
+                entityManager.SetComponentData(station, board);
+            }
         }
 
         private static void CaptureProps(EntityManager entityManager, SaveData data)

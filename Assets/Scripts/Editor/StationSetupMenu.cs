@@ -25,6 +25,7 @@ namespace GasStation.Editor
             station.AddComponent<StationAuthoring>();
             station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
             // Build mode works on the whole lot around the station; add no-build zones over the lanes by hand.
+            Create("Laptop", root.transform, new Vector3(6f, 0f, 12f)).AddComponent<LaptopAuthoring>();
             var buildArea = station.AddComponent<BuildAreaAuthoring>();
             buildArea.lotMin = new Vector2(center.x - 30f, center.z - 20f);
             buildArea.lotMax = new Vector2(center.x + 30f, center.z + 20f);

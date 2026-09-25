@@ -48,6 +48,19 @@ namespace GasStation.Systems
             }
             HudModel.Buzz = SystemAPI.HasSingleton<Buzz>() ? SystemAPI.GetSingleton<Buzz>() : default;
 
+            HudModel.Offers.Clear();
+            if (SystemAPI.HasSingleton<ContractOffer>())
+            {
+                foreach (var offer in SystemAPI.GetSingletonBuffer<ContractOffer>(true))
+                    HudModel.Offers.Add(offer);
+            }
+            HudModel.Contracts.Clear();
+            if (SystemAPI.HasSingleton<Contract>())
+            {
+                foreach (var contract in SystemAPI.GetSingletonBuffer<Contract>(true))
+                    HudModel.Contracts.Add(contract);
+            }
+
             DrainEvents();
             CopyProps();
             CopyShop();
@@ -230,6 +243,21 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.EmergencyServed:
                         HudModel.Notify(Loc.T("msg.emergencyServed"));
+                        break;
+                    case StationEventType.ContractOffered:
+                        HudModel.Notify(Loc.F("msg.contractOffer", GameTexts.ContractName((ContractType)(int)stationEvent.Value)));
+                        break;
+                    case StationEventType.ContractAccepted:
+                        HudModel.Notify(Loc.F("msg.contractAccepted", GameTexts.ContractName((ContractType)(int)stationEvent.Value)));
+                        break;
+                    case StationEventType.ContractPenalty:
+                        HudModel.Notify(Loc.F("msg.contractPenalty", stationEvent.Value));
+                        break;
+                    case StationEventType.ContractCompleted:
+                        HudModel.Notify(Loc.F("msg.contractCompleted", stationEvent.Value));
+                        break;
+                    case StationEventType.ContractCancelled:
+                        HudModel.Notify(Loc.F("msg.contractCancelled", GameTexts.ContractName((ContractType)(int)stationEvent.Value)));
                         break;
                     case StationEventType.PropPlaced:
                         HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
@@ -478,7 +506,8 @@ namespace GasStation.Systems
                     RequestedLiters = car.ValueRO.RequestedLiters,
                     ReceivedLiters = car.ValueRO.ReceivedLiters,
                     PatienceRatio = patience.ValueRO.Max > 0f ? patience.ValueRO.Current / patience.ValueRO.Max : 0f,
-                    RegularId = car.ValueRO.RegularId
+                    RegularId = car.ValueRO.RegularId,
+                    ContractId = car.ValueRO.ContractId
                 });
             }
         }
@@ -613,6 +642,21 @@ namespace GasStation.Systems
                 if (!fuelingAction && trash != Entity.Null && SystemAPI.Exists(trash))
                     HudModel.Hint = InteractionHint.Trash;
             }
+
+            foreach (var transform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<PlayerTag>())
+                HudModel.PlayerPosition = transform.ValueRO.Position;
+
+            HudModel.HasLaptop = SystemAPI.HasSingleton<Laptop>();
+            if (!HudModel.HasLaptop)
+                return;
+
+            HudModel.LaptopPosition = SystemAPI.GetSingleton<Laptop>().Position;
+            // The laptop has the lowest priority: E does the station work first.
+            var offset = HudModel.PlayerPosition - HudModel.LaptopPosition;
+            offset.y = 0f;
+            if (HudModel.Hint is InteractionHint.None or InteractionHint.PumpFree &&
+                offset.sqrMagnitude <= HudModel.LaptopRadius * HudModel.LaptopRadius)
+                HudModel.Hint = InteractionHint.Laptop;
         }
 
         private bool NearWaitingTireCar()

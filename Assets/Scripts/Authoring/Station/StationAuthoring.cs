@@ -107,6 +107,14 @@ namespace GasStation.Authoring
             var regulars = AddBuffer<RegularState>(entity);
             for (int i = 0; i < RegularCatalog.Count; i++)
                 regulars.Add(new RegularState { Loyalty = VisitorMath.StartLoyalty, LastVisitDay = -1 });
+            AddBuffer<ContractOffer>(entity);
+            AddBuffer<Contract>(entity);
+            AddComponent(entity, new ContractBoard
+            {
+                NextId = 1,
+                DaysToNextOffer = 1,
+                Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 401)
+            });
             AddComponent(entity, new Achievements());
             AddComponent(entity, new StaffRoster
             {
