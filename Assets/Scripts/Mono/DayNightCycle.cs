@@ -7,11 +7,13 @@ namespace GasStation.Mono
     [RequireComponent(typeof(Light))]
     public class DayNightCycle : MonoBehaviour
     {
-        [SerializeField] private float maxIntensity = 1.2f;
-        [SerializeField] private float nightIntensity = 0.05f;
+        [SerializeField] private float maxIntensity = 1.35f;
+        [SerializeField] private float nightIntensity = 0.08f;
 
         private Light _light;
         private float _yaw;
+        private ReflectionProbe _probe;
+        private int _lastProbeHour = -1;
 
         private void Awake()
         {
@@ -30,6 +32,17 @@ namespace GasStation.Mono
 
             float daylight = Mathf.Clamp01(Mathf.Sin(elevation * Mathf.Deg2Rad));
             _light.intensity = Mathf.Lerp(nightIntensity, maxIntensity, daylight) * Scenery.WeatherEffects.SunMultiplier;
+
+            // The sky and the station reflection change with the sun; rebake the probe hourly.
+            if (_probe == null)
+                _probe = FindAnyObjectByType<ReflectionProbe>();
+
+            int hour = Mathf.FloorToInt(HudModel.Hour);
+            if (_probe != null && hour != _lastProbeHour)
+            {
+                _lastProbeHour = hour;
+                _probe.RenderProbe();
+            }
         }
     }
 }
