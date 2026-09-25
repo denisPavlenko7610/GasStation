@@ -122,6 +122,14 @@ namespace GasStation.Systems
                 return;
             }
 
+            int requiredLevel = ProgressMath.RequiredLevel(type, level);
+            int stationLevel = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
+            if (stationLevel < requiredLevel)
+            {
+                HudModel.Notify($"{GameTexts.UpgradeName(type)}: нужен уровень станции {requiredLevel}");
+                return;
+            }
+
             var economy = SystemAPI.GetComponentRW<Economy>(station);
             float cost = UpgradeMath.Cost(type, level);
             if (economy.ValueRO.Money < cost)
@@ -150,6 +158,9 @@ namespace GasStation.Systems
                     break;
                 case UpgradeType.Janitor:
                     economy.ValueRW.DailyFixedCosts += UpgradeMath.JanitorSalaryPerLevel;
+                    break;
+                case UpgradeType.Mechanic:
+                    economy.ValueRW.DailyFixedCosts += ProgressMath.MechanicSalaryPerLevel;
                     break;
             }
 

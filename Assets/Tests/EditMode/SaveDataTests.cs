@@ -23,6 +23,7 @@ namespace GasStation.Tests
 
             var saved = SaveData.Create(economy, time, upgrades, stock, pending);
             saved.CaptureQuest(new QuestProgress { Index = 3, Counter = 2f, Completed = 3 });
+            saved.CaptureLevel(new StationLevel { Level = 4, Experience = 120f });
             string json = JsonUtility.ToJson(saved);
             var loaded = JsonUtility.FromJson<SaveData>(json);
 
@@ -44,6 +45,8 @@ namespace GasStation.Tests
             Assert.AreEqual(400f, restoredStock[2].Amount, "Paid deliveries are saved as delivered");
             Assert.AreEqual(3, loaded.ToQuestProgress().Index);
             Assert.AreEqual(2f, loaded.ToQuestProgress().Counter);
+            Assert.AreEqual(4, loaded.ToStationLevel().Level);
+            Assert.AreEqual(120f, loaded.ToStationLevel().Experience);
         }
 
         [Test]
@@ -53,6 +56,8 @@ namespace GasStation.Tests
             Assert.IsTrue(loaded.IsSupported);
             Assert.IsNull(loaded.trash, "Old saves keep the scene litter");
             Assert.AreEqual(0, loaded.ToQuestProgress().Index);
+            Assert.AreEqual(1, loaded.ToStationLevel().Level, "Old saves start at level 1");
+            Assert.IsNull(loaded.pumps, "Old saves keep the scene pump condition");
         }
     }
 }

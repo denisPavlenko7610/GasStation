@@ -11,6 +11,8 @@ namespace GasStation.Components
         public float BuyPrice;
         public float SellPrice;
         public float MarketPrice;
+        /// <summary>Long-term average market price; daily prices wander around it.</summary>
+        public float BaseMarketPrice;
     }
 
     public struct FuelDelivery : IComponentData

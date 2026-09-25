@@ -1,4 +1,5 @@
 using GasStation.Components;
+using GasStation.Logic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -39,7 +40,8 @@ namespace GasStation.Systems
             {
                 var carState = car.ValueRO.State;
                 bool waiting = carState is CarState.Queued or CarState.WaitingForService or CarState.Fueling;
-                if (!waiting || trashCount >= spawner.MaxTrash || spawner.Random.NextFloat() >= chance)
+                float carChance = chance * CustomerProfiles.Get(car.ValueRO.Customer).LitterMultiplier;
+                if (!waiting || trashCount >= spawner.MaxTrash || spawner.Random.NextFloat() >= carChance)
                     continue;
 
                 var prefab = prefabs[spawner.Random.NextInt(prefabs.Length)].Prefab;

@@ -13,7 +13,20 @@ namespace GasStation.Components
         UpgradeBought,
         FuelOrdered,
         TrashCollected,
-        QuestCompleted
+        QuestCompleted,
+        PumpBroken,
+        PumpRepaired,
+        LevelUp,
+        TipReceived,
+        FuelStolen,
+        ThiefCaught,
+        MarketChanged,
+        Vandals,
+        RushHourStarted,
+        SandstormStarted,
+        InspectionPassed,
+        InspectionFailed,
+        NotEnoughMoney
     }
 
     /// <summary>

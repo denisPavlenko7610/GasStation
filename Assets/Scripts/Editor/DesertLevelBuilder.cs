@@ -229,10 +229,11 @@ namespace GasStation.Editor
                 Create("Exit_3_Despawn", spawnerGo.transform, new Vector3(RoadHalfLength - 20f, 0f, RoadZ)).transform
             };
 
-            CreatePump(parent, 1, new Vector3(0f, 0f, -5f), -2.5f, 0);
-            CreatePump(parent, 2, new Vector3(0f, 0f, 5f), 2.5f, 0);
-            CreatePump(parent, 3, new Vector3(0f, 0f, -12f), -9.5f, 1);
-            CreatePump(parent, 4, new Vector3(0f, 0f, 12f), 9.5f, 2);
+            // Abandoned station: pump 1 barely works, the others must be repaired first.
+            CreatePump(parent, 1, new Vector3(0f, 0f, -5f), -2.5f, 0, 0.6f);
+            CreatePump(parent, 2, new Vector3(0f, 0f, 5f), 2.5f, 0, 0f);
+            CreatePump(parent, 3, new Vector3(0f, 0f, -12f), -9.5f, 1, 0f);
+            CreatePump(parent, 4, new Vector3(0f, 0f, 12f), 9.5f, 2, 0f);
 
             CreatePlayer(parent, new Vector3(-6f, 0f, -10f));
 
@@ -264,12 +265,13 @@ namespace GasStation.Editor
             speed.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void CreatePump(Transform parent, int number, Vector3 position, float stopZ, int requiredUpgradeLevel)
+        private static void CreatePump(Transform parent, int number, Vector3 position, float stopZ, int requiredUpgradeLevel, float condition)
         {
             var pumpGo = Create($"Pump_{number}", parent, position);
             var pump = pumpGo.AddComponent<PumpAuthoring>();
             pump.number = number;
             pump.requiredUpgradeLevel = requiredUpgradeLevel;
+            pump.startCondition = condition;
 
             var stop = Create("StopPoint", pumpGo.transform, new Vector3(0f, 0f, stopZ - position.z));
             stop.transform.rotation = Quaternion.LookRotation(Vector3.right);

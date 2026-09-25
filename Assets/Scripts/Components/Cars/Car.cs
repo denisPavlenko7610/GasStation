@@ -3,6 +3,15 @@ using Unity.Mathematics;
 
 namespace GasStation.Components
 {
+    public enum CustomerType : byte
+    {
+        Regular,
+        Trucker,
+        Hurry,
+        Tourist,
+        Thief
+    }
+
     public enum CarState : byte
     {
         Arriving,
@@ -16,6 +25,7 @@ namespace GasStation.Components
     public struct Car : IComponentData
     {
         public CarState State;
+        public CustomerType Customer;
         public FuelType FuelType;
         public float RequestedLiters;
         public float ReceivedLiters;

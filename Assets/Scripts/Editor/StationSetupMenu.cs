@@ -42,7 +42,8 @@ namespace GasStation.Editor
             };
 
             CreatePump(root.transform, 1, new Vector3(0f, 0f, -5f), new Vector3(0f, 0f, -2.5f), 0);
-            CreatePump(root.transform, 2, new Vector3(0f, 0f, 5f), new Vector3(0f, 0f, 2.5f), 0);
+            // Worn pump for the "repair a pump" quest.
+            CreatePump(root.transform, 2, new Vector3(0f, 0f, 5f), new Vector3(0f, 0f, 2.5f), 0).startCondition = 0.3f;
             // Pumps 3 and 4 are opened by the ExtraPump upgrade.
             CreatePump(root.transform, 3, new Vector3(0f, 0f, -12f), new Vector3(0f, 0f, -9.5f), 1);
             CreatePump(root.transform, 4, new Vector3(0f, 0f, 12f), new Vector3(0f, 0f, 9.5f), 2);
@@ -86,7 +87,7 @@ namespace GasStation.Editor
                 UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go, scene);
         }
 
-        private static void CreatePump(Transform parent, int number, Vector3 position, Vector3 stopPosition, int requiredUpgradeLevel)
+        private static PumpAuthoring CreatePump(Transform parent, int number, Vector3 position, Vector3 stopPosition, int requiredUpgradeLevel)
         {
             var pumpGo = Create($"Pump_{number}", parent, position);
             var pump = pumpGo.AddComponent<PumpAuthoring>();
@@ -96,6 +97,7 @@ namespace GasStation.Editor
             var stop = Create("StopPoint", pumpGo.transform, stopPosition - position);
             stop.transform.rotation = Quaternion.LookRotation(Vector3.right);
             pump.stopPoint = stop.transform;
+            return pump;
         }
 
         private static GameObject Create(string name, Transform parent, Vector3 localPosition)

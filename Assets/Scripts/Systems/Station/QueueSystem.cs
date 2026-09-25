@@ -55,7 +55,7 @@ namespace GasStation.Systems
                 if (head >= queue.Length)
                     break;
 
-                if (pump.ValueRO.RequiredUpgradeLevel > openedPumps)
+                if (pump.ValueRO.RequiredUpgradeLevel > openedPumps || pump.ValueRO.IsBroken)
                     continue;
 
                 var occupant = pump.ValueRO.Occupant;

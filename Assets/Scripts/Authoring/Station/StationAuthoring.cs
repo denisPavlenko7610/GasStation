@@ -33,6 +33,8 @@ namespace GasStation.Authoring
         public float interactionRadius = 4f;
         [Tooltip("Litter count at which cleanliness drops to 0%")]
         public int dirtyThreshold = 40;
+        [Tooltip("Seed for market prices and random events")]
+        public uint eventSeed = 11;
 
         public FuelSettings[] fuels =
         {
@@ -71,6 +73,13 @@ namespace GasStation.Authoring
             AddComponent(entity, new StationUpgrades());
             AddComponent(entity, new StationCleanliness { Value = 1f });
             AddComponent(entity, new QuestProgress());
+            AddComponent(entity, new StationLevel { Level = 1 });
+            AddComponent(entity, new WorldEvents
+            {
+                Active = WorldEventKind.None,
+                LastRolledHour = (int)authoring.startHour,
+                Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed)
+            });
             AddBuffer<StationEvent>(entity);
 
             var stock = AddBuffer<FuelStock>(entity);
@@ -98,7 +107,8 @@ namespace GasStation.Authoring
             Capacity = settings.capacity,
             BuyPrice = settings.buyPrice,
             SellPrice = settings.sellPrice,
-            MarketPrice = settings.marketPrice
+            MarketPrice = settings.marketPrice,
+            BaseMarketPrice = settings.marketPrice
         };
     }
 }

@@ -3,11 +3,15 @@ using GasStation.Logic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace GasStation.Systems
 {
-    /// <summary>Spawns customers. Traffic depends on time of day, reputation and fuel prices.</summary>
+    /// <summary>
+    /// Spawns customers. Traffic depends on time of day, reputation, prices, cleanliness, station level,
+    /// upgrades and world events; the customer type depends on the station level.
+    /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
     [UpdateAfter(typeof(FuelDeliverySystem))]
@@ -26,11 +30,6 @@ namespace GasStation.Systems
             _cars = SystemAPI.QueryBuilder().WithAll<Car>().Build();
         }
 
-        private float CleanlinessFactor(ref SystemState state) =>
-            SystemAPI.HasSingleton<StationCleanliness>()
-                ? StationMath.CleanlinessTrafficFactor(SystemAPI.GetSingleton<StationCleanliness>().Value)
-                : 1f;
-
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
@@ -42,6 +41,8 @@ namespace GasStation.Systems
             float hour = SystemAPI.GetSingleton<GameTime>().Hour;
             float reputation = SystemAPI.GetSingleton<Economy>().Reputation;
             var upgrades = SystemAPI.GetSingleton<StationUpgrades>();
+            int stationLevel = SystemAPI.HasSingleton<StationLevel>() ? SystemAPI.GetSingleton<StationLevel>().Level : 1;
+            var worldEvent = SystemAPI.HasSingleton<WorldEvents>() ? SystemAPI.GetSingleton<WorldEvents>().Active : WorldEventKind.None;
             var stock = SystemAPI.GetSingletonBuffer<FuelStock>(true);
 
             float attractiveness = 0f;
@@ -53,7 +54,9 @@ namespace GasStation.Systems
                               * StationMath.ReputationFactor(reputation)
                               * attractiveness
                               * UpgradeMath.TrafficMultiplier(upgrades.Advertising)
-                              * CleanlinessFactor(ref state);
+                              * CleanlinessFactor(ref state)
+                              * ProgressMath.LevelTrafficFactor(stationLevel)
+                              * EventFactor(worldEvent);
 
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
             spawner.Timer -= SystemAPI.Time.DeltaTime * intensity;
@@ -64,12 +67,18 @@ namespace GasStation.Systems
             if (_cars.CalculateEntityCount() >= spawner.MaxCars)
                 return;
 
+            var customer = CustomerProfiles.Pick(spawner.Random.NextFloat(), stationLevel, hour, worldEvent == WorldEventKind.RushHour);
+            var profile = CustomerProfiles.Get(customer);
+
             var prefab = prefabs[spawner.Random.NextInt(prefabs.Length)].Prefab;
             float scale = SystemAPI.HasComponent<LocalTransform>(prefab)
                 ? SystemAPI.GetComponent<LocalTransform>(prefab).Scale
                 : 1f;
             float patience = spawner.Random.NextFloat(spawner.PatienceRange.x, spawner.PatienceRange.y)
+                             * profile.PatienceMultiplier
                              * UpgradeMath.PatienceMultiplier(upgrades.Comfort);
+            float liters = spawner.Random.NextFloat(spawner.LitersRange.x, spawner.LitersRange.y) * profile.LitersMultiplier;
+            var fuel = profile.DieselOnly ? FuelType.Diesel : StationMath.PickFuelType(spawner.Random.NextFloat());
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var car = ecb.Instantiate(prefab);
@@ -77,8 +86,9 @@ namespace GasStation.Systems
             ecb.AddComponent(car, new Car
             {
                 State = CarState.Arriving,
-                FuelType = StationMath.PickFuelType(spawner.Random.NextFloat()),
-                RequestedLiters = spawner.Random.NextFloat(spawner.LitersRange.x, spawner.LitersRange.y),
+                Customer = customer,
+                FuelType = fuel,
+                RequestedLiters = liters,
                 ReceivedLiters = 0f,
                 Pump = Entity.Null,
                 ArrivalOrder = spawner.NextArrivalOrder++
@@ -86,7 +96,7 @@ namespace GasStation.Systems
             ecb.AddComponent(car, new Patience { Current = patience, Max = patience });
             ecb.AddComponent(car, new CarMovement
             {
-                Speed = spawner.Random.NextFloat(spawner.SpeedRange.x, spawner.SpeedRange.y),
+                Speed = spawner.Random.NextFloat(spawner.SpeedRange.x, spawner.SpeedRange.y) * profile.SpeedMultiplier,
                 TurnSpeed = 4f
             });
 
@@ -98,5 +108,17 @@ namespace GasStation.Systems
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
         }
+
+        private float CleanlinessFactor(ref SystemState state) =>
+            SystemAPI.HasSingleton<StationCleanliness>()
+                ? StationMath.CleanlinessTrafficFactor(SystemAPI.GetSingleton<StationCleanliness>().Value)
+                : 1f;
+
+        private static float EventFactor(WorldEventKind kind) => kind switch
+        {
+            WorldEventKind.RushHour => 2.5f,
+            WorldEventKind.Sandstorm => 0.4f,
+            _ => 1f
+        };
     }
 }

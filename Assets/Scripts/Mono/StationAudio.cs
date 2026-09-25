@@ -72,6 +72,16 @@ namespace GasStation.Mono
             StationEventType.FuelRanOut => alarmClip,
             StationEventType.TrashCollected => trashClip,
             StationEventType.QuestCompleted => questClip,
+            StationEventType.LevelUp => questClip,
+            StationEventType.ThiefCaught => questClip,
+            StationEventType.PumpRepaired => nozzleClip,
+            StationEventType.TipReceived => cashClip,
+            StationEventType.InspectionPassed => cashClip,
+            StationEventType.PumpBroken => alarmClip,
+            StationEventType.Vandals => alarmClip,
+            StationEventType.FuelStolen => angryClip,
+            StationEventType.InspectionFailed => angryClip,
+            StationEventType.NotEnoughMoney => angryClip,
             _ => null
         };
 

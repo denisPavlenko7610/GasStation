@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Logic;
 using Unity.Entities;
 
 namespace GasStation.Systems
@@ -21,6 +22,10 @@ namespace GasStation.Systems
             HudModel.Economy = SystemAPI.GetSingleton<Economy>();
             HudModel.LastReport = SystemAPI.GetSingleton<DayReport>();
             HudModel.Upgrades = SystemAPI.GetSingleton<StationUpgrades>();
+            if (SystemAPI.HasSingleton<StationLevel>())
+                HudModel.Level = SystemAPI.GetSingleton<StationLevel>();
+            if (SystemAPI.HasSingleton<WorldEvents>())
+                HudModel.World = SystemAPI.GetSingleton<WorldEvents>();
             if (SystemAPI.HasSingleton<StationCleanliness>())
                 HudModel.Cleanliness = SystemAPI.GetSingleton<StationCleanliness>();
 
@@ -50,6 +55,45 @@ namespace GasStation.Systems
                         break;
                     case StationEventType.FuelDelivered:
                         HudModel.Notify($"Бензовоз привёз {stationEvent.Value:0} л {fuel}");
+                        break;
+                    case StationEventType.PumpBroken:
+                        HudModel.Notify($"Колонка {stationEvent.Value:0} сломалась! Почините её (E)");
+                        break;
+                    case StationEventType.PumpRepaired:
+                        HudModel.Notify($"Колонка {stationEvent.Value:0} как новая");
+                        break;
+                    case StationEventType.NotEnoughMoney:
+                        HudModel.Notify($"Не хватает денег: нужно ${stationEvent.Value:0}");
+                        break;
+                    case StationEventType.LevelUp:
+                        HudModel.Notify($"Уровень станции {stationEvent.Value:0}! Открыты новые улучшения и клиенты");
+                        break;
+                    case StationEventType.TipReceived:
+                        HudModel.Notify($"Чаевые: ${stationEvent.Value:0}");
+                        break;
+                    case StationEventType.FuelStolen:
+                        HudModel.Notify($"Вор уехал без оплаты! Потеряно ${stationEvent.Value:0}");
+                        break;
+                    case StationEventType.ThiefCaught:
+                        HudModel.Notify("Вор пойман и заплатил!");
+                        break;
+                    case StationEventType.MarketChanged:
+                        HudModel.Notify($"Цены на нефть: {stationEvent.Value:+0.0;-0.0;0}%. Проверьте свои цены");
+                        break;
+                    case StationEventType.Vandals:
+                        HudModel.Notify("Ночью приходили вандалы и намусорили");
+                        break;
+                    case StationEventType.RushHourStarted:
+                        HudModel.Notify("Час пик: туристы едут толпой!");
+                        break;
+                    case StationEventType.SandstormStarted:
+                        HudModel.Notify("Песчаная буря: клиентов мало, мусора много");
+                        break;
+                    case StationEventType.InspectionPassed:
+                        HudModel.Notify($"Проверка пройдена! Премия ${stationEvent.Value:0}");
+                        break;
+                    case StationEventType.InspectionFailed:
+                        HudModel.Notify($"Проверка: грязно! Штраф ${stationEvent.Value:0}");
                         break;
                 }
             }
@@ -107,7 +151,11 @@ namespace GasStation.Systems
                 if (pumpEntity != Entity.Null && SystemAPI.Exists(pumpEntity))
                     HudModel.Hint = HintFor(Describe(SystemAPI.GetComponent<Pump>(pumpEntity)));
 
-                bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling;
+                if (HudModel.Hint != InteractionHint.CanStartFueling && pumpEntity != Entity.Null && SystemAPI.Exists(pumpEntity) &&
+                    SystemAPI.GetComponent<Pump>(pumpEntity).Condition < ProgressMath.RepairThreshold)
+                    HudModel.Hint = InteractionHint.Repair;
+
+                bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling or InteractionHint.Repair;
                 var trash = interaction.ValueRO.NearbyTrash;
                 if (!fuelingAction && trash != Entity.Null && SystemAPI.Exists(trash))
                     HudModel.Hint = InteractionHint.Trash;
@@ -119,7 +167,8 @@ namespace GasStation.Systems
             var info = new PumpInfo
             {
                 Number = pump.Number,
-                Locked = pump.RequiredUpgradeLevel > HudModel.Upgrades.ExtraPump
+                Locked = pump.RequiredUpgradeLevel > HudModel.Upgrades.ExtraPump,
+                Condition = pump.Condition
             };
 
             var occupant = pump.Occupant;
@@ -129,6 +178,7 @@ namespace GasStation.Systems
             var car = SystemAPI.GetComponent<Car>(occupant);
             var patience = SystemAPI.GetComponent<Patience>(occupant);
             info.Occupied = true;
+            info.Customer = car.Customer;
             info.CarState = car.State;
             info.FuelType = car.FuelType;
             info.RequestedLiters = car.RequestedLiters;

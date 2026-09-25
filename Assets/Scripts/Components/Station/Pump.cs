@@ -14,5 +14,9 @@ namespace GasStation.Components
         public Entity Occupant;
         /// <summary>ExtraPump upgrade level needed before cars use this pump. 0 = always open.</summary>
         public int RequiredUpgradeLevel;
+        /// <summary>1 = new, 0 = broken. Wears down with every liter pumped.</summary>
+        public float Condition;
+
+        public bool IsBroken => Condition <= 0f;
     }
 }

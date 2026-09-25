@@ -45,6 +45,16 @@ namespace GasStation.Save
 
             if (entityManager.HasComponent<QuestProgress>(station))
                 data.CaptureQuest(entityManager.GetComponentData<QuestProgress>(station));
+            if (entityManager.HasComponent<StationLevel>(station))
+                data.CaptureLevel(entityManager.GetComponentData<StationLevel>(station));
+
+            using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Pump>()))
+            using (var pumps = query.ToComponentDataArray<Pump>(Allocator.Temp))
+            {
+                data.pumps = new PumpSaveData[pumps.Length];
+                for (int i = 0; i < pumps.Length; i++)
+                    data.pumps[i] = new PumpSaveData { number = pumps[i].Number, condition = pumps[i].Condition };
+            }
 
             using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Trash>(), ComponentType.ReadOnly<LocalToWorld>()))
             using (var transforms = query.ToComponentDataArray<LocalToWorld>(Allocator.Temp))
@@ -92,8 +102,31 @@ namespace GasStation.Save
             if (entityManager.HasComponent<QuestProgress>(station))
                 entityManager.SetComponentData(station, data.ToQuestProgress());
 
+            if (entityManager.HasComponent<StationLevel>(station))
+                entityManager.SetComponentData(station, data.ToStationLevel());
+
+            if (data.pumps != null)
+                RestorePumps(entityManager, data.pumps);
+
             if (data.trash != null)
                 RestoreTrash(entityManager, data.trash);
+        }
+
+        private static void RestorePumps(EntityManager entityManager, PumpSaveData[] saved)
+        {
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Pump>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            foreach (var entity in entities)
+            {
+                var pump = entityManager.GetComponentData<Pump>(entity);
+                foreach (var entry in saved)
+                {
+                    if (entry != null && entry.number == pump.Number)
+                        pump.Condition = Mathf.Clamp01(entry.condition);
+                }
+
+                entityManager.SetComponentData(entity, pump);
+            }
         }
 
         private static void RestoreTrash(EntityManager entityManager, TrashSaveData[] trash)

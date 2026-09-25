@@ -127,6 +127,7 @@ namespace GasStation.Mono
             5 => keyboard.digit5Key.wasPressedThisFrame,
             6 => keyboard.digit6Key.wasPressedThisFrame,
             7 => keyboard.digit7Key.wasPressedThisFrame,
+            8 => keyboard.digit8Key.wasPressedThisFrame,
             _ => false
         };
 
@@ -139,7 +140,10 @@ namespace GasStation.Mono
                 var type = (UpgradeType)i;
                 int level = HudModel.Upgrades.Get(type);
                 int max = UpgradeMath.MaxLevel(type);
-                string price = UpgradeMath.CanUpgrade(type, level) ? $"${UpgradeMath.Cost(type, level):0}" : "макс.";
+                int requiredLevel = ProgressMath.RequiredLevel(type, level);
+                string price = !UpgradeMath.CanUpgrade(type, level) ? "макс."
+                    : HudModel.Level.Level < requiredLevel ? $"нужен уровень {requiredLevel}"
+                    : $"${UpgradeMath.Cost(type, level):0}";
                 _builder.AppendLine($"{i + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
             }
 
@@ -165,6 +169,18 @@ namespace GasStation.Mono
             _builder.AppendLine($"Деньги: ${economy.Money:0}");
             _builder.AppendLine($"Репутация: {economy.Reputation * 100f:0}%");
             _builder.AppendLine($"Чистота: {HudModel.Cleanliness.Value * 100f:0}% (мусора: {HudModel.Cleanliness.TrashCount})");
+            var level = HudModel.Level;
+            _builder.AppendLine(level.Level >= ProgressMath.MaxLevel
+                ? $"Уровень станции: {level.Level} (макс.)"
+                : $"Уровень станции: {level.Level}   опыт {level.Experience:0}/{ProgressMath.ExperienceToNext(level.Level):0}");
+            string worldEvent = HudModel.World.Active switch
+            {
+                WorldEventKind.RushHour => "Час пик",
+                WorldEventKind.Sandstorm => "Песчаная буря",
+                _ => null
+            };
+            if (worldEvent != null)
+                _builder.AppendLine($"Событие: {worldEvent} (ещё {HudModel.World.HoursLeft:0.0} ч)");
             _builder.AppendLine($"Сегодня: +${economy.DayIncome:0} / -${economy.DayExpenses:0}");
             _builder.Append($"Обслужено: {economy.DayServed}   Уехали: {economy.DayLost}");
             return _builder.ToString();
@@ -199,9 +215,16 @@ namespace GasStation.Mono
                     continue;
                 }
 
+                if (pump.Condition <= 0f && !pump.Occupied)
+                {
+                    _builder.AppendLine("СЛОМАНА — почините (E рядом)");
+                    continue;
+                }
+
+                string wear = pump.Condition < ProgressMath.RepairThreshold ? $" [износ {100f - pump.Condition * 100f:0}%]" : string.Empty;
                 if (!pump.Occupied)
                 {
-                    _builder.AppendLine("свободна");
+                    _builder.AppendLine($"свободна{wear}");
                     continue;
                 }
 
@@ -213,7 +236,8 @@ namespace GasStation.Mono
                     CarState.Fueling => "заправляется",
                     _ => pump.CarState.ToString()
                 };
-                _builder.AppendLine($"{state}, {fuel} {pump.ReceivedLiters:0}/{pump.RequestedLiters:0} л, терпение {pump.PatienceRatio * 100f:0}%");
+                _builder.AppendLine($"{GameTexts.CustomerName(pump.Customer)} {state}, {fuel} {pump.ReceivedLiters:0}/{pump.RequestedLiters:0} л, " +
+                                    $"терпение {pump.PatienceRatio * 100f:0}%{wear}");
             }
 
             return _builder.ToString();
@@ -243,6 +267,7 @@ namespace GasStation.Mono
                 InteractionHint.Fueling => "Идёт заправка...",
                 InteractionHint.CarArriving => "Машина подъезжает",
                 InteractionHint.Trash => "[E / ЛКМ] Убрать мусор",
+                InteractionHint.Repair => $"[E / ЛКМ] Чинить колонку (${ProgressMath.RepairStepCost:0} за шаг)",
                 _ => string.Empty
             };
         }

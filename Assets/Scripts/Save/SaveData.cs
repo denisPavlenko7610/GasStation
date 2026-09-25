@@ -11,6 +11,16 @@ namespace GasStation.Save
         public float amount;
         public float capacity;
         public float sellPrice;
+        // Version 3; 0 in older saves means "keep the scene value".
+        public float marketPrice;
+        public float buyPrice;
+    }
+
+    [Serializable]
+    public class PumpSaveData
+    {
+        public int number;
+        public float condition;
     }
 
     [Serializable]
@@ -26,7 +36,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
 
         public int version = CurrentVersion;
         public int day;
@@ -47,6 +57,12 @@ namespace GasStation.Save
         public int questsCompleted;
         /// <summary>Null in version 1 saves: litter from the scene is kept as is.</summary>
         public TrashSaveData[] trash;
+
+        // Version 3
+        public int stationLevel;
+        public float stationExperience;
+        /// <summary>Null in older saves: pumps keep their scene condition.</summary>
+        public PumpSaveData[] pumps;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 
@@ -77,7 +93,9 @@ namespace GasStation.Save
                 {
                     amount = Mathf.Min(stock[i].Capacity, stock[i].Amount + pending),
                     capacity = stock[i].Capacity,
-                    sellPrice = stock[i].SellPrice
+                    sellPrice = stock[i].SellPrice,
+                    marketPrice = stock[i].MarketPrice,
+                    buyPrice = stock[i].BuyPrice
                 };
             }
 
@@ -90,6 +108,19 @@ namespace GasStation.Save
             questCounter = quest.Counter;
             questsCompleted = quest.Completed;
         }
+
+        public void CaptureLevel(StationLevel level)
+        {
+            stationLevel = level.Level;
+            stationExperience = level.Experience;
+        }
+
+        /// <summary>Older saves have no level and start at level 1.</summary>
+        public StationLevel ToStationLevel() => new()
+        {
+            Level = Mathf.Max(1, stationLevel),
+            Experience = Mathf.Max(0f, stationExperience)
+        };
 
         public QuestProgress ToQuestProgress() => new()
         {
@@ -123,6 +154,10 @@ namespace GasStation.Save
                 entry.Capacity = fuel[i].capacity;
                 entry.Amount = Mathf.Clamp(fuel[i].amount, 0f, fuel[i].capacity);
                 entry.SellPrice = fuel[i].sellPrice;
+                if (fuel[i].marketPrice > 0f)
+                    entry.MarketPrice = fuel[i].marketPrice;
+                if (fuel[i].buyPrice > 0f)
+                    entry.BuyPrice = fuel[i].buyPrice;
                 stock[i] = entry;
             }
         }

@@ -18,6 +18,7 @@ namespace GasStation.Bridge
             UpgradeType.Attendant => "Заправщик",
             UpgradeType.ExtraPump => "Новая колонка",
             UpgradeType.Janitor => "Уборщик",
+            UpgradeType.Mechanic => "Механик",
             _ => type.ToString()
         };
 
@@ -30,7 +31,17 @@ namespace GasStation.Bridge
             UpgradeType.Attendant => "сам заправляет машины, $80/день",
             UpgradeType.ExtraPump => "открывает ещё одну колонку",
             UpgradeType.Janitor => "сам убирает мусор, $60/день",
+            UpgradeType.Mechanic => "сам чинит колонки, $70/день",
             _ => string.Empty
+        };
+
+        public static string CustomerName(CustomerType type) => type switch
+        {
+            CustomerType.Trucker => "дальнобойщик",
+            CustomerType.Hurry => "торопыга",
+            CustomerType.Tourist => "турист",
+            CustomerType.Thief => "подозрительный тип",
+            _ => "клиент"
         };
 
         public static string QuestTitle(QuestDefinition quest) => quest.Id switch
@@ -46,6 +57,9 @@ namespace GasStation.Bridge
             8 => "Прибыльный день",
             9 => "Расширение",
             10 => "Идеальная чистота",
+            11 => "Колонка не работает",
+            12 => "Растущая слава",
+            13 => "Держи вора!",
             _ => "Задание дня"
         };
 
@@ -59,6 +73,9 @@ namespace GasStation.Bridge
             QuestGoal.Reputation => $"Подними репутацию до {quest.Target:0}%: сейчас {{0}}%",
             QuestGoal.DayIncome => $"Заработай за день ${quest.Target:0}: сейчас ${{0}}",
             QuestGoal.OpenPumps => "Открой новую колонку (Tab): {0}/1",
+            QuestGoal.RepairPump => $"Почини колонку (E рядом со сломанной): {{0}}/{quest.Target:0}",
+            QuestGoal.StationLevel => $"Подними уровень станции до {quest.Target:0}: сейчас {{0}}",
+            QuestGoal.CatchThief => "Стой рядом с машиной вора, когда он заправляется: {0}/1",
             _ => "{0}"
         };
 

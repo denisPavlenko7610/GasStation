@@ -12,13 +12,16 @@ namespace GasStation.Bridge
         CarArriving,
         CanStartFueling,
         Fueling,
-        Trash
+        Trash,
+        Repair
     }
 
     public struct PumpInfo
     {
         public int Number;
         public bool Locked;
+        public float Condition;
+        public CustomerType Customer;
         public bool Occupied;
         public CarState CarState;
         public FuelType FuelType;
@@ -48,6 +51,8 @@ namespace GasStation.Bridge
         public static StationCleanliness Cleanliness;
         public static QuestDefinition Quest;
         public static float QuestProgress;
+        public static StationLevel Level;
+        public static WorldEvents World;
 
         public static int QueueLength;
         public static int CarsOnSite;

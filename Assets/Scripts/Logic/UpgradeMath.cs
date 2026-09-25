@@ -11,6 +11,9 @@ namespace GasStation.Logic
 
         public static int MaxLevel(UpgradeType type) => type == UpgradeType.ExtraPump ? 2 : 3;
 
+        /// <summary>Condition a mechanic restores per second on each worn pump.</summary>
+        public static float MechanicRepairPerSecond(int level) => 0.01f * level;
+
         public static float BaseCost(UpgradeType type) => type switch
         {
             UpgradeType.PumpSpeed => 400f,
@@ -20,6 +23,7 @@ namespace GasStation.Logic
             UpgradeType.Attendant => 800f,
             UpgradeType.ExtraPump => 1500f,
             UpgradeType.Janitor => 600f,
+            UpgradeType.Mechanic => 900f,
             _ => 1000f
         };
 

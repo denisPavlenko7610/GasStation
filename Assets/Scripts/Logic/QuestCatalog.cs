@@ -19,7 +19,13 @@ namespace GasStation.Logic
         /// <summary>State: income of the current day.</summary>
         DayIncome,
         /// <summary>State: ExtraPump upgrade level.</summary>
-        OpenPumps
+        OpenPumps,
+        /// <summary>Counter: pumps fully repaired.</summary>
+        RepairPump,
+        /// <summary>State: station level.</summary>
+        StationLevel,
+        /// <summary>Counter: thieves caught at the pump.</summary>
+        CatchThief
     }
 
     public struct QuestDefinition
@@ -32,7 +38,7 @@ namespace GasStation.Logic
         public bool IsDaily;
 
         public bool IsCounter => Goal is QuestGoal.CollectTrash or QuestGoal.ServeCustomers
-            or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade;
+            or QuestGoal.OrderFuel or QuestGoal.BuyUpgrade or QuestGoal.RepairPump or QuestGoal.CatchThief;
     }
 
     /// <summary>
@@ -46,6 +52,7 @@ namespace GasStation.Logic
         private static readonly QuestDefinition[] Story =
         {
             Quest(0, QuestGoal.CollectTrash, 10f, 200f),
+            Quest(11, QuestGoal.RepairPump, 1f, 150f),
             Quest(1, QuestGoal.ServeCustomers, 3f, 150f),
             Quest(2, QuestGoal.Cleanliness, 80f, 0f, 0.05f),
             Quest(3, QuestGoal.OrderFuel, 1f, 100f),
@@ -54,7 +61,9 @@ namespace GasStation.Logic
             Quest(6, QuestGoal.CollectTrash, 40f, 400f),
             Quest(7, QuestGoal.Reputation, 70f, 500f),
             Quest(8, QuestGoal.DayIncome, 1000f, 800f),
+            Quest(12, QuestGoal.StationLevel, 4f, 600f),
             Quest(9, QuestGoal.OpenPumps, 1f, 1000f),
+            Quest(13, QuestGoal.CatchThief, 1f, 500f, 0.05f),
             Quest(10, QuestGoal.Cleanliness, 100f, 500f, 0.05f),
         };
 
@@ -95,7 +104,7 @@ namespace GasStation.Logic
 
         /// <summary>Progress towards the goal. Counter goals use the stored counter, state goals read the station.</summary>
         public static float Progress(QuestDefinition quest, float counter, float cleanliness, float reputation,
-            float dayIncome, int openPumps)
+            float dayIncome, int openPumps, int stationLevel)
         {
             return quest.Goal switch
             {
@@ -103,6 +112,7 @@ namespace GasStation.Logic
                 QuestGoal.Reputation => math.floor(reputation * 100f),
                 QuestGoal.DayIncome => dayIncome,
                 QuestGoal.OpenPumps => openPumps,
+                QuestGoal.StationLevel => stationLevel,
                 _ => counter
             };
         }
