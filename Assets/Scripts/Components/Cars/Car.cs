@@ -19,7 +19,9 @@ namespace GasStation.Components
         /// <summary>Brings a crowd of passengers into the shop.</summary>
         TourBus,
         /// <summary>Brings a broken-down car: always needs the tire service, pays double.</summary>
-        TowTruck
+        TowTruck,
+        /// <summary>Electric car: skips the pumps, charges at a charger while the driver shops and eats.</summary>
+        Electric
     }
 
     public enum CarState : byte
@@ -44,7 +46,10 @@ namespace GasStation.Components
         ChangingTires,
         DrivingToMotel,
         /// <summary>Guests sleeping in a motel room until morning; the car stands at the room.</summary>
-        InMotel
+        InMotel,
+        DrivingToCharger,
+        /// <summary>At a charger; the driver may be away in the shop or the diner.</summary>
+        Charging
     }
 
     public struct Car : IComponentData

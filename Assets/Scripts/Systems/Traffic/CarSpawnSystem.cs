@@ -96,6 +96,10 @@ namespace GasStation.Systems
             if (customer == CustomerType.Thief && LightingMath.NightFactor(hour) > 0.5f &&
                 spawner.Random.NextFloat() > PropMath.NightCrimeFactor(props.Lamps))
                 customer = CustomerType.Regular;
+            // Once chargers are open, some ordinary drivers come in electric cars.
+            if (customer is CustomerType.Regular or CustomerType.Hurry or CustomerType.Tourist && ChargersOpen(ref state, upgrades) &&
+                spawner.Random.NextFloat() < EvMath.Share)
+                customer = CustomerType.Electric;
             // A police contract keeps most thieves away.
             if (customer == CustomerType.Thief && PoliceOnDuty(ref state) &&
                 spawner.Random.NextFloat() > ContractMath.PoliceThiefShare)
@@ -180,6 +184,9 @@ namespace GasStation.Systems
         }
 
         private const int ExtraCarsForGuests = 6;
+
+        private bool ChargersOpen(ref SystemState state, in StationUpgrades upgrades) =>
+            upgrades.EvCharger > 0 && SystemAPI.HasSingleton<ChargingStation>();
 
         private bool PoliceOnDuty(ref SystemState state)
         {

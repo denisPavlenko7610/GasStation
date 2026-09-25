@@ -98,6 +98,9 @@ namespace GasStation.Systems
                     case StationCommandType.TogglePromo:
                         TogglePromo(command.Product);
                         break;
+                    case StationCommandType.OrderIngredients:
+                        OrderIngredients(station);
+                        break;
                     case StationCommandType.SetSupplier:
                         SetSupplier((SupplierKind)(int)command.Value);
                         break;
@@ -130,6 +133,41 @@ namespace GasStation.Systems
             shelf.Promo = !shelf.Promo;
             shelves[(int)product] = shelf;
             HudModel.Notify(Loc.F(shelf.Promo ? "msg.promoOn" : "msg.promoOff", GameTexts.ProductName(product)));
+        }
+
+        /// <summary>Ingredients for the diner go straight into the fridge.</summary>
+        private void OrderIngredients(Entity station)
+        {
+            int level = SystemAPI.GetComponent<StationUpgrades>(station).Diner;
+            if (!SystemAPI.HasSingleton<Diner>() || level <= 0)
+            {
+                HudModel.Notify(Loc.T("msg.noDiner"));
+                return;
+            }
+
+            var dinerEntity = SystemAPI.GetSingletonEntity<Diner>();
+            var diner = SystemAPI.GetComponent<Diner>(dinerEntity);
+            int count = math.min(DinerMath.IngredientOrder, DinerMath.IngredientCapacity(level) - diner.Ingredients);
+            if (count <= 0)
+            {
+                HudModel.Notify(Loc.T("msg.fridgeFull"));
+                return;
+            }
+
+            float cost = count * DinerMath.IngredientPrice;
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            if (economy.ValueRO.Money < cost)
+            {
+                HudModel.Notify(Loc.F("msg.noMoney", cost));
+                return;
+            }
+
+            economy.ValueRW.Money -= cost;
+            economy.ValueRW.DayExpenses += cost;
+            diner.Ingredients += count;
+            diner.WarnedEmpty = false;
+            SystemAPI.SetComponent(dinerEntity, diner);
+            HudModel.Notify(Loc.F("msg.ingredientsBought", count, cost));
         }
 
         private void SetSupplier(SupplierKind supplier)

@@ -263,6 +263,8 @@ namespace GasStation.Mono
                 StationCommands.OrderProducts(_selectedProduct, ShopMath.OrderSize);
             if (keyboard.pKey.wasPressedThisFrame)
                 StationCommands.TogglePromo(_selectedProduct);
+            if (keyboard.iKey.wasPressedThisFrame && HudModel.HasDiner)
+                StationCommands.OrderIngredients();
         }
 
         private void HandleUpgradeKeys(Keyboard keyboard)
@@ -440,6 +442,15 @@ namespace GasStation.Mono
             }
 
             _builder.Append(Loc.F("panel.store.supplier", Loc.T($"supplier.{HudModel.Supplier}")));
+            if (HudModel.HasDiner)
+            {
+                int level = HudModel.Upgrades.Diner;
+                _builder.AppendLine();
+                _builder.Append(Loc.F("panel.store.diner", HudModel.DinerCounter[0].Ready,
+                    DinerMath.OnMenu(DinerDish.Burger, level) ? HudModel.DinerCounter[1].Ready.ToString() : "—",
+                    HudModel.Diner.Ingredients, DinerMath.IngredientCapacity(level), DinerMath.IngredientOrder,
+                    DinerMath.IngredientOrder * DinerMath.IngredientPrice));
+            }
 
             return _builder.ToString();
         }

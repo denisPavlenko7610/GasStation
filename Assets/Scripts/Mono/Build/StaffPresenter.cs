@@ -28,6 +28,7 @@ namespace GasStation.Mono.Build
             StaffRole.Attendant => new Color(0.95f, 0.5f, 0.1f),
             StaffRole.Janitor => new Color(0.2f, 0.6f, 0.3f),
             StaffRole.Mechanic => new Color(0.2f, 0.35f, 0.75f),
+            StaffRole.Cook => new Color(0.95f, 0.95f, 0.95f),
             _ => new Color(0.75f, 0.2f, 0.25f)
         };
 

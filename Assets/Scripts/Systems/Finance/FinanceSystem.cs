@@ -47,6 +47,10 @@ namespace GasStation.Systems
                     case StationEventType.CustomerPaid:
                         finance.ElectricityToday += e.Value * FinanceMath.ElectricityPerFuelDollar;
                         break;
+                    case StationEventType.EvCharged:
+                        // Subject carries the kWh sold.
+                        finance.ElectricityToday += e.Subject * EvMath.CostPerKwh;
+                        break;
                     case StationEventType.CarWashed:
                         finance.ElectricityToday += FinanceMath.ElectricityPerWash;
                         finance.WaterToday += FinanceMath.WaterPerWash;

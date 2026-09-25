@@ -80,6 +80,9 @@ namespace GasStation.Logic
                 UpgradeType.TireService => 2,
                 UpgradeType.Motel => 4,
                 UpgradeType.Decor => 2,
+                UpgradeType.Diner => 4,
+                // The EV charging licence comes with the fifth station level.
+                UpgradeType.EvCharger => 5,
                 _ => 1
             };
 

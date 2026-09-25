@@ -17,12 +17,14 @@ namespace GasStation.Components
         TruckParking = 10,
         TireService = 11,
         Motel = 12,
-        Decor = 13
+        Decor = 13,
+        EvCharger = 14,
+        Diner = 15
     }
 
     public static class UpgradeTypes
     {
-        public const int Count = 14;
+        public const int Count = 16;
     }
 
     public struct StationUpgrades : IComponentData
@@ -41,6 +43,8 @@ namespace GasStation.Components
         public int TireService;
         public int Motel;
         public int Decor;
+        public int EvCharger;
+        public int Diner;
 
         public int Get(UpgradeType type) => type switch
         {
@@ -58,6 +62,8 @@ namespace GasStation.Components
             UpgradeType.TireService => TireService,
             UpgradeType.Motel => Motel,
             UpgradeType.Decor => Decor,
+            UpgradeType.EvCharger => EvCharger,
+            UpgradeType.Diner => Diner,
             _ => 0
         };
 
@@ -79,6 +85,8 @@ namespace GasStation.Components
                 case UpgradeType.TireService: TireService = level; break;
                 case UpgradeType.Motel: Motel = level; break;
                 case UpgradeType.Decor: Decor = level; break;
+                case UpgradeType.EvCharger: EvCharger = level; break;
+                case UpgradeType.Diner: Diner = level; break;
             }
         }
     }

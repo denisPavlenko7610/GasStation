@@ -772,6 +772,32 @@ namespace GasStation.Localization
             { "laptop.suppliers.order", new[] { "Заказать {0} шт. (${1:0})", "Order {0} (${1:0})" } },
             { "laptop.suppliers.promoOn", new[] { "Акция 2 по цене 1", "2 for 1 promo" } },
             { "laptop.suppliers.promoOff", new[] { "Снять акцию", "End promo" } },
+
+            // Diner and EV chargers
+            { "upgrade.name.EvCharger", new[] { "Электрозарядки", "EV chargers" } },
+            { "upgrade.desc.EvCharger", new[] { "2 зарядки за уровень: электромобили заряжаются 20–40 минут, а водители идут в магазин и закусочную", "2 chargers per level: EVs charge for 20–40 minutes while drivers visit the shop and the diner" } },
+            { "upgrade.name.Diner", new[] { "Закусочная", "Diner" } },
+            { "upgrade.desc.Diner", new[] { "хот-доги (с 2-го уровня бургеры, с 3-го — быстрее): нужен повар или ты у гриля (E)", "hot dogs (burgers from level 2, faster from level 3): needs a cook or you at the grill (E)" } },
+            { "role.Cook", new[] { "повар", "cook" } },
+            { "duty.Cook", new[] { "готовит в закусочной", "cooks at the diner" } },
+            { "customer.Electric", new[] { "электромобиль", "electric car" } },
+            { "carstate.DrivingToCharger", new[] { "едет к зарядке", "driving to a charger" } },
+            { "carstate.Charging", new[] { "заряжается", "charging" } },
+            { "dish.HotDog", new[] { "хот-дог", "hot dog" } },
+            { "dish.Burger", new[] { "бургер", "burger" } },
+            { "hint.Grill", new[] { "E — приготовить у гриля", "E — cook at the grill" } },
+            { "msg.noDiner", new[] { "Закусочной ещё нет", "There is no diner yet" } },
+            { "msg.fridgeFull", new[] { "Холодильник закусочной полон", "The diner fridge is full" } },
+            { "msg.ingredientsBought", new[] { "Куплено ингредиентов: {0} за ${1:0}", "Bought {0} ingredients for ${1:0}" } },
+            { "msg.dinerEmpty", new[] { "В закусочной кончились ингредиенты! Закажи ещё (I в магазине)", "The diner is out of ingredients! Order more (I in the shop panel)" } },
+            { "msg.foodWasted", new[] { "Остыло и выброшено: {0:0} ({1})", "Went cold and was thrown away: {0:0} ({1})" } },
+            { "msg.dishCooked", new[] { "Готово: {0}", "Ready: {0}" } },
+            { "panel.store.diner", new[] { "Закусочная: хот-доги {0}, бургеры {1}, ингредиенты {2}/{3}. I — заказать {4} за ${5:0}", "Diner: hot dogs {0}, burgers {1}, ingredients {2}/{3}. I — order {4} for ${5:0}" } },
+            { "laptop.diner.title", new[] { "Закусочная", "Diner" } },
+            { "laptop.diner.line", new[] { "На прилавке: хот-доги {0}, бургеры {1}. Ингредиенты {2}/{3}", "On the counter: hot dogs {0}, burgers {1}. Ingredients {2}/{3}" } },
+            { "laptop.diner.hint", new[] { "Готовит повар на смене или ты сам у гриля (E). Еда остывает через 3 часа.", "The cook on shift cooks, or you do at the grill (E). Food goes cold after 3 hours." } },
+            { "laptop.diner.order", new[] { "Ингредиенты: {0} за ${1:0}", "Ingredients: {0} for ${1:0}" } },
+            { "laptop.stats.chargers", new[] { "Зарядки: занято {0} из {1}", "Chargers: {0} of {1} in use" } },
         };
     }
 }

@@ -96,8 +96,19 @@ namespace GasStation.Systems
                 candidates.Clear();
             }
 
+            // Cooks only apply once there is a diner to cook in.
+            bool hasDiner = SystemAPI.HasSingleton<StationUpgrades>() && SystemAPI.GetSingleton<StationUpgrades>().Diner > 0;
             while (candidates.Length < StaffMath.CandidatesPerDay)
-                candidates.Add(StaffMath.Generate(ref roster.Random));
+            {
+                var candidate = StaffMath.Generate(ref roster.Random);
+                if (candidate.Role == StaffRole.Cook && !hasDiner)
+                {
+                    candidate.Role = (StaffRole)roster.Random.NextInt((int)StaffRole.Cook);
+                    candidate.Wage = StaffMath.Wage(candidate.Role, candidate.Skill);
+                }
+
+                candidates.Add(candidate);
+            }
 
             var power = new StaffPower();
             foreach (var worker in SystemAPI.Query<RefRO<Worker>>())
@@ -109,6 +120,7 @@ namespace GasStation.Systems
                     case StaffRole.Janitor: power.Janitor += skill; break;
                     case StaffRole.Mechanic: power.Mechanic += skill; break;
                     case StaffRole.Cashier: power.Cashier += skill; break;
+                    case StaffRole.Cook: power.Cook += skill; break;
                 }
 
                 power.Headcount++;

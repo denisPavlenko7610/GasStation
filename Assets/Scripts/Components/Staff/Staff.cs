@@ -7,12 +7,14 @@ namespace GasStation.Components
         Attendant = 0,
         Janitor = 1,
         Mechanic = 2,
-        Cashier = 3
+        Cashier = 3,
+        /// <summary>Cooks at the diner grill.</summary>
+        Cook = 4
     }
 
     public static class StaffRoles
     {
-        public const int Count = 4;
+        public const int Count = 5;
     }
 
     public enum WorkShift : byte
@@ -88,7 +90,9 @@ namespace GasStation.Components
         CleanRestroom,
         RepairPump,
         /// <summary>Cashier behind the shop counter.</summary>
-        Counter
+        Counter,
+        /// <summary>Cook at the diner grill.</summary>
+        Grill
     }
 
     /// <summary>
@@ -133,6 +137,7 @@ namespace GasStation.Components
         public float Janitor;
         public float Mechanic;
         public float Cashier;
+        public float Cook;
         public int Headcount;
 
         public float Get(StaffRole role) => role switch
@@ -141,6 +146,7 @@ namespace GasStation.Components
             StaffRole.Janitor => Janitor,
             StaffRole.Mechanic => Mechanic,
             StaffRole.Cashier => Cashier,
+            StaffRole.Cook => Cook,
             _ => 0f
         };
     }

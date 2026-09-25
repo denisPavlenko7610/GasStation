@@ -41,6 +41,7 @@ namespace GasStation.Systems
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             float cashiers = SystemAPI.HasSingleton<StaffPower>() ? SystemAPI.GetSingleton<StaffPower>().Cashier : 0f;
             float shopTime = shop.ShopTime * StaffMath.ShopTimeFactor(cashiers);
+            float hour = SystemAPI.HasSingleton<GameTime>() ? SystemAPI.GetSingleton<GameTime>().Hour : 12f;
             var watch = new TheftWatch
             {
                 Cashiers = cashiers,
@@ -93,6 +94,7 @@ namespace GasStation.Systems
                         Shoplift(ref shop, shelves, ref economy, events, who, watch);
                     else
                         Purchase(ref shop, shelves, ref economy, events, who);
+                    DinerSale(ref state, ref shop, ref economy, events, who, hour);
                     UseRestroom(ref state, ref shop, ref economy, events);
                 }
 
@@ -129,6 +131,7 @@ namespace GasStation.Systems
                             Shoplift(ref shop, shelves, ref economy, events, customer, watch);
                         else
                             Purchase(ref shop, shelves, ref economy, events, customer);
+                        DinerSale(ref state, ref shop, ref economy, events, customer, hour);
                         UseRestroom(ref state, ref shop, ref economy, events);
                         pedestrian.ValueRW.State = PedestrianState.ToCar;
                         path.Add(new PathPoint { Position = DoorOfCar(SystemAPI.GetComponent<LocalTransform>(carEntity)) });
@@ -156,6 +159,32 @@ namespace GasStation.Systems
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
+        }
+
+        /// <summary>Hungry visitors grab a hot dog or a burger from the diner counter.</summary>
+        private void DinerSale(ref SystemState state, ref Shop shop, ref Economy economy, DynamicBuffer<StationEvent> events,
+            CustomerType customer, float hour)
+        {
+            if (!SystemAPI.HasSingleton<Diner>() || !SystemAPI.HasSingleton<StationUpgrades>() ||
+                SystemAPI.GetSingleton<StationUpgrades>().Diner <= 0)
+                return;
+            if (shop.Random.NextFloat() >= DinerMath.HungerChance(customer, hour))
+                return;
+
+            var counter = SystemAPI.GetBuffer<DinerCounter>(SystemAPI.GetSingletonEntity<Diner>());
+            if (counter.Length < DinerDishes.Count)
+                return;
+
+            int dish = DinerMath.Choose(counter[0].Ready, counter[1].Ready, shop.Random.NextFloat());
+            if (dish < 0)
+                return;
+
+            var item = counter[dish];
+            item.Ready--;
+            counter[dish] = item;
+            economy.Money += item.Price;
+            economy.DayIncome += item.Price;
+            StationEvent.Push(events, StationEventType.DinerSale, default, item.Price, dish);
         }
 
         private struct TheftWatch

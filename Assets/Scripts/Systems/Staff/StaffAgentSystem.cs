@@ -243,6 +243,12 @@ namespace GasStation.Systems
                     pumps.RemoveAtSwapBack(worst);
                     return true;
 
+                case StaffRole.Cook:
+                    if (agent.Job == AgentJob.Grill || !SystemAPI.HasSingleton<Diner>())
+                        return false;
+                    Go(ref agent, path, AgentJob.Grill, Entity.Null, SystemAPI.GetSingleton<Diner>().Grill);
+                    return true;
+
                 default:
                     if (agent.Job == AgentJob.Counter || !SystemAPI.HasSingleton<Shop>())
                         return false;

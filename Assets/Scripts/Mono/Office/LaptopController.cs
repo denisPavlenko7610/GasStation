@@ -296,6 +296,18 @@ namespace GasStation.Mono.Office
                 button.SetEnabled(HudModel.Supplier != supplier);
             }
 
+            if (HudModel.HasDiner)
+            {
+                int level = HudModel.Upgrades.Diner;
+                var diner = Card(Loc.T("laptop.diner.title"));
+                diner.Add(Label(Loc.F("laptop.diner.line", HudModel.DinerCounter[0].Ready,
+                    DinerMath.OnMenu(DinerDish.Burger, level) ? HudModel.DinerCounter[1].Ready.ToString() : "—",
+                    HudModel.Diner.Ingredients, DinerMath.IngredientCapacity(level)), "laptop-line"));
+                diner.Add(Label(Loc.T("laptop.diner.hint"), "laptop-muted"));
+                Action(Actions(diner), Loc.F("laptop.diner.order", DinerMath.IngredientOrder, DinerMath.IngredientOrder * DinerMath.IngredientPrice),
+                    StationCommands.OrderIngredients);
+            }
+
             float priceFactor = ShopMath.SupplierPriceFactor(HudModel.Supplier);
             for (int i = 0; i < ProductTypes.Count; i++)
             {
@@ -473,6 +485,9 @@ namespace GasStation.Mono.Office
             station.Add(Label(stats.RatingCount > 0
                 ? Loc.F("panel.finance.rating", StarText(Mathf.RoundToInt(rating)), rating, stats.RatingCount)
                 : Loc.T("panel.finance.noRating"), "laptop-line"));
+
+            if (HudModel.ChargersOpen > 0)
+                station.Add(Label(Loc.F("laptop.stats.chargers", HudModel.ChargersUsed, HudModel.ChargersOpen), "laptop-line"));
 
             var reviews = Card(Loc.T("panel.finance.reviews"));
             if (HudModel.Reviews.Count == 0)

@@ -25,7 +25,7 @@ namespace GasStation.Logic
         /// <summary>Types picked at random for ordinary traffic (Regular..Thief).</summary>
         public const int Count = 5;
         /// <summary>All customer types, special guests included.</summary>
-        public const int AllCount = 10;
+        public const int AllCount = 11;
 
         public static CustomerProfile Get(CustomerType type) => type switch
         {
@@ -81,6 +81,12 @@ namespace GasStation.Logic
                 MinStationLevel = 3, LitersMultiplier = 1.5f, PatienceMultiplier = 1.3f,
                 SpeedMultiplier = 0.7f, TipShare = 0.05f, LitterMultiplier = 1f, DieselOnly = true,
                 TireChance = 1f
+            },
+            CustomerType.Electric => new CustomerProfile
+            {
+                MinStationLevel = 5, LitersMultiplier = 0f, PatienceMultiplier = 1.2f,
+                SpeedMultiplier = 1f, TipShare = 0.05f, LitterMultiplier = 0.5f,
+                ShopChance = 1f
             },
             _ => new CustomerProfile
             {

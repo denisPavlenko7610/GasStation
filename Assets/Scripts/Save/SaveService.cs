@@ -69,6 +69,7 @@ namespace GasStation.Save
             CaptureProps(entityManager, data);
             CaptureVisitors(entityManager, station, data);
             CaptureContracts(entityManager, station, data);
+            CaptureDiner(entityManager, data);
             data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
             if (entityManager.HasBuffer<DayHistoryEntry>(station))
@@ -188,6 +189,7 @@ namespace GasStation.Save
             RestoreProps(entityManager, data.props);
             RestoreVisitors(entityManager, station, data);
             RestoreContracts(entityManager, station, data);
+            RestoreDiner(entityManager, data);
 
             if (data.products != null)
             {
@@ -491,6 +493,47 @@ namespace GasStation.Save
                 board.NextId = Mathf.Max(maxId + 1, data.nextContractId, 1);
                 board.DaysToNextOffer = data.version >= 16 ? Mathf.Max(1, data.daysToNextOffer) : 1;
                 entityManager.SetComponentData(station, board);
+            }
+        }
+
+        private static void CaptureDiner(EntityManager entityManager, SaveData data)
+        {
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Diner>());
+            if (query.CalculateEntityCount() != 1)
+                return;
+
+            var entity = query.GetSingletonEntity();
+            data.dinerIngredients = entityManager.GetComponentData<Diner>(entity).Ingredients;
+            var counter = entityManager.GetBuffer<DinerCounter>(entity, true);
+            data.dinerReady = new int[counter.Length];
+            data.dinerHoursLeft = new float[counter.Length];
+            for (int i = 0; i < counter.Length; i++)
+            {
+                data.dinerReady[i] = counter[i].Ready;
+                data.dinerHoursLeft[i] = counter[i].HoursLeft;
+            }
+        }
+
+        private static void RestoreDiner(EntityManager entityManager, SaveData data)
+        {
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Diner>());
+            if (query.CalculateEntityCount() != 1 || data.dinerIngredients < 0)
+                return;
+
+            var entity = query.GetSingletonEntity();
+            var diner = entityManager.GetComponentData<Diner>(entity);
+            diner.Ingredients = data.dinerIngredients;
+            diner.CookProgress = 0f;
+            diner.WarnedEmpty = false;
+            entityManager.SetComponentData(entity, diner);
+
+            var counter = entityManager.GetBuffer<DinerCounter>(entity);
+            for (int i = 0; i < counter.Length; i++)
+            {
+                var item = counter[i];
+                item.Ready = data.dinerReady != null && i < data.dinerReady.Length ? Mathf.Max(0, data.dinerReady[i]) : 0;
+                item.HoursLeft = data.dinerHoursLeft != null && i < data.dinerHoursLeft.Length ? data.dinerHoursLeft[i] : 0f;
+                counter[i] = item;
             }
         }
 

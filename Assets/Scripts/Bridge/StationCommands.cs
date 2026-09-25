@@ -25,6 +25,7 @@ namespace GasStation.Bridge
         RemoveProp,
         AcceptContract,
         TogglePromo,
+        OrderIngredients,
         SetSupplier,
         PraiseWorker,
         TrainWorker,
@@ -101,6 +102,8 @@ namespace GasStation.Bridge
 
         public static void TogglePromo(ProductType product) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.TogglePromo, Product = product });
+
+        public static void OrderIngredients() => Queue.Enqueue(new StationCommand { Type = StationCommandType.OrderIngredients });
 
         public static void SetSupplier(SupplierKind supplier) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.SetSupplier, Value = (int)supplier });

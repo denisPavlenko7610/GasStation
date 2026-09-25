@@ -78,6 +78,7 @@ namespace GasStation.Systems
             DrainEvents();
             CopyProps();
             CopyShop();
+            CopyServices();
             CopyWash();
             CopyFacilities();
             CopyStaff();
@@ -301,6 +302,15 @@ namespace GasStation.Systems
                     case StationEventType.InspectionExpiredGoods:
                         HudModel.Notify(Loc.F("msg.inspectionExpired", stationEvent.Value));
                         break;
+                    case StationEventType.DinerOutOfIngredients:
+                        HudModel.Notify(Loc.T("msg.dinerEmpty"));
+                        break;
+                    case StationEventType.FoodWasted:
+                        HudModel.Notify(Loc.F("msg.foodWasted", stationEvent.Value, Loc.T($"dish.{(DinerDish)stationEvent.Subject}")));
+                        break;
+                    case StationEventType.DishCooked:
+                        HudModel.Notify(Loc.F("msg.dishCooked", Loc.T($"dish.{(DinerDish)stationEvent.Subject}")));
+                        break;
                     case StationEventType.PropPlaced:
                         HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
                         break;
@@ -333,6 +343,32 @@ namespace GasStation.Systems
                 HudModel.NoBuildZones.Add(zone);
             if (SystemAPI.HasSingleton<PropEffects>())
                 HudModel.PropEffects = SystemAPI.GetSingleton<PropEffects>();
+        }
+
+        private void CopyServices()
+        {
+            HudModel.HasDiner = SystemAPI.HasSingleton<Diner>() && HudModel.Upgrades.Diner > 0;
+            if (SystemAPI.HasSingleton<Diner>())
+            {
+                var dinerEntity = SystemAPI.GetSingletonEntity<Diner>();
+                HudModel.Diner = SystemAPI.GetComponent<Diner>(dinerEntity);
+                var counter = SystemAPI.GetBuffer<DinerCounter>(dinerEntity, true);
+                for (int i = 0; i < DinerDishes.Count; i++)
+                    HudModel.DinerCounter[i] = i < counter.Length ? counter[i] : default;
+            }
+
+            HudModel.ChargersOpen = 0;
+            HudModel.ChargersUsed = 0;
+            if (!SystemAPI.HasSingleton<ChargingStation>())
+                return;
+
+            var spots = SystemAPI.GetBuffer<ChargerSpot>(SystemAPI.GetSingletonEntity<ChargingStation>(), true);
+            HudModel.ChargersOpen = EvMath.OpenChargers(HudModel.Upgrades.EvCharger, spots.Length);
+            for (int i = 0; i < HudModel.ChargersOpen; i++)
+            {
+                if (spots[i].Occupant != Entity.Null)
+                    HudModel.ChargersUsed++;
+            }
         }
 
         private void CopyShop()
@@ -688,6 +724,16 @@ namespace GasStation.Systems
 
             foreach (var transform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<PlayerTag>())
                 HudModel.PlayerPosition = transform.ValueRO.Position;
+
+            // The grill comes before the laptop: E cooks there.
+            if (HudModel.Hint is InteractionHint.None or InteractionHint.PumpFree && HudModel.Upgrades.Diner > 0 &&
+                SystemAPI.HasSingleton<Diner>())
+            {
+                var grillOffset = HudModel.PlayerPosition - (UnityEngine.Vector3)SystemAPI.GetSingleton<Diner>().Grill;
+                grillOffset.y = 0f;
+                if (grillOffset.sqrMagnitude <= 2.5f * 2.5f)
+                    HudModel.Hint = InteractionHint.Grill;
+            }
 
             HudModel.HasLaptop = SystemAPI.HasSingleton<Laptop>();
             if (!HudModel.HasLaptop)

@@ -15,14 +15,14 @@ namespace GasStation.Logic
             type is UpgradeType.Attendant or UpgradeType.Janitor or UpgradeType.Mechanic;
 
         public static int MaxLevel(UpgradeType type) =>
-            IsLegacyStaff(type) ? 0 : type is UpgradeType.ExtraPump or UpgradeType.TruckParking ? 2 : 3;
+            IsLegacyStaff(type) ? 0 : type is UpgradeType.ExtraPump or UpgradeType.TruckParking or UpgradeType.EvCharger ? 2 : 3;
 
         /// <summary>Upgrades shown in the shop, in display order.</summary>
         public static readonly UpgradeType[] Purchasable =
         {
             UpgradeType.PumpSpeed, UpgradeType.TankCapacity, UpgradeType.Comfort, UpgradeType.Advertising,
             UpgradeType.ExtraPump, UpgradeType.SupplyManager, UpgradeType.CarWash, UpgradeType.TruckParking,
-            UpgradeType.TireService, UpgradeType.Motel, UpgradeType.Decor
+            UpgradeType.TireService, UpgradeType.Motel, UpgradeType.Decor, UpgradeType.Diner, UpgradeType.EvCharger
         };
 
         public static StaffRole LegacyRole(UpgradeType type) => type switch
@@ -48,6 +48,8 @@ namespace GasStation.Logic
             UpgradeType.TireService => 800f,
             UpgradeType.Motel => 2000f,
             UpgradeType.Decor => 400f,
+            UpgradeType.EvCharger => 2500f,
+            UpgradeType.Diner => 1800f,
             _ => 1000f
         };
 

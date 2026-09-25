@@ -115,7 +115,17 @@ namespace GasStation.Components
         Robbery,
         RobberyPrevented,
         /// <summary>Value = fine; the inspector found expired food.</summary>
-        InspectionExpiredGoods
+        InspectionExpiredGoods,
+        /// <summary>Value = bill; Subject = kWh.</summary>
+        EvCharged,
+        /// <summary>Value = price of the dish; Subject = DinerDish.</summary>
+        DinerSale,
+        /// <summary>Subject = DinerDish; the player cooked it at the grill.</summary>
+        DishCooked,
+        /// <summary>Value = dishes thrown away; Subject = DinerDish.</summary>
+        FoodWasted,
+        /// <summary>The cook has nothing to cook with.</summary>
+        DinerOutOfIngredients
     }
 
     /// <summary>

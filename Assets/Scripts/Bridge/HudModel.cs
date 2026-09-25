@@ -18,7 +18,8 @@ namespace GasStation.Bridge
         Tires,
         MotelRoom,
         Renovate,
-        Laptop
+        Laptop,
+        Grill
     }
 
     public struct PumpInfo
@@ -177,6 +178,12 @@ namespace GasStation.Bridge
         public static readonly List<StaffBody> StaffBodies = new();
 
         public static SupplierKind Supplier;
+
+        public static bool HasDiner;
+        public static Diner Diner;
+        public static readonly DinerCounter[] DinerCounter = new DinerCounter[DinerDishes.Count];
+        public static int ChargersOpen;
+        public static int ChargersUsed;
 
         public static int QueueLength;
         public static int CarsOnSite;

@@ -36,7 +36,8 @@ namespace GasStation.Systems
             var queue = new NativeList<QueuedCar>(Allocator.Temp);
             foreach (var (car, entity) in SystemAPI.Query<RefRO<Car>>().WithEntityAccess())
             {
-                if (car.ValueRO.State == CarState.Queued)
+                // Electric cars wait for a charger, not a pump (ChargerSystem).
+                if (car.ValueRO.State == CarState.Queued && car.ValueRO.Customer != CustomerType.Electric)
                     queue.Add(new QueuedCar { Entity = entity, Order = car.ValueRO.ArrivalOrder });
             }
 

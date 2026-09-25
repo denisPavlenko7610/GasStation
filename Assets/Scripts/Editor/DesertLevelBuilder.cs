@@ -342,6 +342,41 @@ namespace GasStation.Editor
                 Primitive(scene, parkingBuilding.transform, $"Line_{i}", paint, new Vector3(13f + i * 6f, 0.03f, 24f), new Vector3(0.15f, 0.02f, 5f));
             SiteMarkers(scene, parkingSite.transform, new Vector3(25f, 0f, 24f), new Vector2(12f, 2.5f));
 
+            // EV chargers: two posts per EvCharger level, facing the charging spots on the free strip east of the pumps.
+            var chargerBody = GetOrCreateMaterial("ChargerBody", new Color(0.15f, 0.17f, 0.2f));
+            var chargerScreen = GetOrCreateMaterial("ChargerScreen", new Color(0.2f, 0.9f, 0.45f));
+            var evPaint = GetOrCreateMaterial("EvBayPaint", new Color(0.2f, 0.6f, 0.35f));
+            for (int level = 1; level <= 2; level++)
+            {
+                var center = new Vector3(ChargerX[level * 2 - 2] + 1.5f, 0f, ChargerZ);
+                var (chargerBuilding, chargerSite) = ConstructionPair(scene, parent, $"EvCharger_{level}", UpgradeType.EvCharger, level, center);
+                for (int i = level * 2 - 2; i < level * 2; i++)
+                {
+                    var post = new Vector3(ChargerX[i], 0f, ChargerZ + 2.3f);
+                    Primitive(scene, chargerBuilding.transform, $"Charger_{i + 1}", chargerBody, post + new Vector3(0f, 0.8f, 0f), new Vector3(0.5f, 1.6f, 0.4f));
+                    Primitive(scene, chargerBuilding.transform, $"Screen_{i + 1}", chargerScreen, post + new Vector3(0f, 1.2f, -0.21f), new Vector3(0.3f, 0.25f, 0.02f));
+                    Primitive(scene, chargerBuilding.transform, $"Bay_{i + 1}", evPaint, new Vector3(ChargerX[i], 0.03f, ChargerZ), new Vector3(2.4f, 0.02f, 4.5f));
+                }
+
+                SiteMarkers(scene, chargerSite.transform, center, new Vector2(3f, 2f));
+            }
+
+            // Diner tables outside the shop.
+            var (dinerBuilding, dinerSite) = ConstructionPair(scene, parent, "Diner", UpgradeType.Diner, 1, DinerTables);
+            var tableTop = GetOrCreateMaterial("TableTop", new Color(0.85f, 0.2f, 0.2f));
+            var tableLeg = GetOrCreateMaterial("TableLeg", new Color(0.3f, 0.3f, 0.32f));
+            for (int i = 0; i < 2; i++)
+            {
+                var table = DinerTables + new Vector3(i * 3.5f - 1.75f, 0f, 0f);
+                Primitive(scene, dinerBuilding.transform, $"Table_{i + 1}", tableTop, table + new Vector3(0f, 0.75f, 0f), new Vector3(1.2f, 0.06f, 1.2f));
+                Primitive(scene, dinerBuilding.transform, $"TableLeg_{i + 1}", tableLeg, table + new Vector3(0f, 0.37f, 0f), new Vector3(0.12f, 0.74f, 0.12f));
+                Primitive(scene, dinerBuilding.transform, $"BenchA_{i + 1}", tableLeg, table + new Vector3(0f, 0.45f, -0.9f), new Vector3(1.2f, 0.08f, 0.35f));
+                Primitive(scene, dinerBuilding.transform, $"BenchB_{i + 1}", tableLeg, table + new Vector3(0f, 0.45f, 0.9f), new Vector3(1.2f, 0.08f, 0.35f));
+            }
+
+            Primitive(scene, dinerBuilding.transform, "Grill", tableLeg, DinerGrill + new Vector3(0f, 0.5f, 0.8f), new Vector3(1.4f, 1f, 0.7f));
+            SiteMarkers(scene, dinerSite.transform, DinerTables, new Vector2(3f, 1.5f));
+
             // Pumps 3 and 4 are installed by the ExtraPump upgrade (they still need a repair afterwards).
             foreach (var (level, z) in new[] { (1, -12f), (2, 12f) })
             {
@@ -378,6 +413,10 @@ namespace GasStation.Editor
 
         /// <summary>A point just under the top of an object, or the fallback when it is missing.</summary>
         private static readonly Vector3 LaptopDesk = new(5f, 0f, 16.5f);
+        private static readonly float[] ChargerX = { 26f, 29f, 32f, 35f };
+        private const float ChargerZ = 1f;
+        private static readonly Vector3 DinerGrill = new(-3f, 0f, 16.8f);
+        private static readonly Vector3 DinerTables = new(-8f, 0f, 14.5f);
 
         /// <summary>A desk with the office laptop next to the shop door; the player opens it with E.</summary>
         private static void BuildLaptopDesk(Scene scene, Transform parent)
@@ -647,6 +686,18 @@ namespace GasStation.Editor
             stationAuthoring.startPaintScheme = 0;
             station.AddComponent<TrashSpawnerAuthoring>().trashPrefabs = StationEditorUtility.FindTrashPrefabs();
             CreateBuildArea(parent);
+
+            // EV chargers: cars stop on the bays facing +X (the posts are built in the environment).
+            var charging = Create("Chargers", parent, Vector3.zero).AddComponent<ChargingStationAuthoring>();
+            charging.spots = new Transform[ChargerX.Length];
+            for (int i = 0; i < ChargerX.Length; i++)
+            {
+                var spot = Create($"Charger_Spot_{i + 1}", charging.transform, new Vector3(ChargerX[i], 0f, ChargerZ));
+                spot.transform.rotation = Quaternion.LookRotation(Vector3.forward);
+                charging.spots[i] = spot.transform;
+            }
+
+            Create("Diner_Grill", parent, DinerGrill).AddComponent<DinerAuthoring>();
             // The office laptop on a desk by the shop door (the desk itself is built in the environment).
             Create("Laptop", parent, LaptopDesk + new Vector3(0f, 0f, -1f)).AddComponent<LaptopAuthoring>();
 
@@ -794,6 +845,8 @@ namespace GasStation.Editor
                 new BuildAreaAuthoring.Zone(-36f, 11f, -16f, 19f),   // motel
                 new BuildAreaAuthoring.Zone(14f, 16f, 36f, 27f),     // truck parking
                 new BuildAreaAuthoring.Zone(-14f, 10f, -6f, 14f),    // cargo unloading
+                new BuildAreaAuthoring.Zone(24f, -2f, 37f, 4.5f),    // EV chargers
+                new BuildAreaAuthoring.Zone(-12f, 13f, -4f, 16f),    // diner tables
             };
         }
 

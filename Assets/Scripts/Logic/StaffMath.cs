@@ -17,6 +17,7 @@ namespace GasStation.Logic
             StaffRole.Janitor => 60f,
             StaffRole.Mechanic => 70f,
             StaffRole.Cashier => 60f,
+            StaffRole.Cook => 75f,
             _ => 60f
         };
 
