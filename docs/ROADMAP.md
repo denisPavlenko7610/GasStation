@@ -2,7 +2,21 @@
 
 Симулятор заправки на Unity 6 + DOTS (Entities 1.3, Entities Graphics, Unity Physics, URP).
 
-## 1. Что есть сейчас
+## Статус
+
+| Этап | Статус |
+|---|---|
+| 0. Чистка | ✅ готово: IAspect заменён на `IJobEntity`, `float3` в компонентах, `MoveInput` вместо `TargetPosition`, камера через singleton, asmdef, `.gitignore`, `Envorinment` → `Environment`. Git LFS не настроен |
+| 1. Трафик | ✅ готово: спавн, маршруты, очередь, колонки, терпение |
+| 2. Заправка | ✅ готово: взаимодействие игрока, резервуары, заказ бензовоза (без модели бензовоза) |
+| 3. Экономика и UI | ✅ готово: деньги, репутация, цены, итоги дня, смена дня и ночи, текстовый HUD |
+| 4. Вертикальный срез | ⏳ дальше: магазин улучшений, сохранения, звук |
+| 5. Контент | — |
+
+Решение по игроку: он остался ECS-сущностью в SubScene, так как сцена уже на это настроена.
+Zenject используется только на Mono-слое, связь с ECS идёт через `Bridge/`.
+
+## 1. Что было на старте
 
 | Область | Состояние |
 |---|---|
@@ -126,20 +140,6 @@
 | **4. Вертикальный срез** (≈2 нед.) | Магазин улучшений, сохранения, звук | Демо на 20–30 минут игры |
 | **5. Контент** | Раздел 4 | Магазин, персонал, события, прогрессия |
 
-## 7. Предлагаемая структура ECS-кода
+## 7. Структура ECS-кода
 
-```
-Assets/Scripts/
-  Runtime/
-    Components/  Cars/ Pumps/ Economy/ Time/ Player/
-    Authoring/   (по тем же доменам)
-    Systems/
-      Traffic/    CarSpawnerSystem, CarMoveSystem, CarDespawnSystem
-      Station/    QueueSystem, PumpAssignSystem, FuelingSystem, PaymentSystem
-      Economy/    EconomySystem, PricingSystem, DayCycleSystem
-      Bridge/     UIBridgeSystem, InputBridgeSystem
-    Config/      ScriptableObjects + BlobAsset бейкеры
-  Mono/          UI, Player, Camera, Audio, Save
-  Editor/
-  Tests/
-```
+Актуальная структура описана в [README](../README.md#структура-кода).
