@@ -91,7 +91,9 @@ namespace GasStation.Systems
                 RequestedLiters = liters,
                 ReceivedLiters = 0f,
                 Pump = Entity.Null,
-                ArrivalOrder = spawner.NextArrivalOrder++
+                ArrivalOrder = spawner.NextArrivalOrder++,
+                WantsShop = spawner.Random.NextFloat() < profile.ShopChance,
+                WantsWash = spawner.Random.NextFloat() < profile.WashChance
             });
             ecb.AddComponent(car, new Patience { Current = patience, Max = patience });
             ecb.AddComponent(car, new CarMovement

@@ -24,6 +24,7 @@ namespace GasStation.Logic
             UpgradeType.ExtraPump => 1500f,
             UpgradeType.Janitor => 600f,
             UpgradeType.Mechanic => 900f,
+            UpgradeType.CarWash => 1200f,
             _ => 1000f
         };
 

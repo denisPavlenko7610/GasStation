@@ -31,6 +31,8 @@ namespace GasStation.Logic
             StationEventType.PumpRepaired => 15f,
             StationEventType.ThiefCaught => 30f,
             StationEventType.InspectionPassed => 40f,
+            StationEventType.ShopSale => 3f,
+            StationEventType.CarWashed => 5f,
             _ => 0f
         };
 
@@ -65,6 +67,7 @@ namespace GasStation.Logic
                 UpgradeType.Attendant => 3,
                 UpgradeType.Mechanic => 4,
                 UpgradeType.ExtraPump => 4,
+                UpgradeType.CarWash => 3,
                 _ => 1
             };
 

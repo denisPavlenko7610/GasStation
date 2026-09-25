@@ -19,6 +19,7 @@ namespace GasStation.Bridge
             UpgradeType.ExtraPump => "Новая колонка",
             UpgradeType.Janitor => "Уборщик",
             UpgradeType.Mechanic => "Механик",
+            UpgradeType.CarWash => "Автомойка",
             _ => type.ToString()
         };
 
@@ -32,8 +33,13 @@ namespace GasStation.Bridge
             UpgradeType.ExtraPump => "открывает ещё одну колонку",
             UpgradeType.Janitor => "сам убирает мусор, $60/день",
             UpgradeType.Mechanic => "сам чинит колонки, $70/день",
+            UpgradeType.CarWash => "открывает мойку, уровни — быстрее и дороже",
             _ => string.Empty
         };
+
+        private static readonly string[] ProductNames = { "Вода", "Кофе", "Снеки", "Моторное масло", "Сувениры" };
+
+        public static string ProductName(ProductType type) => ProductNames[(int)type];
 
         public static string CustomerName(CustomerType type) => type switch
         {
@@ -60,6 +66,8 @@ namespace GasStation.Bridge
             11 => "Колонка не работает",
             12 => "Растущая слава",
             13 => "Держи вора!",
+            14 => "Первые покупки",
+            15 => "Автомойка",
             _ => "Задание дня"
         };
 
@@ -75,6 +83,8 @@ namespace GasStation.Bridge
             QuestGoal.OpenPumps => "Открой новую колонку (Tab): {0}/1",
             QuestGoal.RepairPump => $"Почини колонку (E рядом со сломанной): {{0}}/{quest.Target:0}",
             QuestGoal.StationLevel => $"Подними уровень станции до {quest.Target:0}: сейчас {{0}}",
+            QuestGoal.SellProducts => $"Продай товары в магазине (M — ассортимент): {{0}}/{quest.Target:0}",
+            QuestGoal.OpenCarWash => "Открой автомойку (Tab): {0}/1",
             QuestGoal.CatchThief => "Стой рядом с машиной вора, когда он заправляется: {0}/1",
             _ => "{0}"
         };

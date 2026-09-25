@@ -145,6 +145,51 @@ namespace GasStation.Editor
             return placed;
         }
 
+        /// <summary>A simple walking figure used for drivers going to the shop. Created once as a prefab asset.</summary>
+        public static GameObject GetOrCreatePedestrianPrefab()
+        {
+            const string folder = "Assets/Prefabs/Characters";
+            const string path = folder + "/Pedestrian.prefab";
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (existing != null)
+                return existing;
+
+            EnsureFolder(folder);
+            var root = new GameObject("Pedestrian");
+            var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            body.name = "Body";
+            body.transform.SetParent(root.transform, false);
+            body.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+            body.transform.localScale = new Vector3(0.5f, 0.9f, 0.5f);
+            Object.DestroyImmediate(body.GetComponent<Collider>());
+            body.GetComponent<Renderer>().sharedMaterial = GetOrCreateMaterial("PedestrianShirt", new Color(0.2f, 0.45f, 0.8f));
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
+            Object.DestroyImmediate(root);
+            return prefab;
+        }
+
+        public static Material GetOrCreateMaterial(string name, Color color)
+        {
+            const string folder = "Assets/Materials/Level";
+            string path = $"{folder}/{name}.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material != null)
+                return material;
+
+            EnsureFolder(folder);
+            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            material = new Material(shader) { name = name };
+            if (material.HasProperty("_BaseColor"))
+                material.SetColor("_BaseColor", color);
+            if (material.HasProperty("_Color"))
+                material.SetColor("_Color", color);
+            if (material.HasProperty("_Smoothness"))
+                material.SetFloat("_Smoothness", 0.1f);
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
         public static float GroundHeight(Vector3 position)
         {
             // The lowest hit is the ground; higher ones are roofs, canopies and props.

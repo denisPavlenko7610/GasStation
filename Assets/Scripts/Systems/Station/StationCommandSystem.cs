@@ -52,6 +52,12 @@ namespace GasStation.Systems
                             HudModel.Notify("Сохранение не найдено");
                         }
                         break;
+                    case StationCommandType.ChangeProductPrice:
+                        ChangeProductPrice(command.Product, command.Value);
+                        break;
+                    case StationCommandType.OrderProducts:
+                        OrderProducts(station, command.Product, (int)command.Value);
+                        break;
                     case StationCommandType.NewGame:
                         SaveService.Delete();
                         if (SaveService.Defaults != null)
@@ -110,6 +116,59 @@ namespace GasStation.Systems
 
             StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.FuelOrdered, fuel, liters);
             HudModel.Notify($"Заказано {liters:0} л {GameTexts.FuelName(fuel)}, привезут через {settings.FuelDeliveryTime:0} с");
+        }
+
+        private void ChangeProductPrice(ProductType product, float delta)
+        {
+            if (!SystemAPI.HasSingleton<Shop>())
+                return;
+
+            var shelves = SystemAPI.GetBuffer<ShopProduct>(SystemAPI.GetSingletonEntity<Shop>());
+            var shelf = shelves[(int)product];
+            shelf.SellPrice = math.max(MinPrice, shelf.SellPrice + delta);
+            shelves[(int)product] = shelf;
+        }
+
+        private void OrderProducts(Entity station, ProductType product, int count)
+        {
+            if (!SystemAPI.HasSingleton<Shop>())
+            {
+                HudModel.Notify("На станции нет магазина");
+                return;
+            }
+
+            var shop = SystemAPI.GetSingleton<Shop>();
+            var shelf = SystemAPI.GetBuffer<ShopProduct>(SystemAPI.GetSingletonEntity<Shop>())[(int)product];
+
+            int pending = 0;
+            foreach (var delivery in SystemAPI.Query<RefRO<ProductDelivery>>())
+            {
+                if (delivery.ValueRO.Type == product)
+                    pending += delivery.ValueRO.Count;
+            }
+
+            count = math.min(count, shelf.Capacity - shelf.Stock - pending);
+            if (count <= 0)
+            {
+                HudModel.Notify($"{GameTexts.ProductName(product)}: полки заполнены");
+                return;
+            }
+
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            float cost = count * shelf.BuyPrice;
+            if (economy.ValueRO.Money < cost)
+            {
+                HudModel.Notify($"Не хватает денег: нужно ${cost:0}");
+                return;
+            }
+
+            economy.ValueRW.Money -= cost;
+            economy.ValueRW.DayExpenses += cost;
+
+            var order = EntityManager.CreateEntity();
+            EntityManager.AddComponentData(order, new ProductDelivery { Type = product, Count = count, TimeLeft = shop.DeliveryTime });
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.ProductsOrdered, default, count);
+            HudModel.Notify($"Заказано: {GameTexts.ProductName(product)} × {count}, привезут через {shop.DeliveryTime:0} с");
         }
 
         private void BuyUpgrade(Entity station, UpgradeType type)

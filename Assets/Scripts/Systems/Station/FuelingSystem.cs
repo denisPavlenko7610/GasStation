@@ -8,8 +8,8 @@ using Unity.Transforms;
 namespace GasStation.Systems
 {
     /// <summary>
-    /// Pumps fuel into cars and wears the pump down. When done the customer pays (plus a tip) and leaves;
-    /// a thief drives away without paying unless the player stands next to the car.
+    /// Pumps fuel into cars and wears the pump down. When done the customer pays (plus a tip) and goes
+    /// shopping or gets ready to leave; a thief drives away without paying unless the player stands next to the car.
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(StationSystemGroup))]
@@ -38,6 +38,7 @@ namespace GasStation.Systems
             var exitRoute = SystemAPI.GetBuffer<ExitRoutePoint>(SystemAPI.GetSingletonEntity<CarSpawner>());
             float catchRadius = SystemAPI.GetSingleton<StationSettings>().InteractionRadius;
             float3 playerPosition = PlayerPosition(ref state, out bool hasPlayer);
+            bool hasShop = SystemAPI.HasSingleton<Shop>();
 
             foreach (var (car, patience, path, transform) in SystemAPI
                          .Query<RefRW<Car>, RefRO<Patience>, DynamicBuffer<PathPoint>, RefRO<LocalTransform>>())
@@ -79,6 +80,7 @@ namespace GasStation.Systems
 
                 ref var eco = ref economy.ValueRW;
                 float liters = car.ValueRO.ReceivedLiters;
+                bool paid = false;
                 float bill = StationMath.Payment(liters, fuel.SellPrice);
 
                 if (liters <= 0f)
@@ -107,6 +109,14 @@ namespace GasStation.Systems
                         StationEvent.Push(events, StationEventType.TipReceived, default, tip);
                     if (car.ValueRO.Customer == CustomerType.Thief)
                         StationEvent.Push(events, StationEventType.ThiefCaught, default, bill);
+                    paid = true;
+                }
+
+                if (paid)
+                {
+                    // The car keeps the pump while the driver shops; CarWashSystem frees it on departure.
+                    car.ValueRW.State = car.ValueRO.WantsShop && hasShop ? CarState.Shopping : CarState.ReadyToLeave;
+                    continue;
                 }
 
                 pump.ValueRW.Occupant = Entity.Null;

@@ -40,7 +40,8 @@ namespace GasStation.Systems
                 economy.Reputation,
                 economy.DayIncome,
                 SystemAPI.GetComponent<StationUpgrades>(station).ExtraPump,
-                SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1);
+                SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1,
+                SystemAPI.GetComponent<StationUpgrades>(station).CarWash);
 
             if (QuestCatalog.IsComplete(quest, current))
             {
@@ -72,6 +73,7 @@ namespace GasStation.Systems
             QuestGoal.BuyUpgrade => type == StationEventType.UpgradeBought,
             QuestGoal.RepairPump => type == StationEventType.PumpRepaired,
             QuestGoal.CatchThief => type == StationEventType.ThiefCaught,
+            QuestGoal.SellProducts => type == StationEventType.ShopSale,
             _ => false
         };
     }

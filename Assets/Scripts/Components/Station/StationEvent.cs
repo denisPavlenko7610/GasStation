@@ -26,7 +26,12 @@ namespace GasStation.Components
         SandstormStarted,
         InspectionPassed,
         InspectionFailed,
-        NotEnoughMoney
+        NotEnoughMoney,
+        ShopSale,
+        ShopEmpty,
+        ProductsOrdered,
+        ProductsDelivered,
+        CarWashed
     }
 
     /// <summary>

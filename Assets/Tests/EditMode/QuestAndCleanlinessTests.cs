@@ -19,7 +19,7 @@ namespace GasStation.Tests
         {
             int first = QuestCatalog.StoryCount;
             var early = QuestCatalog.Get(first);
-            var later = QuestCatalog.Get(first + 3);
+            var later = QuestCatalog.Get(first + QuestCatalog.DailyGoalCount);
 
             Assert.IsTrue(early.IsDaily);
             Assert.AreEqual(early.Goal, later.Goal);
@@ -43,8 +43,8 @@ namespace GasStation.Tests
             var trash = new QuestDefinition { Goal = QuestGoal.CollectTrash, Target = 10f };
             var clean = new QuestDefinition { Goal = QuestGoal.Cleanliness, Target = 80f };
 
-            Assert.AreEqual(4f, QuestCatalog.Progress(trash, 4f, 0.5f, 0.5f, 0f, 0, 1));
-            Assert.AreEqual(79f, QuestCatalog.Progress(clean, 0f, 0.799f, 0.5f, 0f, 0, 1));
+            Assert.AreEqual(4f, QuestCatalog.Progress(trash, 4f, 0.5f, 0.5f, 0f, 0, 1, 0));
+            Assert.AreEqual(79f, QuestCatalog.Progress(clean, 0f, 0.799f, 0.5f, 0f, 0, 1, 0));
             Assert.IsFalse(QuestCatalog.IsComplete(clean, 79f));
             Assert.IsTrue(QuestCatalog.IsComplete(clean, 80f));
         }

@@ -48,6 +48,8 @@ namespace GasStation.Save
             if (entityManager.HasComponent<StationLevel>(station))
                 data.CaptureLevel(entityManager.GetComponentData<StationLevel>(station));
 
+            CaptureShop(entityManager, data);
+
             using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Pump>()))
             using (var pumps = query.ToComponentDataArray<Pump>(Allocator.Temp))
             {
@@ -108,8 +110,60 @@ namespace GasStation.Save
             if (data.pumps != null)
                 RestorePumps(entityManager, data.pumps);
 
+            if (data.products != null)
+                RestoreShop(entityManager, data.products);
+
             if (data.trash != null)
                 RestoreTrash(entityManager, data.trash);
+        }
+
+        private static void CaptureShop(EntityManager entityManager, SaveData data)
+        {
+            using var shopQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Shop>());
+            if (shopQuery.CalculateEntityCount() != 1)
+                return;
+
+            var pending = new int[ProductTypes.Count];
+            using (var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ProductDelivery>()))
+            using (var deliveries = query.ToComponentDataArray<ProductDelivery>(Allocator.Temp))
+            {
+                foreach (var delivery in deliveries)
+                    pending[(int)delivery.Type] += delivery.Count;
+            }
+
+            var shelves = entityManager.GetBuffer<ShopProduct>(shopQuery.GetSingletonEntity(), true);
+            data.products = new ProductSaveData[shelves.Length];
+            for (int i = 0; i < shelves.Length; i++)
+            {
+                // Paid orders are saved as delivered.
+                int extra = i < pending.Length ? pending[i] : 0;
+                data.products[i] = new ProductSaveData
+                {
+                    stock = Mathf.Min(shelves[i].Capacity, shelves[i].Stock + extra),
+                    capacity = shelves[i].Capacity,
+                    sellPrice = shelves[i].SellPrice
+                };
+            }
+        }
+
+        private static void RestoreShop(EntityManager entityManager, ProductSaveData[] saved)
+        {
+            using var shopQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Shop>());
+            if (shopQuery.CalculateEntityCount() != 1)
+                return;
+
+            var shelves = entityManager.GetBuffer<ShopProduct>(shopQuery.GetSingletonEntity());
+            for (int i = 0; i < shelves.Length && i < saved.Length; i++)
+            {
+                if (saved[i] == null)
+                    continue;
+
+                var shelf = shelves[i];
+                shelf.Capacity = saved[i].capacity > 0 ? saved[i].capacity : shelf.Capacity;
+                shelf.Stock = Mathf.Clamp(saved[i].stock, 0, shelf.Capacity);
+                shelf.SellPrice = saved[i].sellPrice > 0f ? saved[i].sellPrice : shelf.SellPrice;
+                shelves[i] = shelf;
+            }
         }
 
         private static void RestorePumps(EntityManager entityManager, PumpSaveData[] saved)
@@ -200,6 +254,23 @@ namespace GasStation.Save
 
             using (var deliveries = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FuelDelivery>()))
                 entityManager.DestroyEntity(deliveries);
+
+            using (var productDeliveries = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ProductDelivery>()))
+                entityManager.DestroyEntity(productDeliveries);
+
+            using (var pedestrians = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Pedestrian>()))
+                entityManager.DestroyEntity(pedestrians);
+
+            using (var washQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<CarWash>()))
+            using (var washes = washQuery.ToEntityArray(Allocator.Temp))
+            {
+                foreach (var washEntity in washes)
+                {
+                    var wash = entityManager.GetComponentData<CarWash>(washEntity);
+                    wash.Occupant = Entity.Null;
+                    entityManager.SetComponentData(washEntity, wash);
+                }
+            }
 
             using (var pumpQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<Pump>()))
             using (var pumps = pumpQuery.ToEntityArray(Allocator.Temp))

@@ -48,6 +48,19 @@ namespace GasStation.Editor
             CreatePump(root.transform, 3, new Vector3(0f, 0f, -12f), new Vector3(0f, 0f, -9.5f), 1);
             CreatePump(root.transform, 4, new Vector3(0f, 0f, 12f), new Vector3(0f, 0f, 9.5f), 2);
 
+            var shop = Create("Shop_Door", root.transform, new Vector3(0f, 0f, 15f));
+            shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
+
+            var wash = Create("CarWash_Bay", root.transform, new Vector3(20f, 0f, 10f));
+            wash.transform.rotation = Quaternion.LookRotation(Vector3.right);
+            var washAuthoring = wash.AddComponent<CarWashAuthoring>();
+            washAuthoring.entryRoute = new[] { Create("Wash_Entry", root.transform, new Vector3(10f, 0f, 6f)).transform };
+            washAuthoring.exitRoute = new[]
+            {
+                Create("Wash_Exit_0", root.transform, new Vector3(30f, 0f, 10f)).transform,
+                Create("Wash_Exit_1_Despawn", root.transform, new Vector3(45f, 0f, 0f)).transform
+            };
+
             EditorSceneManager.MarkSceneDirty(scene);
             Selection.activeGameObject = root;
 

@@ -19,7 +19,13 @@ namespace GasStation.Components
         DrivingToPump,
         WaitingForService,
         Fueling,
-        Leaving
+        Leaving,
+        /// <summary>Fueled and paid; the driver walked to the shop, the car still occupies the pump.</summary>
+        Shopping,
+        DrivingToWash,
+        Washing,
+        /// <summary>Done at the pump (and the shop); CarWashSystem frees the pump and picks the way out.</summary>
+        ReadyToLeave
     }
 
     public struct Car : IComponentData
@@ -33,6 +39,12 @@ namespace GasStation.Components
         public uint ArrivalOrder;
         /// <summary>Seconds spent at the pump waiting for service.</summary>
         public float ServiceWait;
+        public bool WantsShop;
+        public bool WantsWash;
+        /// <summary>The driver is out of the car (a pedestrian walking to or from the shop).</summary>
+        public bool DriverAway;
+        /// <summary>Generic countdown: shopping without a pedestrian, washing.</summary>
+        public float Timer;
     }
 
     /// <summary>Seconds the customer is willing to wait in the queue and at the pump.</summary>

@@ -52,6 +52,15 @@ namespace GasStation.Bridge
         public static QuestDefinition Quest;
         public static float QuestProgress;
         public static StationLevel Level;
+
+        public static bool HasShop;
+        public static readonly ShopProduct[] Products = new ShopProduct[ProductTypes.Count];
+        public static readonly int[] PendingProducts = new int[ProductTypes.Count];
+        public static int PedestriansInShop;
+
+        public static bool HasWash;
+        public static bool WashBusy;
+        public static float WashTimeLeft;
         public static WorldEvents World;
 
         public static int QueueLength;

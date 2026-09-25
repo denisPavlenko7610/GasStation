@@ -82,6 +82,10 @@ namespace GasStation.Mono
             StationEventType.FuelStolen => angryClip,
             StationEventType.InspectionFailed => angryClip,
             StationEventType.NotEnoughMoney => angryClip,
+            StationEventType.ShopSale => cashClip,
+            StationEventType.CarWashed => cashClip,
+            StationEventType.ShopEmpty => angryClip,
+            StationEventType.ProductsDelivered => deliveryClip,
             _ => null
         };
 

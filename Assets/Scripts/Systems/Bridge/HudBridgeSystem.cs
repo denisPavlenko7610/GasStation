@@ -30,6 +30,8 @@ namespace GasStation.Systems
                 HudModel.Cleanliness = SystemAPI.GetSingleton<StationCleanliness>();
 
             DrainEvents();
+            CopyShop();
+            CopyWash();
             CopyFuel();
             CopyCars();
             CopyPumps();
@@ -92,6 +94,12 @@ namespace GasStation.Systems
                     case StationEventType.InspectionPassed:
                         HudModel.Notify($"Проверка пройдена! Премия ${stationEvent.Value:0}");
                         break;
+                    case StationEventType.ShopEmpty:
+                        HudModel.Notify("Покупатель ушёл из магазина ни с чем — закажите товар (M)");
+                        break;
+                    case StationEventType.ProductsDelivered:
+                        HudModel.Notify($"В магазин привезли товар: {stationEvent.Value:0} шт.");
+                        break;
                     case StationEventType.InspectionFailed:
                         HudModel.Notify($"Проверка: грязно! Штраф ${stationEvent.Value:0}");
                         break;
@@ -99,6 +107,56 @@ namespace GasStation.Systems
             }
 
             events.Clear();
+        }
+
+        private void CopyShop()
+        {
+            HudModel.HasShop = SystemAPI.HasSingleton<Shop>();
+            for (int i = 0; i < ProductTypes.Count; i++)
+                HudModel.PendingProducts[i] = 0;
+
+            if (!HudModel.HasShop)
+                return;
+
+            var shelves = SystemAPI.GetBuffer<ShopProduct>(SystemAPI.GetSingletonEntity<Shop>());
+            for (int i = 0; i < ProductTypes.Count; i++)
+                HudModel.Products[i] = i < shelves.Length ? shelves[i] : default;
+
+            foreach (var delivery in SystemAPI.Query<RefRO<ProductDelivery>>())
+                HudModel.PendingProducts[(int)delivery.ValueRO.Type] += delivery.ValueRO.Count;
+
+            int inShop = 0;
+            foreach (var pedestrian in SystemAPI.Query<RefRO<Pedestrian>>())
+            {
+                if (pedestrian.ValueRO.State == PedestrianState.InShop)
+                    inShop++;
+            }
+
+            foreach (var car in SystemAPI.Query<RefRO<Car>>())
+            {
+                // Without a pedestrian model the driver is "inside" for the whole trip.
+                if (car.ValueRO.State == CarState.Shopping && car.ValueRO.DriverAway && car.ValueRO.Timer > 0f)
+                    inShop++;
+            }
+
+            HudModel.PedestriansInShop = inShop;
+        }
+
+        private void CopyWash()
+        {
+            HudModel.HasWash = SystemAPI.HasSingleton<CarWash>();
+            HudModel.WashBusy = false;
+            HudModel.WashTimeLeft = 0f;
+            if (!HudModel.HasWash)
+                return;
+
+            var occupant = SystemAPI.GetSingleton<CarWash>().Occupant;
+            if (occupant == Entity.Null || !SystemAPI.Exists(occupant) || !SystemAPI.HasComponent<Car>(occupant))
+                return;
+
+            var car = SystemAPI.GetComponent<Car>(occupant);
+            HudModel.WashBusy = true;
+            HudModel.WashTimeLeft = car.State == CarState.Washing ? car.Timer : 0f;
         }
 
         private void CopyFuel()

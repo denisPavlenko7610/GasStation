@@ -95,12 +95,14 @@ namespace GasStation.Editor
             Place("Trash_can", scene, parent, new Vector3(-8f, 0f, 17f), 0f);
             Place("Trash_can_2", scene, parent, new Vector3(5f, 0f, -9f), 0f);
             Place("Gas_Cistern", scene, parent, new Vector3(-27f, 0f, 19f), 90f);
-            Place("Old_Rust_Car", scene, parent, new Vector3(26f, 0f, 20f), 35f);
+            Place("Old_Rust_Car", scene, parent, new Vector3(-18f, 0f, 24f), 35f);
+            // Car wash bay, opened by the CarWash upgrade.
+            Place("Station_Canopy_2", scene, parent, new Vector3(26f, 0f, 12f), 90f);
             Place("Air_conditioning", scene, parent, new Vector3(-6f, 0f, 24f), 180f);
             Place("Hydrant", scene, parent, new Vector3(-34f, 0f, -13f), 0f);
             Place("Gas_Station_Sign", scene, parent, new Vector3(-26f, 0f, -15f), 180f);
             Place("Warning_sign_1", scene, parent, new Vector3(-16f, 0f, -9f), 180f);
-            Place("Warning_sign_2", scene, parent, new Vector3(16f, 0f, 9f), 0f);
+            Place("Warning_sign_2", scene, parent, new Vector3(20f, 0f, -12f), 0f);
             Place("Mini_Flags", scene, parent, new Vector3(30f, 0f, -14f), 0f);
 
             for (int i = 0; i < 3; i++)
@@ -237,12 +239,32 @@ namespace GasStation.Editor
 
             CreatePlayer(parent, new Vector3(-6f, 0f, -10f));
 
+            var shop = Create("Shop_Door", parent, new Vector3(0f, 0f, 17.5f));
+            shop.AddComponent<ShopAuthoring>().pedestrianPrefab = StationEditorUtility.GetOrCreatePedestrianPrefab();
+
+            var wash = Create("CarWash_Bay", parent, new Vector3(26f, 0f, 12f));
+            wash.transform.rotation = Quaternion.LookRotation(Vector3.right);
+            var washAuthoring = wash.AddComponent<CarWashAuthoring>();
+            washAuthoring.entryRoute = new[]
+            {
+                Create("Wash_Entry_0", wash.transform.parent, new Vector3(12f, 0f, 6f)).transform,
+                Create("Wash_Entry_1", wash.transform.parent, new Vector3(18f, 0f, 12f)).transform
+            };
+            washAuthoring.exitRoute = new[]
+            {
+                Create("Wash_Exit_0", wash.transform.parent, new Vector3(36f, 0f, 12f)).transform,
+                Create("Wash_Exit_1", wash.transform.parent, new Vector3(44f, 0f, -4f)).transform,
+                Create("Wash_Exit_2_Road", wash.transform.parent, new Vector3(46f, 0f, RoadZ)).transform,
+                Create("Wash_Exit_3_Despawn", wash.transform.parent, new Vector3(RoadHalfLength - 20f, 0f, RoadZ)).transform
+            };
+
             // Litter of an abandoned station: everywhere except the pump lanes and the shop door.
             var trash = Create("Trash", parent, Vector3.zero);
             var keepOut = new List<Rect>
             {
                 new(-3f, -14f, 6f, 28f),   // pump island
-                new(-4f, 17f, 8f, 3f)      // shop door
+                new(-4f, 15f, 8f, 5f),     // shop door
+                new(8f, 4f, 30f, 12f)      // wash lane
             };
             StationEditorUtility.ScatterTrash(scene, trash.transform, new Vector3(Lot.center.x, 0f, Lot.center.y),
                 new Vector2(Lot.width / 2f - 2f, Lot.height / 2f - 2f), 45, 1234, keepOut);
@@ -355,23 +377,8 @@ namespace GasStation.Editor
             go.transform.position += new Vector3(0f, 0f, z - bounds.center.z);
         }
 
-        private static Material GetOrCreateMaterial(string name, Color color)
-        {
-            string path = $"{MaterialFolder}/{name}.mat";
-            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (material != null)
-                return material;
-
-            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            material = new Material(shader) { name = name };
-            if (material.HasProperty("_BaseColor"))
-                material.SetColor("_BaseColor", color);
-            if (material.HasProperty("_Color"))
-                material.SetColor("_Color", color);
-            material.SetFloat("_Smoothness", 0.1f);
-            AssetDatabase.CreateAsset(material, path);
-            return material;
-        }
+        private static Material GetOrCreateMaterial(string name, Color color) =>
+            StationEditorUtility.GetOrCreateMaterial(name, color);
 
         private static void AddToBuildSettings(string scenePath)
         {

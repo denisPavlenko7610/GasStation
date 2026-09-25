@@ -58,6 +58,7 @@ namespace GasStation.Tests
             Assert.AreEqual(0, loaded.ToQuestProgress().Index);
             Assert.AreEqual(1, loaded.ToStationLevel().Level, "Old saves start at level 1");
             Assert.IsNull(loaded.pumps, "Old saves keep the scene pump condition");
+            Assert.IsNull(loaded.products, "Old saves keep the scene shop stock");
         }
     }
 }

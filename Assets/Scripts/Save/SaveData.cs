@@ -17,6 +17,14 @@ namespace GasStation.Save
     }
 
     [Serializable]
+    public class ProductSaveData
+    {
+        public int stock;
+        public int capacity;
+        public float sellPrice;
+    }
+
+    [Serializable]
     public class PumpSaveData
     {
         public int number;
@@ -36,7 +44,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 3;
+        public const int CurrentVersion = 4;
 
         public int version = CurrentVersion;
         public int day;
@@ -63,6 +71,10 @@ namespace GasStation.Save
         public float stationExperience;
         /// <summary>Null in older saves: pumps keep their scene condition.</summary>
         public PumpSaveData[] pumps;
+
+        // Version 4
+        /// <summary>Null in older saves: the shop keeps its scene stock.</summary>
+        public ProductSaveData[] products;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

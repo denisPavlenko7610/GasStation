@@ -11,7 +11,9 @@ namespace GasStation.Bridge
         BuyUpgrade,
         SaveGame,
         LoadGame,
-        NewGame
+        NewGame,
+        ChangeProductPrice,
+        OrderProducts
     }
 
     public struct StationCommand
@@ -19,6 +21,7 @@ namespace GasStation.Bridge
         public StationCommandType Type;
         public FuelType Fuel;
         public UpgradeType Upgrade;
+        public ProductType Product;
         public float Value;
     }
 
@@ -43,6 +46,12 @@ namespace GasStation.Bridge
         public static void LoadGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.LoadGame });
 
         public static void NewGame() => Queue.Enqueue(new StationCommand { Type = StationCommandType.NewGame });
+
+        public static void ChangeProductPrice(ProductType product, float delta) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.ChangeProductPrice, Product = product, Value = delta });
+
+        public static void OrderProducts(ProductType product, int count) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.OrderProducts, Product = product, Value = count });
 
         public static bool TryDequeue(out StationCommand command) => Queue.TryDequeue(out command);
 

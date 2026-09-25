@@ -17,6 +17,7 @@ namespace GasStation.Mono
         private const float ReportDuration = 8f;
 
         private const float NewGameConfirmTime = 2f;
+        private const float ProductPriceStep = 0.25f;
 
         private readonly StringBuilder _builder = new();
         private Canvas _canvas;
@@ -26,7 +27,9 @@ namespace GasStation.Mono
         private Text _center;
         private Text _help;
         private Text _shop;
-        private bool _shopOpen;
+        private bool _upgradesOpen;
+        private bool _storeOpen;
+        private ProductType _selectedProduct;
         private float _newGameRequestedAt = float.NegativeInfinity;
         private FuelType _selectedFuel;
         private int _shownReportDay;
@@ -50,7 +53,7 @@ namespace GasStation.Mono
             _center = CreateText("Center", font, new Vector2(0.5f, 0.5f), TextAnchor.MiddleCenter, 34);
             _help = CreateText("Help", font, new Vector2(1f, 0f), TextAnchor.LowerRight, 22);
             _help.text = "WASD — ходить   E / ЛКМ — заправить / убрать мусор\n1/2/3 — топливо   +/- — цена   O — заказать 500 л\n" +
-                         "Tab — улучшения   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
+                         "Tab — улучшения   M — магазин   F5 — сохранить   F9 — загрузить   F10 ×2 — новая игра";
             _shop = CreateText("Shop", font, new Vector2(0.5f, 1f), TextAnchor.UpperCenter, 26);
         }
 
@@ -65,7 +68,7 @@ namespace GasStation.Mono
             _fuel.text = BuildFuel();
             _pumps.text = BuildPumps();
             _center.text = BuildCenter();
-            _shop.text = _shopOpen ? BuildShop() : BuildQuest();
+            _shop.text = _upgradesOpen ? BuildUpgrades() : _storeOpen ? BuildStore() : BuildQuest();
         }
 
         private void HandleKeys()
@@ -75,7 +78,16 @@ namespace GasStation.Mono
                 return;
 
             if (keyboard.tabKey.wasPressedThisFrame)
-                _shopOpen = !_shopOpen;
+            {
+                _upgradesOpen = !_upgradesOpen;
+                _storeOpen = false;
+            }
+
+            if (keyboard.mKey.wasPressedThisFrame && HudModel.HasShop)
+            {
+                _storeOpen = !_storeOpen;
+                _upgradesOpen = false;
+            }
 
             if (keyboard.f5Key.wasPressedThisFrame)
                 StationCommands.SaveGame();
@@ -95,7 +107,7 @@ namespace GasStation.Mono
                 }
             }
 
-            if (_shopOpen)
+            if (_upgradesOpen)
             {
                 for (int i = 0; i < UpgradeTypes.Count; i++)
                 {
@@ -103,6 +115,23 @@ namespace GasStation.Mono
                         StationCommands.BuyUpgrade((UpgradeType)i);
                 }
 
+                return;
+            }
+
+            if (_storeOpen)
+            {
+                for (int i = 0; i < ProductTypes.Count; i++)
+                {
+                    if (DigitPressed(keyboard, i + 1))
+                        _selectedProduct = (ProductType)i;
+                }
+
+                if (keyboard.equalsKey.wasPressedThisFrame || keyboard.numpadPlusKey.wasPressedThisFrame)
+                    StationCommands.ChangeProductPrice(_selectedProduct, ProductPriceStep);
+                if (keyboard.minusKey.wasPressedThisFrame || keyboard.numpadMinusKey.wasPressedThisFrame)
+                    StationCommands.ChangeProductPrice(_selectedProduct, -ProductPriceStep);
+                if (keyboard.oKey.wasPressedThisFrame)
+                    StationCommands.OrderProducts(_selectedProduct, ShopMath.OrderSize);
                 return;
             }
 
@@ -128,10 +157,11 @@ namespace GasStation.Mono
             6 => keyboard.digit6Key.wasPressedThisFrame,
             7 => keyboard.digit7Key.wasPressedThisFrame,
             8 => keyboard.digit8Key.wasPressedThisFrame,
+            9 => keyboard.digit9Key.wasPressedThisFrame,
             _ => false
         };
 
-        private string BuildShop()
+        private string BuildUpgrades()
         {
             _builder.Clear();
             _builder.AppendLine("УЛУЧШЕНИЯ (цифра — купить, Tab — закрыть)");
@@ -145,6 +175,25 @@ namespace GasStation.Mono
                     : HudModel.Level.Level < requiredLevel ? $"нужен уровень {requiredLevel}"
                     : $"${UpgradeMath.Cost(type, level):0}";
                 _builder.AppendLine($"{i + 1}. {GameTexts.UpgradeName(type)} [{level}/{max}] — {price}: {GameTexts.UpgradeDescription(type)}");
+            }
+
+            return _builder.ToString();
+        }
+
+        private string BuildStore()
+        {
+            _builder.Clear();
+            _builder.AppendLine($"МАГАЗИН (1–5 — товар, +/- — цена, O — заказать {ShopMath.OrderSize} шт., M — закрыть)");
+            _builder.AppendLine($"Покупателей внутри: {HudModel.PedestriansInShop}");
+            for (int i = 0; i < ProductTypes.Count; i++)
+            {
+                var product = HudModel.Products[i];
+                string marker = (int)_selectedProduct == i ? "▶ " : "";
+                _builder.Append($"{marker}{i + 1}. {GameTexts.ProductName((ProductType)i)}: {product.Stock}/{product.Capacity}   " +
+                                $"${product.SellPrice:0.00} (закупка ${product.BuyPrice:0.00}, обычно ${product.ReferencePrice:0.00})");
+                if (HudModel.PendingProducts[i] > 0)
+                    _builder.Append($"   +{HudModel.PendingProducts[i]} в пути");
+                _builder.AppendLine();
             }
 
             return _builder.ToString();
@@ -206,6 +255,14 @@ namespace GasStation.Mono
         {
             _builder.Clear();
             _builder.AppendLine($"Очередь: {HudModel.QueueLength}   Машин на станции: {HudModel.CarsOnSite}");
+            if (HudModel.HasWash)
+            {
+                string wash = HudModel.Upgrades.CarWash == 0 ? "закрыта (улучшение «Автомойка»)"
+                    : HudModel.WashTimeLeft > 0f ? $"моет машину, ещё {HudModel.WashTimeLeft:0} с"
+                    : HudModel.WashBusy ? "машина подъезжает"
+                    : "свободна";
+                _builder.AppendLine($"Мойка: {wash}");
+            }
             foreach (var pump in HudModel.Pumps)
             {
                 _builder.Append($"Колонка {pump.Number}: ");
@@ -234,6 +291,8 @@ namespace GasStation.Mono
                     CarState.DrivingToPump => "подъезжает",
                     CarState.WaitingForService => "ждёт заправки",
                     CarState.Fueling => "заправляется",
+                    CarState.Shopping => "водитель в магазине",
+                    CarState.ReadyToLeave => "уезжает",
                     _ => pump.CarState.ToString()
                 };
                 _builder.AppendLine($"{GameTexts.CustomerName(pump.Customer)} {state}, {fuel} {pump.ReceivedLiters:0}/{pump.RequestedLiters:0} л, " +
