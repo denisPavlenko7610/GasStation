@@ -125,7 +125,21 @@ namespace GasStation.Components
         /// <summary>Value = dishes thrown away; Subject = DinerDish.</summary>
         FoodWasted,
         /// <summary>The cook has nothing to cook with.</summary>
-        DinerOutOfIngredients
+        DinerOutOfIngredients,
+        /// <summary>Value = new star count.</summary>
+        StarGained,
+        /// <summary>Value = new star count.</summary>
+        StarLost,
+        /// <summary>Value = RoadEventKind.</summary>
+        RoadEventStarted,
+        /// <summary>Value = RoadEventKind.</summary>
+        RoadEventEnded,
+        /// <summary>Value = HostedEventKind.</summary>
+        HostedEventStarted,
+        /// <summary>Value = ticket income; Subject = preparation in percent.</summary>
+        HostedEventEnded,
+        /// <summary>Value = OwnerSkill.</summary>
+        SkillLearned
     }
 
     /// <summary>

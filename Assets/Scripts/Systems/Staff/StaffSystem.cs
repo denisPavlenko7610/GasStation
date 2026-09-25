@@ -42,13 +42,14 @@ namespace GasStation.Systems
                 newDay |= events[i].Type == StationEventType.DayEnded;
 
             var time = SystemAPI.GetSingleton<GameTime>();
+            float drainFactor = SkillMath.StaffDrainFactor((SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0));
             float deltaHours = SystemAPI.Time.DeltaTime * time.MinutesPerSecond / 60f;
             foreach (var worker in SystemAPI.Query<RefRW<Worker>>())
             {
                 ref var w = ref worker.ValueRW;
                 if (StaffMath.OnShift(w.Shift, time.Hour))
                 {
-                    w.Energy = math.max(0f, w.Energy - StaffMath.EnergyDrain(w.Trait) * deltaHours);
+                    w.Energy = math.max(0f, w.Energy - StaffMath.EnergyDrain(w.Trait) * drainFactor * deltaHours);
                     if (w.Energy <= 0f)
                         w.Exhausted = true;
                 }

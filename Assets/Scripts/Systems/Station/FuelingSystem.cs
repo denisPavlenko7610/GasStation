@@ -40,6 +40,7 @@ namespace GasStation.Systems
             float3 playerPosition = PlayerPosition(ref state, out bool hasPlayer);
             bool hasShop = SystemAPI.HasSingleton<Shop>();
             float cleanliness = SystemAPI.HasSingleton<StationCleanliness>() ? SystemAPI.GetSingleton<StationCleanliness>().Value : 1f;
+            int skills = (SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0);
             bool hasRegulars = SystemAPI.HasSingleton<RegularState>();
             var regulars = hasRegulars ? SystemAPI.GetSingletonBuffer<RegularState>(true) : default;
             bool hasContracts = SystemAPI.HasSingleton<Contract>();
@@ -72,7 +73,7 @@ namespace GasStation.Systems
                 car.ValueRW.ReceivedLiters += amount;
 
                 bool wasWorking = !pump.ValueRO.IsBroken;
-                pump.ValueRW.Condition = math.max(0f, pump.ValueRO.Condition - amount * ProgressMath.WearPerLiter);
+                pump.ValueRW.Condition = math.max(0f, pump.ValueRO.Condition - amount * ProgressMath.WearPerLiter * SkillMath.WearFactor(skills));
                 if (wasWorking && pump.ValueRO.IsBroken)
                     StationEvent.Push(events, StationEventType.PumpBroken, default, pump.ValueRO.Number);
 
@@ -110,7 +111,7 @@ namespace GasStation.Systems
                 else
                 {
                     float patienceRatio = patience.ValueRO.Max > 0f ? patience.ValueRO.Current / patience.ValueRO.Max : 0f;
-                    float tip = CustomerProfiles.Tip(car.ValueRO.Customer, bill, patienceRatio);
+                    float tip = CustomerProfiles.Tip(car.ValueRO.Customer, bill, patienceRatio) * SkillMath.TipFactor(skills);
                     int regularIndex = car.ValueRO.RegularId - 1;
                     if (hasRegulars && regularIndex >= 0 && regularIndex < regulars.Length)
                         tip += bill * VisitorMath.TipShare(regulars[regularIndex].Loyalty);

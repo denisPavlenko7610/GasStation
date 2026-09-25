@@ -789,6 +789,11 @@ namespace GasStation.Mono
                 ? Loc.F("hud.level.max", level.Level)
                 : Loc.F("hud.level", level.Level, level.Experience, ProgressMath.ExperienceToNext(level.Level)));
 
+            _builder.AppendLine(Loc.F("hud.stars", Stars(HudModel.Stars.Stars)));
+            if (HudModel.Road.Kind != RoadEventKind.None)
+                _builder.AppendLine(Loc.F("hud.road", Loc.T($"road.{HudModel.Road.Kind}"), HudModel.Road.HoursLeft));
+            if (HudModel.Hosted.Active != HostedEventKind.None)
+                _builder.AppendLine(Loc.F("hud.hosted", Loc.T($"hosted.{HudModel.Hosted.Active}"), HudModel.Hosted.Attendees));
             if (HudModel.World.Active != WorldEventKind.None)
                 _builder.AppendLine(Loc.F("hud.event", Loc.T($"event.{HudModel.World.Active}"), HudModel.World.HoursLeft));
 

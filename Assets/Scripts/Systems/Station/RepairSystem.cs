@@ -29,6 +29,9 @@ namespace GasStation.Systems
         {
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
             var economy = SystemAPI.GetSingletonRW<Economy>();
+            int skills = (SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0);
+            float stepCost = ProgressMath.RepairStepCost * SkillMath.RepairCostFactor(skills);
+            float repairStep = ProgressMath.RepairStep * SkillMath.RepairStepFactor(skills);
 
             foreach (var interaction in SystemAPI.Query<RefRW<PlayerInteraction>>().WithAll<PlayerTag>())
             {
@@ -41,18 +44,18 @@ namespace GasStation.Systems
                     continue;
 
                 interaction.ValueRW.InteractPressed = false;
-                if (economy.ValueRO.Money < ProgressMath.RepairStepCost)
+                if (economy.ValueRO.Money < stepCost)
                 {
-                    StationEvent.Push(events, StationEventType.NotEnoughMoney, default, ProgressMath.RepairStepCost);
+                    StationEvent.Push(events, StationEventType.NotEnoughMoney, default, stepCost);
                     continue;
                 }
 
-                economy.ValueRW.Money -= ProgressMath.RepairStepCost;
-                economy.ValueRW.DayExpenses += ProgressMath.RepairStepCost;
+                economy.ValueRW.Money -= stepCost;
+                economy.ValueRW.DayExpenses += stepCost;
                 // The step that lifts the pump over the threshold finishes the repair.
-                float step = pump.ValueRO.Condition + ProgressMath.RepairStep >= ProgressMath.RepairThreshold
+                float step = pump.ValueRO.Condition + repairStep >= ProgressMath.RepairThreshold
                     ? 1f
-                    : ProgressMath.RepairStep;
+                    : repairStep;
                 Repair(ref pump.ValueRW, step, events);
             }
 

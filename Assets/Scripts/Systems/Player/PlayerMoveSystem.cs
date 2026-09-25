@@ -1,4 +1,5 @@
 using GasStation.Components;
+using GasStation.Logic;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
@@ -13,7 +14,8 @@ namespace GasStation.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new PlayerMoveJob { DeltaTime = SystemAPI.Time.DeltaTime }.ScheduleParallel();
+            int skills = SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0;
+            new PlayerMoveJob { DeltaTime = SystemAPI.Time.DeltaTime, SpeedFactor = SkillMath.SpeedFactor(skills) }.ScheduleParallel();
         }
     }
 
@@ -22,10 +24,12 @@ namespace GasStation.Systems
     public partial struct PlayerMoveJob : IJobEntity
     {
         public float DeltaTime;
+        /// <summary>The owner's Runner skill.</summary>
+        public float SpeedFactor;
 
         private void Execute(ref LocalTransform transform, in MoveInput input, in MoveSpeed speed)
         {
-            transform.Position += input.Value * speed.Value * DeltaTime;
+            transform.Position += input.Value * speed.Value * SpeedFactor * DeltaTime;
         }
     }
 }

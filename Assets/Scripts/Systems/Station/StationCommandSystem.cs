@@ -95,6 +95,12 @@ namespace GasStation.Systems
                     case StationCommandType.RemoveProp:
                         RemoveProp(station, command.Position);
                         break;
+                    case StationCommandType.LearnSkill:
+                        LearnSkill(station, (OwnerSkill)(int)command.Value);
+                        break;
+                    case StationCommandType.PlanEvent:
+                        PlanEvent(station, (HostedEventKind)(int)command.Value);
+                        break;
                     case StationCommandType.TogglePromo:
                         TogglePromo(command.Product);
                         break;
@@ -121,6 +127,67 @@ namespace GasStation.Systems
                         break;
                 }
             }
+        }
+
+        private void LearnSkill(Entity station, OwnerSkill skill)
+        {
+            if (!SystemAPI.HasComponent<OwnerSkillSet>(station))
+                return;
+
+            var skills = SystemAPI.GetComponent<OwnerSkillSet>(station);
+            int level = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
+            if (!SkillMath.CanLearn(skills.Learned, skill, level))
+            {
+                HudModel.Notify(Loc.T(SkillMath.FreePoints(level, skills.Learned) <= 0 ? "msg.noSkillPoints" : "msg.skillLocked"));
+                return;
+            }
+
+            skills.Learned = SkillMath.Learn(skills.Learned, skill);
+            SystemAPI.SetComponent(station, skills);
+            StationEvent.Push(SystemAPI.GetBuffer<StationEvent>(station), StationEventType.SkillLearned, default, (int)skill);
+        }
+
+        /// <summary>Plans an event for tomorrow; paid now.</summary>
+        private void PlanEvent(Entity station, HostedEventKind kind)
+        {
+            if (!SystemAPI.HasComponent<HostedEvents>(station) || kind == HostedEventKind.None)
+                return;
+
+            var hosted = SystemAPI.GetComponent<HostedEvents>(station);
+            int day = SystemAPI.GetComponent<GameTime>(station).Day;
+            var info = HostedEventMath.Get(kind);
+            int level = SystemAPI.HasComponent<StationLevel>(station) ? SystemAPI.GetComponent<StationLevel>(station).Level : 1;
+            if (hosted.Planned != HostedEventKind.None || hosted.Active != HostedEventKind.None)
+            {
+                HudModel.Notify(Loc.T("msg.eventAlreadyPlanned"));
+                return;
+            }
+
+            if (!HostedEventMath.CanPlan(day + 1, hosted.LastHostedDay))
+            {
+                HudModel.Notify(Loc.F("msg.eventTooSoon", hosted.LastHostedDay + HostedEventMath.EveryDays));
+                return;
+            }
+
+            if (level < info.RequiredLevel)
+            {
+                HudModel.Notify(Loc.F("msg.contractNeedsLevel", info.RequiredLevel));
+                return;
+            }
+
+            var economy = SystemAPI.GetComponentRW<Economy>(station);
+            if (economy.ValueRO.Money < info.Cost)
+            {
+                HudModel.Notify(Loc.F("msg.noMoney", info.Cost));
+                return;
+            }
+
+            economy.ValueRW.Money -= info.Cost;
+            economy.ValueRW.DayExpenses += info.Cost;
+            hosted.Planned = kind;
+            hosted.PlannedDay = day + 1;
+            SystemAPI.SetComponent(station, hosted);
+            HudModel.Notify(Loc.F("msg.eventPlanned", Loc.T($"hosted.{kind}"), info.StartHour));
         }
 
         private void TogglePromo(ProductType product)
@@ -540,7 +607,7 @@ namespace GasStation.Systems
             }
 
             var economy = SystemAPI.GetSingletonRW<Economy>();
-            float cost = liters * stock.BuyPrice;
+            float cost = liters * stock.BuyPrice * SkillMath.FuelPriceFactor((SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0));
             if (economy.ValueRO.Money < cost)
             {
                 HudModel.Notify(Loc.F("msg.noMoney", cost));
@@ -600,7 +667,8 @@ namespace GasStation.Systems
             }
 
             var economy = SystemAPI.GetComponentRW<Economy>(station);
-            float cost = math.round(count * shelf.BuyPrice * ShopMath.SupplierPriceFactor(shop.Supplier) * 100f) / 100f;
+            float cost = math.round(count * shelf.BuyPrice * ShopMath.SupplierPriceFactor(shop.Supplier)
+                                    * SkillMath.GoodsPriceFactor((SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0)) * 100f) / 100f;
             if (economy.ValueRO.Money < cost)
             {
                 HudModel.Notify(Loc.F("msg.noMoney", cost));
@@ -746,6 +814,14 @@ namespace GasStation.Systems
             if (stationLevel < requiredLevel)
             {
                 HudModel.Notify(Loc.F("msg.upgradeNeedsLevel", GameTexts.UpgradeName(type), requiredLevel));
+                return;
+            }
+
+            // The EV charging licence also needs a three-star station.
+            int stars = SystemAPI.HasComponent<StationStars>(station) ? SystemAPI.GetComponent<StationStars>(station).Stars : StarMath.MaxStars;
+            if (type == UpgradeType.EvCharger && stars < StarMath.EvLicenceStars)
+            {
+                HudModel.Notify(Loc.F("msg.needStars", GameTexts.UpgradeName(type), StarMath.EvLicenceStars));
                 return;
             }
 

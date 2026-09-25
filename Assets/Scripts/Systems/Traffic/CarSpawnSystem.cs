@@ -62,6 +62,18 @@ namespace GasStation.Systems
 
             intensity *= VisitorTrafficFactor(ref state);
 
+            // Stars, the owner's fame, what happens on the highway and events the player hosts.
+            int skills = SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0;
+            var road = SystemAPI.HasSingleton<RoadEvent>() ? SystemAPI.GetSingleton<RoadEvent>().Kind : RoadEventKind.None;
+            var hosted = SystemAPI.HasSingleton<HostedEvents>() ? SystemAPI.GetSingleton<HostedEvents>().Active : HostedEventKind.None;
+            bool hostedOn = HostedEventMath.IsOn(hosted, hour);
+            intensity *= (SystemAPI.HasSingleton<StationStars>() ? StarMath.TrafficFactor(SystemAPI.GetSingleton<StationStars>().Stars) : 1f)
+                         * SkillMath.TrafficFactor(skills)
+                         * RoadMath.TrafficFactor(road)
+                         * (hostedOn ? HostedEventMath.Get(hosted).Crowd : 1f);
+            bool touristBoost = worldEvent == WorldEventKind.RushHour || RoadMath.TouristBoost(road) ||
+                                (hostedOn && hosted != HostedEventKind.MovieNight);
+
             var props = SystemAPI.HasSingleton<PropEffects>() ? SystemAPI.GetSingleton<PropEffects>() : default;
             ref var spawner = ref SystemAPI.GetComponentRW<CarSpawner>(spawnerEntity).ValueRW;
 
@@ -91,7 +103,7 @@ namespace GasStation.Systems
             if (ActiveCars(ref state) >= spawner.MaxCars)
                 return;
 
-            var customer = CustomerProfiles.Pick(spawner.Random.NextFloat(), stationLevel, hour, worldEvent == WorldEventKind.RushHour);
+            var customer = CustomerProfiles.Pick(spawner.Random.NextFloat(), stationLevel, hour, touristBoost);
             // Lamps scare thieves off at night: some of them become ordinary customers.
             if (customer == CustomerType.Thief && LightingMath.NightFactor(hour) > 0.5f &&
                 spawner.Random.NextFloat() > PropMath.NightCrimeFactor(props.Lamps))
@@ -106,6 +118,10 @@ namespace GasStation.Systems
                 customer = CustomerType.Regular;
 
             SpawnCar(ref state, spawnerEntity, ref spawner, prefabs, new SpawnRequest { Customer = customer }, upgrades, props);
+
+            // Everyone arriving during a hosted event is a guest who buys a ticket.
+            if (hostedOn)
+                SystemAPI.GetSingletonRW<HostedEvents>().ValueRW.Attendees++;
         }
 
         private void SpawnCar(ref SystemState state, Entity spawnerEntity, ref CarSpawner spawner, DynamicBuffer<CarPrefabElement> prefabs,
@@ -122,9 +138,11 @@ namespace GasStation.Systems
             float patience = spawner.Random.NextFloat(spawner.PatienceRange.x, spawner.PatienceRange.y)
                              * profile.PatienceMultiplier
                              * UpgradeMath.PatienceMultiplier(upgrades.Comfort)
-                             * PropMath.PatienceFactor(props.Benches);
+                             * PropMath.PatienceFactor(props.Benches)
+                             * SkillMath.PatienceFactor(SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0);
             float liters = spawner.Random.NextFloat(spawner.LitersRange.x, spawner.LitersRange.y)
-                           * (request.HasHabits ? request.LitersMultiplier : profile.LitersMultiplier);
+                           * (request.HasHabits ? request.LitersMultiplier : profile.LitersMultiplier)
+                           * (SystemAPI.HasSingleton<RoadEvent>() ? RoadMath.LitersFactor(SystemAPI.GetSingleton<RoadEvent>().Kind) : 1f);
             var fuel = request.HasHabits ? request.Fuel
                 : profile.DieselOnly ? FuelType.Diesel
                 : StationMath.PickFuelType(spawner.Random.NextFloat());

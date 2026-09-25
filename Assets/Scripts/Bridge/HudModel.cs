@@ -179,6 +179,11 @@ namespace GasStation.Bridge
 
         public static SupplierKind Supplier;
 
+        public static OwnerSkillSet Skills;
+        public static StationStars Stars;
+        public static RoadEvent Road;
+        public static HostedEvents Hosted;
+
         public static bool HasDiner;
         public static Diner Diner;
         public static readonly DinerCounter[] DinerCounter = new DinerCounter[DinerDishes.Count];

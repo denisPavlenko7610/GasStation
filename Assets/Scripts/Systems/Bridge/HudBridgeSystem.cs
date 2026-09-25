@@ -75,6 +75,11 @@ namespace GasStation.Systems
                 });
             }
 
+            HudModel.Skills = SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>() : default;
+            HudModel.Stars = SystemAPI.HasSingleton<StationStars>() ? SystemAPI.GetSingleton<StationStars>() : default;
+            HudModel.Road = SystemAPI.HasSingleton<RoadEvent>() ? SystemAPI.GetSingleton<RoadEvent>() : default;
+            HudModel.Hosted = SystemAPI.HasSingleton<HostedEvents>() ? SystemAPI.GetSingleton<HostedEvents>() : default;
+
             DrainEvents();
             CopyProps();
             CopyShop();
@@ -311,6 +316,27 @@ namespace GasStation.Systems
                     case StationEventType.DishCooked:
                         HudModel.Notify(Loc.F("msg.dishCooked", Loc.T($"dish.{(DinerDish)stationEvent.Subject}")));
                         break;
+                    case StationEventType.StarGained:
+                        HudModel.Notify(Loc.F("msg.starGained", StarText((int)stationEvent.Value)));
+                        break;
+                    case StationEventType.StarLost:
+                        HudModel.Notify(Loc.F("msg.starLost", StarText((int)stationEvent.Value)));
+                        break;
+                    case StationEventType.RoadEventStarted:
+                        HudModel.Notify(Loc.T($"road.{(RoadEventKind)(int)stationEvent.Value}.start"));
+                        break;
+                    case StationEventType.RoadEventEnded:
+                        HudModel.Notify(Loc.T($"road.{(RoadEventKind)(int)stationEvent.Value}.end"));
+                        break;
+                    case StationEventType.HostedEventStarted:
+                        HudModel.Notify(Loc.F("msg.eventStarted", Loc.T($"hosted.{(HostedEventKind)(int)stationEvent.Value}")));
+                        break;
+                    case StationEventType.HostedEventEnded:
+                        HudModel.Notify(Loc.F("msg.eventEnded", stationEvent.Value, stationEvent.Subject));
+                        break;
+                    case StationEventType.SkillLearned:
+                        HudModel.Notify(Loc.F("msg.skillLearned", Loc.T($"skill.{(OwnerSkill)(int)stationEvent.Value}")));
+                        break;
                     case StationEventType.PropPlaced:
                         HudModel.Notify(Loc.F("msg.propPlaced", GameTexts.PropName((PropType)(int)stationEvent.Value)));
                         break;
@@ -344,6 +370,9 @@ namespace GasStation.Systems
             if (SystemAPI.HasSingleton<PropEffects>())
                 HudModel.PropEffects = SystemAPI.GetSingleton<PropEffects>();
         }
+
+        private static string StarText(int stars) =>
+            new string('★', UnityEngine.Mathf.Clamp(stars, 0, 5)) + new string('☆', 5 - UnityEngine.Mathf.Clamp(stars, 0, 5));
 
         private void CopyServices()
         {

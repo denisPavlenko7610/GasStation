@@ -372,7 +372,7 @@ namespace GasStation.Save
     [Serializable]
     public class SaveData
     {
-        public const int CurrentVersion = 19;
+        public const int CurrentVersion = 20;
 
         public int version = CurrentVersion;
         public int day;
@@ -458,6 +458,16 @@ namespace GasStation.Save
         public int dinerIngredients = -1;
         public int[] dinerReady;
         public float[] dinerHoursLeft;
+
+        // Version 20. Zero in older saves: no skills, no stars, a quiet road, nothing planned.
+        public int skills;
+        public int stars;
+        public int bestStars;
+        public int roadEvent;
+        public float roadHoursLeft;
+        public int plannedEvent;
+        public int plannedEventDay;
+        public int lastHostedDay = -100;
 
         public bool IsSupported => version >= 1 && version <= CurrentVersion;
 

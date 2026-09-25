@@ -41,6 +41,7 @@ namespace GasStation.Systems
             manager.Timer = 0f;
 
             float discount = FacilityMath.SupplyDiscount(level);
+            int skills = (SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0);
             float deliveryTime = SystemAPI.GetSingleton<StationSettings>().FuelDeliveryTime * FacilityMath.SupplyDeliveryFactor(level);
             ref var economy = ref SystemAPI.GetSingletonRW<Economy>().ValueRW;
             var events = SystemAPI.GetSingletonBuffer<StationEvent>();
@@ -59,7 +60,7 @@ namespace GasStation.Systems
                     continue;
 
                 float liters = math.min(fuel.Capacity * 0.5f, fuel.Capacity - available);
-                float cost = liters * fuel.BuyPrice * discount;
+                float cost = liters * fuel.BuyPrice * discount * SkillMath.FuelPriceFactor(skills);
                 if (liters < 1f || economy.Money - cost < FacilityMath.MoneyReserve)
                     continue;
 
@@ -90,7 +91,7 @@ namespace GasStation.Systems
                         continue;
 
                     int count = math.min(ShopMath.OrderSize, shelf.Capacity - available);
-                    float cost = count * shelf.BuyPrice * discount * ShopMath.SupplierPriceFactor(supplier);
+                    float cost = count * shelf.BuyPrice * discount * ShopMath.SupplierPriceFactor(supplier) * SkillMath.GoodsPriceFactor(skills);
                     if (count <= 0 || economy.Money - cost < FacilityMath.MoneyReserve)
                         continue;
 

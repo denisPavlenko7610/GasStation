@@ -24,6 +24,8 @@ namespace GasStation.Bridge
         PlaceProp,
         RemoveProp,
         AcceptContract,
+        LearnSkill,
+        PlanEvent,
         TogglePromo,
         OrderIngredients,
         SetSupplier,
@@ -99,6 +101,12 @@ namespace GasStation.Bridge
 
         public static void RemoveProp(Vector3 position) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.RemoveProp, Position = position });
+
+        public static void LearnSkill(OwnerSkill skill) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.LearnSkill, Value = (int)skill });
+
+        public static void PlanEvent(HostedEventKind kind) =>
+            Queue.Enqueue(new StationCommand { Type = StationCommandType.PlanEvent, Value = (int)kind });
 
         public static void TogglePromo(ProductType product) =>
             Queue.Enqueue(new StationCommand { Type = StationCommandType.TogglePromo, Product = product });

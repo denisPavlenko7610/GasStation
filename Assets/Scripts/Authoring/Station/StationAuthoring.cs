@@ -115,6 +115,14 @@ namespace GasStation.Authoring
                 DaysToNextOffer = 1,
                 Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 401)
             });
+            AddComponent(entity, new OwnerSkillSet());
+            AddComponent(entity, new StationStars());
+            AddComponent(entity, new RoadEvent
+            {
+                LastRolledHour = -1,
+                Random = Unity.Mathematics.Random.CreateFromIndex(authoring.eventSeed + 503)
+            });
+            AddComponent(entity, new HostedEvents { PlannedDay = -1, LastHostedDay = -100 });
             AddComponent(entity, new Achievements());
             AddComponent(entity, new StaffRoster
             {

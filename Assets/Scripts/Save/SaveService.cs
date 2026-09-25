@@ -70,6 +70,7 @@ namespace GasStation.Save
             CaptureVisitors(entityManager, station, data);
             CaptureContracts(entityManager, station, data);
             CaptureDiner(entityManager, data);
+            CaptureGrowth(entityManager, station, data);
             data.stationName = GasStation.Bridge.StationProfile.CustomName;
 
             if (entityManager.HasBuffer<DayHistoryEntry>(station))
@@ -190,6 +191,7 @@ namespace GasStation.Save
             RestoreVisitors(entityManager, station, data);
             RestoreContracts(entityManager, station, data);
             RestoreDiner(entityManager, data);
+            RestoreGrowth(entityManager, station, data);
 
             if (data.products != null)
             {
@@ -494,6 +496,68 @@ namespace GasStation.Save
                 board.DaysToNextOffer = data.version >= 16 ? Mathf.Max(1, data.daysToNextOffer) : 1;
                 entityManager.SetComponentData(station, board);
             }
+        }
+
+        private static void CaptureGrowth(EntityManager entityManager, Entity station, SaveData data)
+        {
+            if (entityManager.HasComponent<OwnerSkillSet>(station))
+                data.skills = entityManager.GetComponentData<OwnerSkillSet>(station).Learned;
+            if (entityManager.HasComponent<StationStars>(station))
+            {
+                var stars = entityManager.GetComponentData<StationStars>(station);
+                data.stars = stars.Stars;
+                data.bestStars = stars.Best;
+            }
+
+            if (entityManager.HasComponent<RoadEvent>(station))
+            {
+                var road = entityManager.GetComponentData<RoadEvent>(station);
+                data.roadEvent = (int)road.Kind;
+                data.roadHoursLeft = road.HoursLeft;
+            }
+
+            if (entityManager.HasComponent<HostedEvents>(station))
+            {
+                var hosted = entityManager.GetComponentData<HostedEvents>(station);
+                data.plannedEvent = (int)hosted.Planned;
+                data.plannedEventDay = hosted.PlannedDay;
+                data.lastHostedDay = hosted.LastHostedDay;
+            }
+        }
+
+        /// <summary>A running hosted event is not saved: it simply ends.</summary>
+        private static void RestoreGrowth(EntityManager entityManager, Entity station, SaveData data)
+        {
+            if (entityManager.HasComponent<OwnerSkillSet>(station))
+            {
+                var skills = entityManager.GetComponentData<OwnerSkillSet>(station);
+                skills.Learned = data.skills;
+                entityManager.SetComponentData(station, skills);
+            }
+
+            if (entityManager.HasComponent<StationStars>(station))
+                entityManager.SetComponentData(station, new StationStars
+                {
+                    Stars = Mathf.Clamp(data.stars, 0, StarMath.MaxStars),
+                    Best = Mathf.Clamp(data.bestStars, 0, StarMath.MaxStars)
+                });
+
+            if (entityManager.HasComponent<RoadEvent>(station))
+            {
+                var road = entityManager.GetComponentData<RoadEvent>(station);
+                road.Kind = (RoadEventKind)Mathf.Clamp(data.roadEvent, 0, (int)RoadEventKind.OilCrisis);
+                road.HoursLeft = road.Kind == RoadEventKind.None ? 0f : Mathf.Max(0.1f, data.roadHoursLeft);
+                road.LastRolledHour = -1;
+                entityManager.SetComponentData(station, road);
+            }
+
+            if (entityManager.HasComponent<HostedEvents>(station))
+                entityManager.SetComponentData(station, new HostedEvents
+                {
+                    Planned = (HostedEventKind)Mathf.Clamp(data.plannedEvent, 0, HostedEventKinds.Count - 1),
+                    PlannedDay = data.plannedEventDay,
+                    LastHostedDay = data.lastHostedDay
+                });
         }
 
         private static void CaptureDiner(EntityManager entityManager, SaveData data)

@@ -144,7 +144,7 @@ namespace GasStation.Systems
             {
                 Id = id,
                 Type = contractType,
-                Price = ContractMath.OfferPrice(contractType, market),
+                Price = ContractMath.OfferPrice(contractType, market * SkillMath.ContractPriceFactor((SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0))),
                 Days = ContractMath.Get(contractType).Days,
                 ExpiresIn = ContractMath.OfferLifetime
             });

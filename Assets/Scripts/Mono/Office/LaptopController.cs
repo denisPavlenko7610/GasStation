@@ -22,6 +22,8 @@ namespace GasStation.Mono.Office
             Mail,
             Staff,
             Suppliers,
+            Events,
+            Skills,
             Bank,
             Competitor,
             Regulars,
@@ -152,6 +154,8 @@ namespace GasStation.Mono.Office
                 case App.Mail: BuildMail(content); break;
                 case App.Staff: BuildStaff(content); break;
                 case App.Suppliers: BuildSuppliers(content); break;
+                case App.Events: BuildEvents(content); break;
+                case App.Skills: BuildSkills(content); break;
                 case App.Bank: BuildBank(content); break;
                 case App.Competitor: BuildCompetitor(content); break;
                 case App.Regulars: BuildRegulars(content); break;
@@ -327,6 +331,77 @@ namespace GasStation.Mono.Office
                     () => StationCommands.OrderProducts(product, ShopMath.OrderSize));
                 Action(actions, Loc.T(shelf.Promo ? "laptop.suppliers.promoOff" : "laptop.suppliers.promoOn"),
                     () => StationCommands.TogglePromo(product));
+            }
+        }
+
+        private void BuildEvents(VisualElement content)
+        {
+            content.Add(Label(Loc.F("laptop.events.stars", StarText(HudModel.Stars.Stars)), "laptop-heading"));
+            int next = HudModel.Stars.Stars + 1;
+            if (next <= StarMath.MaxStars)
+            {
+                var need = StarMath.Requirement(next);
+                var card = Card(Loc.F("laptop.events.next", StarText(next)));
+                card.Add(Label(Loc.F("laptop.events.need", need.Rating, need.Cleanliness * 100f, need.Level, need.Services), "laptop-line"));
+                card.Add(Label(Loc.F("laptop.events.starsHint", StarMath.EvLicenceStars), "laptop-muted"));
+            }
+
+            var road = Card(Loc.T("laptop.events.road"));
+            road.Add(Label(HudModel.Road.Kind == RoadEventKind.None
+                ? Loc.T("laptop.events.roadCalm")
+                : Loc.F("hud.road", Loc.T($"road.{HudModel.Road.Kind}"), HudModel.Road.HoursLeft), "laptop-line"));
+            if (HudModel.Road.Kind != RoadEventKind.None)
+                road.Add(Label(Loc.T($"road.{HudModel.Road.Kind}.desc"), "laptop-muted"));
+
+            content.Add(Label(Loc.T("laptop.events.host"), "laptop-heading"));
+            var hosted = HudModel.Hosted;
+            if (hosted.Active != HostedEventKind.None)
+                content.Add(Label(Loc.F("hud.hosted", Loc.T($"hosted.{hosted.Active}"), hosted.Attendees), "laptop-line"));
+            else if (hosted.Planned != HostedEventKind.None)
+                content.Add(Label(Loc.F("laptop.events.planned", Loc.T($"hosted.{hosted.Planned}"), hosted.PlannedDay,
+                    HostedEventMath.Get(hosted.Planned).StartHour), "laptop-line"));
+
+            bool free = hosted.Planned == HostedEventKind.None && hosted.Active == HostedEventKind.None &&
+                        HostedEventMath.CanPlan(HudModel.Day + 1, hosted.LastHostedDay);
+            if (!free && hosted.Planned == HostedEventKind.None && hosted.Active == HostedEventKind.None)
+                content.Add(Label(Loc.F("msg.eventTooSoon", hosted.LastHostedDay + HostedEventMath.EveryDays), "laptop-muted"));
+
+            foreach (var kind in new[] { HostedEventKind.Fair, HostedEventKind.CarMeet, HostedEventKind.MovieNight })
+            {
+                var info = HostedEventMath.Get(kind);
+                var card = Card(Loc.T($"hosted.{kind}"));
+                card.Add(Label(Loc.T($"hosted.{kind}.desc"), "laptop-muted"));
+                card.Add(Label(Loc.F("laptop.events.terms", info.StartHour, info.EndHour, info.Cost, info.Ticket, (info.Crowd - 1f) * 100f,
+                    info.RequiredLevel), "laptop-line"));
+                var planKind = kind;
+                var plan = Action(Actions(card), Loc.F("laptop.events.plan", info.Cost), () => StationCommands.PlanEvent(planKind));
+                plan.SetEnabled(free && HudModel.Level.Level >= info.RequiredLevel && HudModel.Economy.Money >= info.Cost);
+            }
+
+            content.Add(Label(Loc.T("laptop.events.prepHint"), "laptop-muted"));
+        }
+
+        private void BuildSkills(VisualElement content)
+        {
+            int learned = HudModel.Skills.Learned;
+            int points = SkillMath.FreePoints(HudModel.Level.Level, learned);
+            content.Add(Label(Loc.F("laptop.skills.heading", points), "laptop-heading"));
+            for (int branch = 0; branch < OwnerSkills.Count / OwnerSkills.PerBranch; branch++)
+            {
+                var card = Card(Loc.T($"skill.branch.{branch}"));
+                for (int i = 0; i < OwnerSkills.PerBranch; i++)
+                {
+                    var skill = (OwnerSkill)(branch * OwnerSkills.PerBranch + i);
+                    bool has = SkillMath.Has(learned, skill);
+                    string mark = has ? "✔ " : SkillMath.Unlocked(learned, skill) ? "○ " : "× ";
+                    card.Add(Label($"{mark}{Loc.T($"skill.{skill}")}: {Loc.T($"skill.{skill}.desc")}", has ? "laptop-line" : "laptop-muted"));
+                    if (has)
+                        continue;
+
+                    var learnSkill = skill;
+                    var button = Action(Actions(card), Loc.F("laptop.skills.learn", Loc.T($"skill.{skill}")), () => StationCommands.LearnSkill(learnSkill));
+                    button.SetEnabled(SkillMath.CanLearn(learned, skill, HudModel.Level.Level));
+                }
             }
         }
 
