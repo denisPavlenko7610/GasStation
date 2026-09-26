@@ -5,63 +5,65 @@ using UnityEngine.InputSystem;
 namespace GasStation.Mono
 {
     /// <summary>
-    /// Camera state shared with the ECS follow system. Update() reads the zoom wheel and the
-    /// right-mouse orbit drag and eases the offset; CameraFollowSystem applies it to the player.
+    /// Camera state shared with the ECS follow system. The game is played first-person: Update() reads mouse look
+    /// into Yaw/Pitch and locks the cursor while walking; menus, the laptop, build and photo mode free it.
+    /// Offset is the overhead view that build and photo mode orbit around the player's position.
     /// </summary>
     public class CameraSingleton : MonoBehaviour
     {
         [SerializeField] private float followDistance = 12f;
-        [SerializeField] private float orbitDegreesPerPixel = 0.4f;
-        [SerializeField] private float zoomPerWheelStep = 0.12f;
-        [SerializeField] private float minZoom = 0.45f;
-        [SerializeField] private float maxZoom = 2.4f;
-        [SerializeField] private float easing = 8f;
+        [SerializeField] private float lookDegreesPerPixel = 0.12f;
+        [SerializeField] private float maxPitch = 80f;
+
+        /// <summary>Eye height above the player entity's origin (it sits 1 m above the ground).</summary>
+        public const float EyeHeight = 0.65f;
 
         public static Camera Instance { get; private set; }
         public static Vector3 Offset { get; private set; }
+        /// <summary>Where the player stands; build and photo mode start from here.</summary>
+        public static Vector3 PlayerPosition { get; set; }
+        public static float Yaw { get; private set; }
+        public static float Pitch { get; private set; } = 12f;
 
-        private float _height;
-        private float _yaw;
-        private float _zoom = 1f;
-        private float _zoomTarget = 1f;
+        /// <summary>True while the mouse steers the view (cursor locked).</summary>
+        public static bool Looking { get; private set; }
 
         private void Awake()
         {
             Instance = Camera.main;
-            _height = transform.position.y;
-            RebuildOffset();
+            if (Instance != null)
+                Instance.nearClipPlane = 0.05f;
+            Offset = new Vector3(0f, transform.position.y, -followDistance);
         }
 
         private void Update()
         {
-            // Build mode, photo mode and menus drive the camera themselves; don't fight their input.
-            if (BuildMode.Active || PhotoMode.Active || GamePause.MenuOpen || LaptopState.IsOpen)
+            // Build mode, photo mode, menus and the laptop need the pointer; don't fight their input.
+            bool free = BuildMode.Active || PhotoMode.Active || GamePause.MenuOpen || LaptopState.IsOpen ||
+                        !HudModel.HasStation || !Application.isFocused;
+            SetLooking(!free);
+            if (!Looking)
                 return;
 
             var mouse = Mouse.current;
-            if (mouse != null)
-            {
-                float scroll = mouse.scroll.ReadValue().y;
-                if (scroll != 0f)
-                    _zoomTarget = Mathf.Clamp(_zoomTarget * Mathf.Exp(-scroll * zoomPerWheelStep * 0.01f), minZoom, maxZoom);
+            if (mouse == null)
+                return;
 
-                if (mouse.rightButton.isPressed)
-                {
-                    _yaw = Mathf.Repeat(_yaw + mouse.delta.x.ReadValue() * orbitDegreesPerPixel, 360f);
-                    RebuildOffset();
-                }
-            }
-
-            if (!Mathf.Approximately(_zoom, _zoomTarget))
-            {
-                _zoom = Mathf.Lerp(_zoom, _zoomTarget, 1f - Mathf.Exp(-easing * Time.deltaTime));
-                RebuildOffset();
-            }
+            Vector2 delta = mouse.delta.ReadValue() * lookDegreesPerPixel * GameSettings.MouseSensitivity;
+            Yaw = Mathf.Repeat(Yaw + delta.x, 360f);
+            Pitch = Mathf.Clamp(Pitch - (GameSettings.InvertY ? -delta.y : delta.y), -maxPitch, maxPitch);
         }
 
-        private void RebuildOffset()
+        private void OnDisable() => SetLooking(false);
+
+        private static void SetLooking(bool looking)
         {
-            Offset = Quaternion.Euler(0f, _yaw, 0f) * new Vector3(0f, _height, -followDistance) * _zoom;
+            if (Looking == looking)
+                return;
+
+            Looking = looking;
+            Cursor.lockState = looking ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !looking;
         }
     }
 }

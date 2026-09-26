@@ -15,6 +15,28 @@ namespace GasStation.Tests
         }
 
         [Test]
+        public void FirstDayPatience_OnlyTheFirstDayIsLenient()
+        {
+            Assert.Greater(StationMath.FirstDayPatience(1), 1f);
+            Assert.AreEqual(1f, StationMath.FirstDayPatience(2));
+        }
+
+        [Test]
+        public void InteractionScore_PrefersWhatTheCameraLooksAt()
+        {
+            var look = new float3(0f, 0f, 1f);
+            float ahead = InteractionMath.Score(float2.zero, new float2(0f, 2f), look, 3f);
+            float behind = InteractionMath.Score(float2.zero, new float2(0f, -1.5f), look, 3f);
+            Assert.Less(ahead, behind);
+        }
+
+        [Test]
+        public void InteractionScore_OutOfReachIsNeverPicked()
+        {
+            Assert.AreEqual(float.MaxValue, InteractionMath.Score(float2.zero, new float2(5f, 0f), new float3(1f, 0f, 0f), 3f));
+        }
+
+        [Test]
         public void TrafficIntensity_IsAlwaysPositive()
         {
             for (float hour = 0f; hour < 24f; hour += 0.5f)

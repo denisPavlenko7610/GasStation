@@ -22,6 +22,7 @@ namespace GasStation.Mono.Hud
         private readonly VisualElement[] _meterFills = new VisualElement[3];
         private readonly VisualElement _meters;
         private readonly Label _marker;
+        private readonly VisualElement _crosshair;
         private readonly List<VisualElement> _cardPool = new();
         private readonly VisualElement _chart;
         private readonly List<VisualElement> _chartColumns = new();
@@ -51,6 +52,11 @@ namespace GasStation.Mono.Hud
             CreateCard(HudBlock.Help, "card--bottom-right", textClass: "hud-text--small");
             CreateCard(HudBlock.Panel, "card--top-center", accent: true);
             CreateCard(HudBlock.Center, "card--center", textClass: "hud-text--center");
+
+            // First-person aim point; interaction prompts appear just under it.
+            _crosshair = new VisualElement { pickingMode = PickingMode.Ignore };
+            _crosshair.AddToClassList("crosshair");
+            _root.Add(_crosshair);
 
             _marker = new Label("▼") { pickingMode = PickingMode.Ignore };
             _marker.AddToClassList("quest-marker");
@@ -90,6 +96,9 @@ namespace GasStation.Mono.Hud
             if (block == HudBlock.Panel)
                 card.EnableInClassList("card--wide", text.Length > 220);
         }
+
+        public void SetCrosshair(bool visible) =>
+            _crosshair.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
 
         public void SetMeters(HudMeters meters)
         {

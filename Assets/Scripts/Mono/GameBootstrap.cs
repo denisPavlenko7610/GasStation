@@ -29,10 +29,10 @@ namespace GasStation.Mono
                 root.AddComponent<Audio.RadioPlayer>();
                 root.AddComponent<Build.BuildModeController>();
                 root.AddComponent<Build.PropPresenter>();
-                root.AddComponent<Build.StaffPresenter>();
+                // People and the cat have no art yet; their placeholder primitives are not shown (first-person
+                // view with no capsules). StaffPresenter and StationCat come back once character models exist.
                 root.AddComponent<Office.LaptopController>();
                 root.AddComponent<Collections.PhotoModeController>();
-                root.AddComponent<Collections.StationCat>();
                 Object.DontDestroyOnLoad(root);
             }
 

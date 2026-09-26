@@ -142,6 +142,7 @@ namespace GasStation.Systems
                              * profile.PatienceMultiplier
                              * UpgradeMath.PatienceMultiplier(upgrades.Comfort)
                              * PropMath.PatienceFactor(props.Benches)
+                             * StationMath.FirstDayPatience(SystemAPI.GetSingleton<GameTime>().Day)
                              * SkillMath.PatienceFactor(SystemAPI.HasSingleton<OwnerSkillSet>() ? SystemAPI.GetSingleton<OwnerSkillSet>().Learned : 0);
             float liters = spawner.Random.NextFloat(spawner.LitersRange.x, spawner.LitersRange.y)
                            * (request.HasHabits ? request.LitersMultiplier : profile.LitersMultiplier)

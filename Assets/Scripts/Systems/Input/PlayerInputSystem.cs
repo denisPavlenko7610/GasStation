@@ -1,5 +1,6 @@
 using GasStation.Bridge;
 using GasStation.Components;
+using GasStation.Mono;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -36,11 +37,17 @@ namespace GasStation.Systems
             bool interactHeld = !menuOpen && (_inputAction.Player.Fire.IsPressed()
                                               || (Keyboard.current != null && Keyboard.current.eKey.isPressed));
 
+            // WASD walks relative to where the owner looks.
+            var yaw = Quaternion.Euler(0f, CameraSingleton.Yaw, 0f);
+            Vector3 walk = yaw * new Vector3(move.x, 0f, move.y);
+            Vector3 look = Quaternion.Euler(CameraSingleton.Pitch, CameraSingleton.Yaw, 0f) * Vector3.forward;
+
             foreach (var (moveInput, interaction) in SystemAPI
                          .Query<RefRW<MoveInput>, RefRW<PlayerInteraction>>()
                          .WithAll<PlayerTag>())
             {
-                moveInput.ValueRW.Value = new float3(move.x, 0f, move.y);
+                moveInput.ValueRW.Value = walk;
+                interaction.ValueRW.LookDirection = look;
                 interaction.ValueRW.InteractPressed = interact;
                 interaction.ValueRW.InteractHeld = interactHeld;
             }

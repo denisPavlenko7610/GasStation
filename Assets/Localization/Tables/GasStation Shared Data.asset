@@ -3695,6 +3695,14 @@ MonoBehaviour:
     m_Key: quest.goal.HostEvent
     m_Metadata:
       m_Items: []
+  - m_Id: 368519970291712
+    m_Key: settings.mouseSensitivity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 368520079343616
+    m_Key: settings.invertY
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

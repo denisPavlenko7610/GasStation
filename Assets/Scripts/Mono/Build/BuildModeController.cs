@@ -82,7 +82,7 @@ namespace GasStation.Mono.Build
             }
 
             var camera = CameraSingleton.Instance;
-            var focus = camera != null ? camera.transform.position - CameraSingleton.Offset : Vector3.zero;
+            var focus = CameraSingleton.PlayerPosition;
             BuildMode.Enter(focus);
         }
 
@@ -126,7 +126,7 @@ namespace GasStation.Mono.Build
                 if (_ghost != null)
                     Destroy(_ghost);
                 _ghostType = BuildMode.Selected;
-                _ghost = PropVisuals.Create(_ghostType, transform);
+                _ghost = PropVisuals.Create(_ghostType, transform, ghost: true);
                 _ghost.name = "BuildGhost";
                 _ghostValid = !_ghostValid; // force a tint below
             }

@@ -146,8 +146,8 @@ namespace GasStation.Localization
 
             // HUD: status
             { "hud.help", new[] {
-                "WASD — ходить   E / ЛКМ — действие   1/2/3 — топливо   +/- — цена   O — заказать 500 л\nTab — улучшения   M — магазин   C — покраска   H — персонал   J — достижения   K — постоянные клиенты   F — финансы   B — стройка   N — ноутбук   F12 — фото\nT — скорость   R — радио   L — язык   F1 — подсказки   F5 — сохранить   F9 — загрузить   Esc — меню",
-                "WASD — walk   E / LMB — action   1/2/3 — fuel   +/- — price   O — order 500 L\nTab — upgrades   M — shop   C — paint   H — staff   J — achievements   K — regulars   F — finances   B — build   N — laptop   F12 — photo\nT — speed   R — radio   L — language   F1 — hints   F5 — save   F9 — load   Esc — menu" } },
+                "WASD — ходить   мышь — смотреть   E / ЛКМ — действие   1/2/3 — топливо   +/- — цена   O — заказать 500 л\nTab — улучшения   M — магазин   C — покраска   H — персонал   J — достижения   K — постоянные клиенты   F — финансы   B — стройка   N — ноутбук   F12 — фото\nT — скорость   R — радио   L — язык   F1 — подсказки   F5 — сохранить   F9 — загрузить   Esc — меню",
+                "WASD — walk   mouse — look   E / LMB — action   1/2/3 — fuel   +/- — price   O — order 500 L\nTab — upgrades   M — shop   C — paint   H — staff   J — achievements   K — regulars   F — finances   B — build   N — laptop   F12 — photo\nT — speed   R — radio   L — language   F1 — hints   F5 — save   F9 — load   Esc — menu" } },
             { "hud.day", new[] { "День {0}   {1:00}:{2:00}", "Day {0}   {1:00}:{2:00}" } },
             { "hud.money", new[] { "Деньги: ${0:0}", "Money: ${0:0}" } },
             { "hud.reputation", new[] { "Репутация: {0:0}%", "Reputation: {0:0}%" } },
@@ -198,7 +198,7 @@ namespace GasStation.Localization
                 "Итоги дня {0}\nДоход: ${1:0}   Расходы: ${2:0}\nПрибыль: ${3:0}\nОбслужено: {4}   Уехали: {5}",
                 "Day {0} summary\nIncome: ${1:0}   Expenses: ${2:0}\nProfit: ${3:0}\nServed: {4}   Lost: {5}" } },
             { "hint.CanStartFueling", new[] { "[E / ЛКМ] Заправить", "[E / LMB] Fuel the car" } },
-            { "hint.Fueling", new[] { "Идёт заправка...", "Fueling..." } },
+            { "hint.Fueling", new[] { "[Держи E / ЛКМ] Заправка...", "[Hold E / LMB] Fueling..." } },
             { "hint.CarArriving", new[] { "Машина подъезжает", "Car arriving" } },
             { "hint.Trash", new[] { "[E / ЛКМ] Убрать мусор", "[E / LMB] Pick up litter" } },
             { "hint.Restroom", new[] { "[E / ЛКМ] Убрать туалет", "[E / LMB] Clean the restroom" } },
@@ -445,9 +445,11 @@ namespace GasStation.Localization
             { "settings.game", new[] { "ИГРА", "GAME" } },
             { "settings.gameSpeed", new[] { "Скорость игры", "Game speed" } },
             { "settings.autosave", new[] { "Автосохранение в конце дня", "Autosave at the end of each day" } },
+            { "settings.mouseSensitivity", new[] { "Чувствительность мыши", "Mouse sensitivity" } },
+            { "settings.invertY", new[] { "Инвертировать мышь по вертикали", "Invert mouse Y" } },
             { "controls.text", new[] {
-                "WASD / стрелки — ходить\nE / ЛКМ — действие рядом: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (листаются по страницам)   M — магазин   C — покраска   H — персонал   J — достижения   K — постоянные клиенты   F — финансы, банк, конкурент\nНоутбук у двери магазина (E рядом или N откуда угодно): почта с контрактами, банк, конкурент, клиенты, статистика — всё мышью\nB — режим строительства: WASD — камера, колесо — масштаб, 1–8 — объект, Q / E — поворот, ЛКМ — поставить, ПКМ — убрать\nF12 — фоторежим: камера свободна, пробел — снимок\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
-                "WASD / arrows — walk\nE / LMB — nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (flip through the pages)   M — shop   C — paint   H — staff   J — achievements   K — regulars   F — finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics — all with the mouse\nB — build mode: WASD — camera, wheel — zoom, 1–8 — object, Q / E — rotate, LMB — place, RMB — remove\nF12 — photo mode: free camera, Space — screenshot\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
+                "WASD / стрелки — ходить, мышь — смотреть по сторонам\nE / ЛКМ — действие с тем, на что смотришь: заправить машину, поменять шины, починить колонку, убрать туалет или номер мотеля, подобрать мусор\n\n1 / 2 / 3 — выбрать топливо   + / − — цена   O — заказать 500 л\nTab — улучшения (листаются по страницам)   M — магазин   C — покраска   H — персонал   J — достижения   K — постоянные клиенты   F — финансы, банк, конкурент\nНоутбук у двери магазина (E рядом или N откуда угодно): почта с контрактами, банк, конкурент, клиенты, статистика — всё мышью\nB — режим строительства: WASD — камера, колесо — масштаб, 1–8 — объект, Q / E — поворот, ЛКМ — поставить, ПКМ — убрать\nF12 — фоторежим: камера свободна, пробел — снимок\n\nT — скорость игры ×1 / ×2 / ×3   R — радио   F1 — подсказки   L — язык\nF5 — сохранить   F9 — загрузить   Esc — пауза",
+                "WASD / arrows — walk, mouse — look around\nE / LMB — act on what you look at: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 — select fuel   + / − — price   O — order 500 L\nTab — upgrades (flip through the pages)   M — shop   C — paint   H — staff   J — achievements   K — regulars   F — finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics — all with the mouse\nB — build mode: WASD — camera, wheel — zoom, 1–8 — object, Q / E — rotate, LMB — place, RMB — remove\nF12 — photo mode: free camera, Space — screenshot\n\nT — game speed ×1 / ×2 / ×3   R — radio   F1 — hints   L — language\nF5 — save   F9 — load   Esc — pause" } },
 
             // Bank, bills and the competitor
             { "msg.loanAlready", new[] { "Сначала погаси текущий кредит", "Repay the current loan first" } },

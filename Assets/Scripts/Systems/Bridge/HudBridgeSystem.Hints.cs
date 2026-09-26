@@ -106,11 +106,11 @@ namespace GasStation.Systems
                 if (pumpEntity != Entity.Null && SystemAPI.Exists(pumpEntity))
                     HudModel.Hint = HintFor(Describe(SystemAPI.GetComponent<Pump>(pumpEntity)));
 
-                if (HudModel.Hint != InteractionHint.CanStartFueling && pumpEntity != Entity.Null && SystemAPI.Exists(pumpEntity) &&
+                if (HudModel.Hint is not (InteractionHint.CanStartFueling or InteractionHint.Fueling) && pumpEntity != Entity.Null && SystemAPI.Exists(pumpEntity) &&
                     SystemAPI.GetComponent<Pump>(pumpEntity).Condition < ProgressMath.RepairThreshold)
                     HudModel.Hint = InteractionHint.Repair;
 
-                bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling or InteractionHint.Repair;
+                bool fuelingAction = HudModel.Hint is InteractionHint.CanStartFueling or InteractionHint.Fueling or InteractionHint.Repair;
                 if (!fuelingAction && NearWaitingTireCar())
                 {
                     HudModel.Hint = InteractionHint.Tires;

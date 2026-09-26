@@ -499,7 +499,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1231806479
-    m_Localized: "WASD \u2014 walk   E / LMB \u2014 action   1/2/3 \u2014 fuel   +/- \u2014 price   O \u2014 order 500 L\nTab \u2014 upgrades   M \u2014 shop   C \u2014 paint   H \u2014 staff   J \u2014 achievements   K \u2014 regulars   F \u2014 finances   B \u2014 build   N \u2014 laptop   F12 \u2014 photo\nT \u2014 speed   R \u2014 radio   L \u2014 language   F1 \u2014 hints   F5 \u2014 save   F9 \u2014 load   Esc \u2014 menu"
+    m_Localized: "WASD \u2014 walk   mouse \u2014 look   E / LMB \u2014 action   1/2/3 \u2014 fuel   +/- \u2014 price   O \u2014 order 500 L\nTab \u2014 upgrades   M \u2014 shop   C \u2014 paint   H \u2014 staff   J \u2014 achievements   K \u2014 regulars   F \u2014 finances   B \u2014 build   N \u2014 laptop   F12 \u2014 photo\nT \u2014 speed   R \u2014 radio   L \u2014 language   F1 \u2014 hints   F5 \u2014 save   F9 \u2014 load   Esc \u2014 menu"
     m_Metadata:
       m_Items: []
   - m_Id: 1231806480
@@ -685,7 +685,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1231806524
-    m_Localized: Fueling...
+    m_Localized: '[Hold E / LMB] Fueling...'
     m_Metadata:
       m_Items: []
   - m_Id: 1231806525
@@ -1600,7 +1600,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1231806752
-    m_Localized: "WASD / arrows \u2014 walk\nE / LMB \u2014 nearby action: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 \u2014 select fuel   + / \u2212 \u2014 price   O \u2014 order 500 L\nTab \u2014 upgrades (flip through the pages)   M \u2014 shop   C \u2014 paint   H \u2014 staff   J \u2014 achievements   K \u2014 regulars   F \u2014 finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics \u2014 all with the mouse\nB \u2014 build mode: WASD \u2014 camera, wheel \u2014 zoom, 1\u20138 \u2014 object, Q / E \u2014 rotate, LMB \u2014 place, RMB \u2014 remove\nF12 \u2014 photo mode: free camera, Space \u2014 screenshot\n\nT \u2014 game speed \xD71 / \xD72 / \xD73   R \u2014 radio   F1 \u2014 hints   L \u2014 language\nF5 \u2014 save   F9 \u2014 load   Esc \u2014 pause"
+    m_Localized: "WASD / arrows \u2014 walk, mouse \u2014 look around\nE / LMB \u2014 act on what you look at: fuel a car, change tires, repair a pump, clean the restroom or a motel room, pick up litter\n\n1 / 2 / 3 \u2014 select fuel   + / \u2212 \u2014 price   O \u2014 order 500 L\nTab \u2014 upgrades (flip through the pages)   M \u2014 shop   C \u2014 paint   H \u2014 staff   J \u2014 achievements   K \u2014 regulars   F \u2014 finances, bank, competitor\nThe laptop by the shop door (E next to it or N anywhere): contract mail, bank, competitor, regulars, statistics \u2014 all with the mouse\nB \u2014 build mode: WASD \u2014 camera, wheel \u2014 zoom, 1\u20138 \u2014 object, Q / E \u2014 rotate, LMB \u2014 place, RMB \u2014 remove\nF12 \u2014 photo mode: free camera, Space \u2014 screenshot\n\nT \u2014 game speed \xD71 / \xD72 / \xD73   R \u2014 radio   F1 \u2014 hints   L \u2014 language\nF5 \u2014 save   F9 \u2014 load   Esc \u2014 pause"
     m_Metadata:
       m_Items: []
   - m_Id: 1231806753
@@ -3711,6 +3711,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1240195325
     m_Localized: "Host an event (laptop \u2192 Events): {0}/{1:0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 368519970291712
+    m_Localized: Mouse sensitivity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 368520079343616
+    m_Localized: Invert mouse Y
     m_Metadata:
       m_Items: []
   references:

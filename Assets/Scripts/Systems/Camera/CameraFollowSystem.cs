@@ -10,8 +10,6 @@ namespace GasStation.Systems
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class CameraFollowSystem : SystemBase
     {
-        private const float Ease = 8f;
-
         protected override void OnCreate()
         {
             RequireForUpdate<PlayerTag>();
@@ -34,19 +32,19 @@ namespace GasStation.Systems
 
             if (BuildMode.Active)
             {
-                camera.transform.position = BuildMode.Focus + CameraSingleton.Offset * BuildMode.Zoom;
+                // Overhead view looking down at the focus.
+                camera.transform.SetPositionAndRotation(BuildMode.Focus + CameraSingleton.Offset * BuildMode.Zoom,
+                    Quaternion.LookRotation(-CameraSingleton.Offset));
                 return;
             }
 
             var player = SystemAPI.GetSingletonEntity<PlayerTag>();
             Vector3 position = SystemAPI.GetComponent<LocalToWorld>(player).Position;
-            float dt = SystemAPI.Time.DeltaTime;
+            CameraSingleton.PlayerPosition = position;
 
-            // Ease toward the target instead of snapping, so zoom and orbit feel smooth.
-            Vector3 desired = position + CameraSingleton.Offset;
-            camera.transform.position = Vector3.Lerp(camera.transform.position, desired, 1f - Mathf.Exp(-Ease * dt));
-            var look = position + Vector3.up * 1.2f;
-            camera.transform.rotation = Quaternion.LookRotation((look - camera.transform.position).normalized);
+            // First person: the camera is the owner's eyes.
+            camera.transform.SetPositionAndRotation(position + Vector3.up * CameraSingleton.EyeHeight,
+                Quaternion.Euler(CameraSingleton.Pitch, CameraSingleton.Yaw, 0f));
         }
     }
 }

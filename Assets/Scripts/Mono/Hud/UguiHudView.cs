@@ -58,6 +58,10 @@ namespace GasStation.Mono.Hud
                 text.text = value;
         }
 
+        public void SetCrosshair(bool visible)
+        {
+        }
+
         public void SetMeters(HudMeters meters)
         {
             // The status text already shows these values as numbers.

@@ -43,6 +43,12 @@ namespace GasStation.Systems
                 if (pump.ValueRO.Condition >= ProgressMath.RepairThreshold)
                     continue;
 
+                // E at a pump with a customer means fueling (start or resume holding), never a paid repair.
+                var occupant = pump.ValueRO.Occupant;
+                if (occupant != Entity.Null && SystemAPI.Exists(occupant) &&
+                    SystemAPI.GetComponent<Car>(occupant).State is CarState.WaitingForService or CarState.Fueling)
+                    continue;
+
                 interaction.ValueRW.InteractPressed = false;
                 if (economy.ValueRO.Money < stepCost)
                 {

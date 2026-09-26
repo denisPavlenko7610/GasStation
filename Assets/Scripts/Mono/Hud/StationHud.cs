@@ -56,7 +56,7 @@ namespace GasStation.Mono
 
         private void Update()
         {
-            _view.SetVisible(HudModel.HasStation && !LaptopState.IsOpen && !PhotoMode.Active);
+            _view.SetVisible(HudModel.HasStation && !LaptopState.IsOpen && !PhotoMode.Active && !GamePause.MenuOpen);
             if (!HudModel.HasStation)
                 return;
 
@@ -65,6 +65,7 @@ namespace GasStation.Mono
             _view.SetText(HudBlock.Status, BuildStatus());
             _view.SetText(HudBlock.Fuel, BuildFuel());
             _view.SetText(HudBlock.Pumps, BuildPumps());
+            _view.SetCrosshair(!BuildMode.Active);
             _view.SetText(HudBlock.Center, BuildCenter());
             _view.SetText(HudBlock.Help, GameSettings.ShowControls ? Loc.T("hud.help") : string.Empty);
             _view.SetText(HudBlock.Panel, BuildMode.Active ? BuildBuildMode()

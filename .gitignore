@@ -68,3 +68,6 @@ crashlytics-build.properties
 # DOTS build-time cache, regenerated on demand
 Assets/SceneDependencyCache/
 Assets/SceneDependencyCache.meta
+.claude/settings.local.json
+Assets/Screenshots/
+Assets/Screenshots.meta

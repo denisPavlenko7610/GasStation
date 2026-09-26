@@ -34,7 +34,7 @@ namespace GasStation.Systems
                          .WithAll<PlayerTag>())
             {
                 var nearest = Entity.Null;
-                float best = RenovationMath.InteractionRadius * RenovationMath.InteractionRadius;
+                float best = float.MaxValue;
                 float2 player = transform.ValueRO.Position.xz;
 
                 foreach (var (renovation, entity) in SystemAPI.Query<RefRO<Renovation>>().WithEntityAccess())
@@ -42,7 +42,8 @@ namespace GasStation.Systems
                     if (renovation.ValueRO.Done)
                         continue;
 
-                    float distance = math.distancesq(renovation.ValueRO.Position.xz, player);
+                    float distance = InteractionMath.Score(player, renovation.ValueRO.Position.xz, interaction.ValueRO.LookDirection,
+                        RenovationMath.InteractionRadius);
                     if (distance < best)
                     {
                         best = distance;

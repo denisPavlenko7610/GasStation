@@ -294,6 +294,9 @@ namespace GasStation.Mono.Menu
             scroll.Add(Dropdown(Loc.T("settings.gameSpeed"), speeds.Select(s => $"×{s}").ToList(),
                 Mathf.Max(0, Array.IndexOf(speeds, GameSettings.GameSpeed)), index => GameSettings.GameSpeed = speeds[index]));
             scroll.Add(ToggleRow(Loc.T("settings.autosave"), GameSettings.Autosave, value => GameSettings.Autosave = value));
+            scroll.Add(SliderRow(Loc.T("settings.mouseSensitivity"), 0.2f, 3f, GameSettings.MouseSensitivity,
+                value => GameSettings.MouseSensitivity = value));
+            scroll.Add(ToggleRow(Loc.T("settings.invertY"), GameSettings.InvertY, value => GameSettings.InvertY = value));
 
             var buttons = new VisualElement();
             buttons.AddToClassList("menu-buttons-row");

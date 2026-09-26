@@ -13,24 +13,38 @@
     border-color: rgba(255, 255, 255, 0.10);
     border-left-width: 4px;
     border-left-color: rgb(245, 158, 66);
-    padding: 12px 16px 14px 16px;
+    padding: 10px 14px 12px 14px;
 }
 
 .card--top-left { left: 18px; top: 18px; max-width: 34%; }
 .card--top-right { right: 18px; top: 18px; max-width: 40%; border-left-color: rgb(96, 165, 250); }
 .card--bottom-left { left: 18px; bottom: 18px; max-width: 48%; border-left-color: rgb(52, 211, 153); }
 .card--bottom-right { right: 18px; bottom: 18px; max-width: 46%; border-left-color: rgba(255, 255, 255, 0.28); }
-.card--top-center { top: 18px; left: 30%; right: 30%; border-left-width: 1px; border-left-color: rgba(255, 255, 255, 0.10); }
-.card--top-center.card--wide { left: 18%; right: 18%; }
+.card--top-center { top: 18px; left: 50%; translate: -50% 0; min-width: 320px; max-width: 42%; border-left-width: 1px; border-left-color: rgba(255, 255, 255, 0.10); }
+.card--top-center.card--wide { max-width: 64%; }
 .card--center {
-    top: 42%;
-    left: 35%;
-    right: 35%;
+    top: 55%;
+    left: 37%;
+    right: 37%;
     align-items: center;
     background-color: rgba(16, 18, 28, 0.9);
     border-color: rgba(245, 158, 66, 0.65);
     border-left-width: 1px;
     border-left-color: rgba(245, 158, 66, 0.65);
+}
+
+.crosshair {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    margin-top: -4px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.55);
 }
 
 .accent-line {
@@ -43,14 +57,14 @@
 
 .hud-text {
     color: rgb(238, 240, 244);
-    font-size: 20px;
+    font-size: 17px;
     white-space: normal;
     -unity-text-align: upper-left;
 }
 
 .hud-text--right { -unity-text-align: upper-right; }
-.hud-text--small { font-size: 15px; color: rgb(178, 186, 200); }
-.hud-text--center { font-size: 27px; -unity-text-align: middle-center; -unity-font-style: bold; }
+.hud-text--small { font-size: 13px; color: rgb(178, 186, 200); }
+.hud-text--center { font-size: 22px; -unity-text-align: middle-center; -unity-font-style: bold; }
 
 .meter {
     flex-direction: row;
@@ -59,7 +73,7 @@
 }
 
 .meter__label {
-    width: 132px;
+    width: 110px;
     font-size: 14px;
     color: rgb(178, 186, 200);
     -unity-font-style: bold;
@@ -67,7 +81,7 @@
 }
 
 .meter__track {
-    width: 224px;
+    width: 180px;
     height: 12px;
     border-radius: 6px;
     overflow: hidden;
@@ -131,6 +145,7 @@
 }
 
 .chart {
+    min-width: 480px;
     flex-direction: row;
     align-items: flex-end;
     height: 170px;

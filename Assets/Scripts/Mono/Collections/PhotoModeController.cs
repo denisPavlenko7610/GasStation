@@ -57,7 +57,7 @@ namespace GasStation.Mono.Collections
         private static void Enter()
         {
             var camera = CameraSingleton.Instance;
-            var focus = camera != null ? camera.transform.position - CameraSingleton.Offset : Vector3.zero;
+            var focus = CameraSingleton.PlayerPosition;
             PhotoMode.Enter(focus, camera != null ? camera.transform.rotation : Quaternion.identity);
             HudModel.Notify(Loc.T("msg.photoMode"));
         }

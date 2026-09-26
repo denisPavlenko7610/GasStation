@@ -8,6 +8,9 @@ namespace GasStation.Logic
     {
         public const float LostCustomerPenalty = 0.03f;
 
+        /// <summary>Customers wait longer on the first day, while the new owner learns the ropes.</summary>
+        public static float FirstDayPatience(int day) => day <= 1 ? 1.5f : 1f;
+
         /// <summary>Relative traffic for the hour of day: quiet nights, morning and evening rush.</summary>
         public static float TrafficIntensity(float hour)
         {

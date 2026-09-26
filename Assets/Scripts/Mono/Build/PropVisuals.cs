@@ -4,14 +4,30 @@ using UnityEngine;
 
 namespace GasStation.Mono.Build
 {
-    /// <summary>Builds the look of every prop from primitives (PrimitiveArt). Used for placed props and for the build ghost.</summary>
+    /// <summary>
+    /// Builds the look of every prop: the art-pack model from PropModelSet when there is one, primitives
+    /// (PrimitiveArt) otherwise. Used for placed props and for the build ghost (which gets no colliders).
+    /// </summary>
     public static class PropVisuals
     {
-        public static GameObject Create(PropType type, Transform parent)
+        public static GameObject Create(PropType type, Transform parent, bool ghost = false)
         {
             var root = new GameObject($"Prop_{type}");
             root.transform.SetParent(parent, false);
             var t = root.transform;
+
+            var model = PropModelSet.ModelFor(type);
+            if (model != null)
+            {
+                var instance = Object.Instantiate(model, t, false);
+                if (ghost)
+                {
+                    foreach (var collider in instance.GetComponentsInChildren<Collider>())
+                        Object.Destroy(collider);
+                }
+
+                return root;
+            }
 
             switch (type)
             {

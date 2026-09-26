@@ -1,4 +1,5 @@
 using GasStation.Components;
+using GasStation.Logic;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -7,7 +8,7 @@ using Unity.Transforms;
 namespace GasStation.Systems
 {
     /// <summary>
-    /// Finds the pump and the litter next to the player. On interact, starting fueling has priority;
+    /// Finds the pump and the litter next to the player, preferring what the camera looks at. On interact, starting fueling has priority;
     /// otherwise the press is left for TrashPickupSystem.
     /// </summary>
     [BurstCompile]
@@ -37,8 +38,9 @@ namespace GasStation.Systems
                          .WithAll<PlayerTag>())
             {
                 float2 playerPosition = transform.ValueRO.Position.xz;
-                interaction.ValueRW.NearbyPump = FindNearestPump(ref state, playerPosition, pumpRadius);
-                interaction.ValueRW.NearbyTrash = FindNearestTrash(ref state, playerPosition, trashRadius);
+                float3 look = interaction.ValueRO.LookDirection;
+                interaction.ValueRW.NearbyPump = FindNearestPump(ref state, playerPosition, look, pumpRadius);
+                interaction.ValueRW.NearbyTrash = FindNearestTrash(ref state, playerPosition, look, trashRadius);
 
                 var pumpEntity = interaction.ValueRO.NearbyPump;
                 if (!interaction.ValueRO.InteractPressed || pumpEntity == Entity.Null)
@@ -59,13 +61,13 @@ namespace GasStation.Systems
             }
         }
 
-        private Entity FindNearestPump(ref SystemState state, float2 position, float radius)
+        private Entity FindNearestPump(ref SystemState state, float2 position, float3 look, float radius)
         {
-            float best = radius * radius;
+            float best = float.MaxValue;
             var nearest = Entity.Null;
             foreach (var (pump, entity) in SystemAPI.Query<RefRO<Pump>>().WithEntityAccess())
             {
-                float distance = math.distancesq(pump.ValueRO.InteractionPoint.xz, position);
+                float distance = InteractionMath.Score(position, pump.ValueRO.InteractionPoint.xz, look, radius);
                 if (distance < best)
                 {
                     best = distance;
@@ -76,13 +78,13 @@ namespace GasStation.Systems
             return nearest;
         }
 
-        private Entity FindNearestTrash(ref SystemState state, float2 position, float radius)
+        private Entity FindNearestTrash(ref SystemState state, float2 position, float3 look, float radius)
         {
-            float best = radius * radius;
+            float best = float.MaxValue;
             var nearest = Entity.Null;
             foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalToWorld>>().WithAll<Trash>().WithEntityAccess())
             {
-                float distance = math.distancesq(transform.ValueRO.Position.xz, position);
+                float distance = InteractionMath.Score(position, transform.ValueRO.Position.xz, look, radius);
                 if (distance < best)
                 {
                     best = distance;

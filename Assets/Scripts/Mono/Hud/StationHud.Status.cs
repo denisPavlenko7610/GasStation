@@ -90,44 +90,32 @@ namespace GasStation.Mono
             _builder.Clear();
             _builder.AppendLine(Loc.F("hud.queue", HudModel.QueueLength, HudModel.CarsOnSite));
 
-            if (HudModel.HasWash)
+            // Facilities that are not built yet stay off the HUD: the upgrades panel lists them.
+            if (HudModel.HasWash && HudModel.Upgrades.CarWash > 0)
             {
-                string wash = HudModel.Upgrades.CarWash == 0 ? Loc.T("hud.wash.closed")
-                    : HudModel.WashTimeLeft > 0f ? Loc.F("hud.wash.working", HudModel.WashTimeLeft)
+                string wash = HudModel.WashTimeLeft > 0f ? Loc.F("hud.wash.working", HudModel.WashTimeLeft)
                     : HudModel.WashBusy ? Loc.T("hud.wash.arriving")
                     : Loc.T("hud.free.f");
                 _builder.AppendLine(Loc.F("hud.wash", wash));
             }
 
-            if (HudModel.HasParking)
-            {
-                _builder.AppendLine(HudModel.ParkingOpen == 0
-                    ? Loc.T("hud.parking.closed")
-                    : Loc.F("hud.parking", HudModel.ParkingUsed, HudModel.ParkingOpen));
-            }
+            if (HudModel.HasParking && HudModel.ParkingOpen > 0)
+                _builder.AppendLine(Loc.F("hud.parking", HudModel.ParkingUsed, HudModel.ParkingOpen));
 
-            if (HudModel.HasTireService)
+            if (HudModel.HasTireService && HudModel.Upgrades.TireService > 0)
             {
-                string tires = HudModel.Upgrades.TireService == 0 ? Loc.T("hud.tires.closed")
-                    : HudModel.TireTimeLeft > 0f ? Loc.F("hud.tires.working", HudModel.TireTimeLeft)
+                string tires = HudModel.TireTimeLeft > 0f ? Loc.F("hud.tires.working", HudModel.TireTimeLeft)
                     : HudModel.TireCarWaiting ? Loc.T("hud.tires.waiting")
                     : Loc.T("hud.free.m");
                 _builder.AppendLine(Loc.F("hud.tires", tires));
             }
 
-            if (HudModel.HasMotel)
+            if (HudModel.HasMotel && HudModel.MotelOpen > 0)
             {
-                if (HudModel.MotelOpen == 0)
-                {
-                    _builder.AppendLine(Loc.T("hud.motel.closed"));
-                }
-                else
-                {
-                    _builder.Append(Loc.F("hud.motel", HudModel.MotelUsed, HudModel.MotelOpen));
-                    if (HudModel.MotelDirty > 0)
-                        _builder.Append(Loc.F("hud.motel.dirty", HudModel.MotelDirty));
-                    _builder.AppendLine();
-                }
+                _builder.Append(Loc.F("hud.motel", HudModel.MotelUsed, HudModel.MotelOpen));
+                if (HudModel.MotelDirty > 0)
+                    _builder.Append(Loc.F("hud.motel.dirty", HudModel.MotelDirty));
+                _builder.AppendLine();
             }
 
             if (HudModel.HasRestroom)
@@ -139,12 +127,10 @@ namespace GasStation.Mono
 
             foreach (var pump in HudModel.Pumps)
             {
-                _builder.Append(Loc.F("hud.pump", pump.Number));
                 if (pump.Locked)
-                {
-                    _builder.AppendLine(Loc.T("hud.pump.locked"));
                     continue;
-                }
+
+                _builder.Append(Loc.F("hud.pump", pump.Number));
 
                 if (pump.Condition <= 0f && !pump.Occupied)
                 {
@@ -185,6 +171,10 @@ namespace GasStation.Mono
 
             if (HudModel.Message != null && Time.unscaledTime - HudModel.MessageTime < MessageDuration)
                 return HudModel.Message;
+
+            // Interaction prompts are for walking around; build mode aims with the mouse instead.
+            if (BuildMode.Active)
+                return string.Empty;
 
             return HudModel.Hint switch
             {

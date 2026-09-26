@@ -27,6 +27,8 @@ namespace GasStation.Bridge
         public static bool ShowControls { get; set; } = true;
         public static bool Autosave { get; set; } = true;
         public static int GameSpeed { get; set; } = 1;
+        public static float MouseSensitivity { get; set; } = 1f;
+        public static bool InvertY { get; set; }
 
         public static readonly int[] FrameRateOptions = { 0, 30, 60, 120, 144, 165, 240 };
         public static readonly int[] GameSpeedOptions = { 1, 2, 3 };
@@ -48,6 +50,8 @@ namespace GasStation.Bridge
             ShowControls = PlayerPrefs.GetInt(Prefix + "ShowControls", 1) == 1;
             Autosave = PlayerPrefs.GetInt(Prefix + "Autosave", 1) == 1;
             GameSpeed = Mathf.Clamp(PlayerPrefs.GetInt(Prefix + "GameSpeed", 1), 1, 3);
+            MouseSensitivity = Mathf.Clamp(PlayerPrefs.GetFloat(Prefix + "MouseSensitivity", 1f), 0.2f, 3f);
+            InvertY = PlayerPrefs.GetInt(Prefix + "InvertY", 0) == 1;
         }
 
         public static void Save()
@@ -67,6 +71,8 @@ namespace GasStation.Bridge
             PlayerPrefs.SetInt(Prefix + "ShowControls", ShowControls ? 1 : 0);
             PlayerPrefs.SetInt(Prefix + "Autosave", Autosave ? 1 : 0);
             PlayerPrefs.SetInt(Prefix + "GameSpeed", GameSpeed);
+            PlayerPrefs.SetFloat(Prefix + "MouseSensitivity", MouseSensitivity);
+            PlayerPrefs.SetInt(Prefix + "InvertY", InvertY ? 1 : 0);
             PlayerPrefs.Save();
         }
     }
